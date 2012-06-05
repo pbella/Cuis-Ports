@@ -1,32 +1,32 @@
-'From Cuis 4.0 of 21 April 2012 [latest update: #1260] on 4 June 2012 at 7:46:52 pm'!
+'From Cuis 4.0 of 21 April 2012 [latest update: #1260] on 4 June 2012 at 11:15:23 pm'!
 'Description Split out from XML-Parser'!
-!classDefinition: #XPath category: #'XPath-XPath'!
+!classDefinition: #XPath category: #'XPath'!
 Object subclass: #XPath
 	instanceVariableNames: 'instructions literals path source block'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'XPath-XPath'!
-!classDefinition: 'XPath class' category: #'XPath-XPath'!
+	category: 'XPath'!
+!classDefinition: 'XPath class' category: #'XPath'!
 XPath class
 	instanceVariableNames: ''!
 
-!classDefinition: #XPathContext category: #'XPath-XPath'!
+!classDefinition: #XPathContext category: #'XPath'!
 Object subclass: #XPathContext
 	instanceVariableNames: 'root path parameters locals stack marker pc results done'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'XPath-XPath'!
-!classDefinition: 'XPathContext class' category: #'XPath-XPath'!
+	category: 'XPath'!
+!classDefinition: 'XPathContext class' category: #'XPath'!
 XPathContext class
-	instanceVariableNames: ''!
+	instanceVariableNames: 'haltOnXPathError'!
 
-!classDefinition: #XPathParser category: #'XPath-XPath'!
+!classDefinition: #XPathParser category: #'XPath'!
 Object subclass: #XPathParser
 	instanceVariableNames: 'stream path pathSource'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'XPath-XPath'!
-!classDefinition: 'XPathParser class' category: #'XPath-XPath'!
+	category: 'XPath'!
+!classDefinition: 'XPathParser class' category: #'XPath'!
 XPathParser class
 	instanceVariableNames: ''!
 
@@ -37,6 +37,9 @@ I represent an instance of an XPath, which can be applied to XML documents (or S
 My instance creation methods accept a string (or stream) and compile the string representation of an XPath query into a sequence of selectors.  These selectors are messages for an XPathContext that when sent to an instance of an XPathContext will execute the path on the document specified by that context.
 
 !
+
+!XPathContext commentStamp: '<historical>' prior: 0!
+Note: if your XPath is not returning the expected result, try enabling haltOnXPathError: on the class side.  This will halt execution at points where the problem could be due to an invalid XPath.!
 
 !XMLDOMParser methodsFor: '*xpath-content' stamp: 'PH 10/7/2003 07:34'!
 characters: aString 
@@ -234,18 +237,24 @@ descendants
 !XPathContext methodsFor: 'instructions' stamp: 'PH 10/8/2003 07:31'!
 either: arg1 or: arg2! !
 
-!XPathContext methodsFor: 'instructions' stamp: 'PH 10/12/2003 18:30'!
+!XPathContext methodsFor: 'instructions' stamp: 'pb 6/4/2012 22:58'!
 element: name
-	| children matches |
+	| children matches node |
 	children := OrderedCollection new.
-	self pop
-		do: [:element | "[:element | children addAll: element elements]."
-			element isTag
-				ifTrue: [children
-						addAll: (element elements
-								select: [:element2 | element2 isTag])]].
-	matches := (children select:
-		[:element | (element name = name) or: [name = '*']]).
+	node := self pop.
+	node
+		ifNil: [
+			self class haltOnXPathError ifTrue: [ self halt ]]
+		ifNotNil: [
+			node do: [ :element |
+				"[:element | children addAll: element elements]."
+				element ifNotNil: [
+					element isTag ifTrue: [
+						children addAll:
+							(element elements select: [ :element2 |
+								element2 isTag ]) ]]]].
+	matches := children select: [ :element |
+		element name = name or: [ name = '*' ]].
 	self push: matches.! !
 
 !XPathContext methodsFor: 'instructions' stamp: 'PH 10/13/2003 06:43'!
@@ -310,10 +319,14 @@ orAttributes: namesCollection
 				ifTrue: [ allAttributes add: element attributes ] ].
 	self push: allAttributes values! !
 
-!XPathContext methodsFor: 'instructions' stamp: 'PH 7/24/2002 06:48'!
+!XPathContext methodsFor: 'instructions' stamp: 'pb 6/4/2012 22:58'!
 parent
-	self push: (self pop collect:
-		[:element | element parent]).! !
+	self push:
+		(self pop collect: [ :element |
+			element
+				ifNil: [
+					self class haltOnXPathError ifTrue: [ self halt ]]
+				ifNotNil: [ element parent ]]).! !
 
 !XPathContext methodsFor: 'accessing' stamp: 'PH 7/21/2002 10:26'!
 path
@@ -323,9 +336,14 @@ path
 path: aPath
 	path := aPath! !
 
-!XPathContext methodsFor: 'instructions' stamp: 'PH 7/24/2002 06:20'!
+!XPathContext methodsFor: 'instructions' stamp: 'pb 6/4/2012 22:58'!
 pop
-	^ stack removeLast.! !
+	| item |
+	stack size > 0
+		ifTrue: [ item := stack removeLast ]
+		ifFalse: [
+			self class haltOnXPathError ifTrue: [ self halt ]].
+	^ item.! !
 
 !XPathContext methodsFor: 'functions' stamp: 'PH 7/27/2002 07:47'!
 position
@@ -392,6 +410,20 @@ for: aPath in: aDocument
 	context path: aPath;
 			root: aDocument.
 	^context! !
+
+!XPathContext class methodsFor: 'as yet unclassified' stamp: 'pb 6/4/2012 22:57'!
+haltOnXPathError
+	"An error has occurred... should we ignore it (likely not returning the expected result) or halt?"
+	^ haltOnXPathError.! !
+
+!XPathContext class methodsFor: 'as yet unclassified' stamp: 'pb 6/4/2012 23:04'!
+haltOnXPathError: bool
+	"Since we use a dynamically generated block to navigate the XML document based on the provided XPath, it's entirely possible to end up in an invalid state.  Enabling haltOnXPathError will make it easier to troubleshoot  problems with an invalid XPath (or the XPath code) but should be disabled unless you specficially want to understand why you aren't getting the expected result."
+	haltOnXPathError := bool.! !
+
+!XPathContext class methodsFor: 'as yet unclassified' stamp: 'pb 6/4/2012 22:59'!
+initialize
+	haltOnXPathError := false.! !
 
 !XPathContext class methodsFor: 'as yet unclassified' stamp: 'PH 7/21/2002 11:57'!
 new
@@ -751,3 +783,4 @@ on: aStream
 	parser := self new.
 	parser stream: aStream.
 	^parser! !
+XPathContext initialize!
