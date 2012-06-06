@@ -1,4 +1,4 @@
-'From Cuis 4.0 of 21 April 2012 [latest update: #1260] on 4 June 2012 at 7:49:05 pm'!
+'From Cuis 4.0 of 21 April 2012 [latest update: #1260] on 5 June 2012 at 8:22:08 pm'!
 'Description Based on XML-Parser-AlexandreBergel.15.mcz (pbfix - need to confirm)
 
 Work in progress'!
@@ -2877,14 +2877,14 @@ xmlDeclaration: versionString encoding: encodingString
 				endPI.
 			self stream flush]! !
 
-!XMLWriter class methodsFor: 'class initialization' stamp: 'ar 12/13/2002 01:04'!
+!XMLWriter class methodsFor: 'class initialization' stamp: 'pb 6/5/2012 20:20'!
 initialize
 	"XMLWriter initialize"
 
 	XMLTranslation := Dictionary new.
 	XMLTranslation
-		at: Character cr put: '&#13;';
-		at: Character lf put: '&#10;';
+		at: Character crCharacter put: '&#13;';
+		at: Character lfCharacter put: '&#10;';
 		at: Character tab put: '&#9;';
 		at: $& put: '&amp;';
 		at: $< put: '&lt;';

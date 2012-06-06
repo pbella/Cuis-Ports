@@ -1,4 +1,4 @@
-'From Cuis 4.0 of 21 April 2012 [latest update: #1260] on 4 June 2012 at 5:07:55 pm'!
+'From Cuis 4.0 of 21 April 2012 [latest update: #1260] on 5 June 2012 at 8:19:20 pm'!
 'Description Based on http://www.squeaksource.com/Regex/VB-Regex-damienpollet.17.mcz
 
 Tests have been moved to VBRegexTest'!
@@ -1390,11 +1390,11 @@ forString: aString ignoreCase: aBoolean
 	`aString'."
 	^self for: (RxParser new parse: aString) ignoreCase: aBoolean! !
 
-!RxMatcher class methodsFor: 'class initialization' stamp: 'avi 11/30/2003 13:30'!
+!RxMatcher class methodsFor: 'class initialization' stamp: 'pb 6/5/2012 20:17'!
 initialize
 	"RxMatcher initialize"
-	Cr := Character cr.
-	Lf := Character lf.! !
+	Cr := Character crCharacter.
+	Lf := Character lfCharacter.! !
 
 !RxParser methodsFor: 'recursive descent'!
 atom
@@ -2235,13 +2235,13 @@ initialize
 		initializeBackslashConstants;
 		initializeBackslashSpecials! !
 
-!RxParser class methodsFor: 'class initialization' stamp: 'avi 11/30/2003 13:27'!
+!RxParser class methodsFor: 'class initialization' stamp: 'pb 6/5/2012 20:19'!
 initializeBackslashConstants
 	"self initializeBackslashConstants"
 	(BackslashConstants := Dictionary new)
 		at: $e put: Character escape;
-		at: $n put: Character lf;
-		at: $r put: Character cr;
+		at: $n put: Character lfCharacter;
+		at: $r put: Character crCharacter;
 		at: $f put: Character newPage;
 		at: $t put: Character tab! !
 
