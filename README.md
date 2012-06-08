@@ -28,7 +28,7 @@ FFI - Based on FFI-Kernel-ar.9.mcz
 
 FFITests - Based on FFI-Tests-ar.2.mcz
 
-OpenGL - Based on OpenGL-Core-jrd.6.mcz.  Depends on 3DTransform and FFI.
+OpenGL - Based on OpenGL-Core-jrd.6.mcz.  Depends on 3DTransform and FFI.  This was pushed out prematurely and has at least a couple of issues yet to be resolved: font handling is broken, and there are a couple of remaining hacks that were forgotten about that need to be fixed. 
 
 Note: after loading FFI projects, you must call 'Smalltalk recreateSpecialObjectsArray.'
 
