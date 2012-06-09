@@ -1,4 +1,4 @@
-'From Cuis 4.0 of 21 April 2012 [latest update: #1260] on 9 June 2012 at 2:31:53 pm'!
+'From Cuis 4.0 of 21 April 2012 [latest update: #1260] on 9 June 2012 at 6:44:29 pm'!
 'Description Originally based on OpenGL-Core-jrd.6.mcz and have merged in some of the changes from OpenGL-Core-bf.17.mcz.  Requires 3DTransform and FFI.
 '!
 !classDefinition: #GLExtConstants category: #'OpenGL-Pools'!
@@ -2913,17 +2913,16 @@ imagePixelFormat32
 imagePixelType32
 	^GLUnsignedByte! !
 
-!OGLUnix methodsFor: 'initialize' stamp: 'pb 6/9/2012 14:10'!
+!OGLUnix methodsFor: 'initialize' stamp: 'pb 6/9/2012 18:44'!
 openGLLibraryName
 	self flag: #pbfix.
 	"
 	6/2012 Linux specfic notes:
 	1) Currently, the VM downloaded via the Ubuntu Software Center is a different build than what comes from the squeak.org site and will segfault so use the one from squeak.org instead.
-	2) Still working on tracking down the issue running under Cog VM.
-	3) The X11 VM support that relates to OpenGL behaves differently on Linux vs. other platforms.  There appears to be a fix for: http://lists.squeakfoundation.org/pipermail/vm-dev/2012-June/010797.html
-	4) If you're on a Unix system rather than a Linux system, make the change suggested by the comment in glExtGetProcAddress:
+	2) The X11 VM support that relates to OpenGL behaves differently on Linux vs. other platforms.  There appears to be a fix for: http://lists.squeakfoundation.org/pipermail/vm-dev/2012-June/010797.html that will hopefully be merged in soon.
+	3) If you're on a Unix system rather than a Linux system, make the change suggested by the comment in glExtGetProcAddress:
 	"
-	Smalltalk osVersion = 'linux'
+	(Smalltalk osVersion = 'linux' or: Smalltalk osVersion = 'linux-gnu')
 		ifTrue: [ ^ 'libGL.so.1' ]
 		ifFalse: [ ^ 'GL' ].! !
 
