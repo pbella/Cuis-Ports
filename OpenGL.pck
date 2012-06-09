@@ -1,5 +1,5 @@
-'From Cuis 4.0 of 21 April 2012 [latest update: #1260] on 6 June 2012 at 3:35:22 am'!
-'Description Based on OpenGL-Core-jrd.6.mcz.  Requires 3DTransform and FFI.
+'From Cuis 4.0 of 21 April 2012 [latest update: #1260] on 9 June 2012 at 2:31:53 pm'!
+'Description Originally based on OpenGL-Core-jrd.6.mcz and have merged in some of the changes from OpenGL-Core-bf.17.mcz.  Requires 3DTransform and FFI.
 '!
 !classDefinition: #GLExtConstants category: #'OpenGL-Pools'!
 SharedPool subclass: #GLExtConstants
@@ -2899,10 +2899,10 @@ uploadTexture: aTForm dirtyRect: aRectangle
 	].
 ! !
 
-!OGLUnix methodsFor: 'accessing' stamp: 'das 9/5/2005 18:30'!
+!OGLUnix methodsFor: 'accessing' stamp: 'pb 6/9/2012 14:05'!
 glExtGetProcAddress: aString
-	"Answer the function address for the given extension function"
-	<cdecl: ulong 'glXGetProcAddressARB' (char*) module: 'B3DAcceleratorPlugin'>
+	"Answer the function address for the given extension function.  pbfix - module: needs to be changed to 'GL' for Unix systems"
+	<cdecl: ulong 'glXGetProcAddressARB' (char*) module: 'libGL.so.1'>
 	^self externalCallFailed! !
 
 !OGLUnix methodsFor: 'accessing' stamp: 'bf 10/21/2002 19:10'!
@@ -2913,13 +2913,19 @@ imagePixelFormat32
 imagePixelType32
 	^GLUnsignedByte! !
 
-!OGLUnix methodsFor: 'initialize' stamp: 'pb 6/6/2012 01:53'!
+!OGLUnix methodsFor: 'initialize' stamp: 'pb 6/9/2012 14:10'!
 openGLLibraryName
 	self flag: #pbfix.
 	"
-	^'GL'
+	6/2012 Linux specfic notes:
+	1) Currently, the VM downloaded via the Ubuntu Software Center is a different build than what comes from the squeak.org site and will segfault so use the one from squeak.org instead.
+	2) Still working on tracking down the issue running under Cog VM.
+	3) The X11 VM support that relates to OpenGL behaves differently on Linux vs. other platforms.  There appears to be a fix for: http://lists.squeakfoundation.org/pipermail/vm-dev/2012-June/010797.html
+	4) If you're on a Unix system rather than a Linux system, make the change suggested by the comment in glExtGetProcAddress:
 	"
-	^'GL'! !
+	Smalltalk osVersion = 'linux'
+		ifTrue: [ ^ 'libGL.so.1' ]
+		ifFalse: [ ^ 'GL' ].! !
 
 !OGLUnix methodsFor: 'accessing' stamp: 'bf 10/21/2002 19:15'!
 textureInternalFormat
@@ -2957,13 +2963,13 @@ texturePixelFormat
 texturePixelType
 	^GLUnsignedInt8888Rev! !
 
-!OGLUnixQuartz class methodsFor: 'as yet unclassified' stamp: 'das 3/12/2004 12:55'!
+!OGLUnixQuartz class methodsFor: 'as yet unclassified' stamp: 'pb 6/9/2012 13:32'!
 test
 	"OGLUnixOSX test"
 
 	self flag: #pbfix.
 "
-	<cdecl: void 'ffiTest2' (long long) module: 'libGL'>
+	<cdecl: void 'ffiTest2' (long long) module: 'B3DAcceleratorPlugin'>
 "
 	^self error: 'test failed'! !
 
@@ -3010,10 +3016,10 @@ glExtCallingConvention
 	"Answer the calling convention for extension functions"
 	^ExternalFunction callTypeAPI! !
 
-!OGLWin32 methodsFor: 'accessing' stamp: 'das 9/5/2005 18:30'!
+!OGLWin32 methodsFor: 'accessing' stamp: 'pb 6/9/2012 13:29'!
 glExtGetProcAddress: aString
 	"Answer the function address for the given extension function"
-	<apicall: ulong 'wglGetProcAddress' (char*) module: 'libGL'>
+	<apicall: ulong 'wglGetProcAddress' (char*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OGLWin32 methodsFor: 'accessing' stamp: 'ar 6/26/2002 19:10'!
@@ -3685,49 +3691,49 @@ generateBufferObject: bufferArray type: type mode: mode
 glAccum: op with: value
 	"This method was automatically generated."
 	"void glAccum(GLenum op, GLfloat value);"
-	<apicall: void 'glAccum' (ulong float)  module: 'opengl32.dll'>
+	<apicall: void 'glAccum' (ulong float)  module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'pb 6/6/2012 00:19'!
 glActiveTextureARB: texture
 	"This method was automatically generated."
 	"void glActiveTextureARB(GLenum texture);"
-	<apicall: void 'glActiveTextureARB' (ulong) module: 'opengl32.dll'>
+	<apicall: void 'glActiveTextureARB' (ulong) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:58'!
 glAlphaFunc: func with: ref
 	"This method was automatically generated."
 	"void glAlphaFunc(GLenum func, GLclampf ref);"
-	<apicall: void 'glAlphaFunc' (ulong float) module: 'opengl32.dll'>
+	<apicall: void 'glAlphaFunc' (ulong float) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:58'!
 glAreTexturesResident: n with: textures with: residences
 	"This method was automatically generated."
 	"GLboolean glAreTexturesResident(GLsizei n, GLuint* textures, GLboolean* residences);"
-	<apicall: bool 'glAreTexturesResident' (long ulong* ulong*) module: 'opengl32.dll'>
+	<apicall: bool 'glAreTexturesResident' (long ulong* ulong*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:58'!
 glAreTexturesResidentEXT: n with: textures with: residences
 	"This method was automatically generated."
 	"GLboolean glAreTexturesResidentEXT(GLsizei n, GLuint* textures, GLboolean* residences);"
-	<apicall: bool 'glAreTexturesResidentEXT' (long ulong* ulong*) module: 'opengl32.dll'>
+	<apicall: bool 'glAreTexturesResidentEXT' (long ulong* ulong*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:58'!
 glArrayElement: i
 	"This method was automatically generated."
 	"void glArrayElement(GLint i);"
-	<apicall: void 'glArrayElement' (long) module: 'opengl32.dll'>
+	<apicall: void 'glArrayElement' (long) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:58'!
 glArrayElementEXT: i
 	"This method was automatically generated."
 	"void glArrayElementEXT(GLint i);"
-	<apicall: void 'glArrayElementEXT' (long) module: 'opengl32.dll'>
+	<apicall: void 'glArrayElementEXT' (long) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'GL_ARB_shader_objects' stamp: 'daf 4/1/2007 20:24'!
@@ -3773,35 +3779,35 @@ glBindRenderbufferEXT: target with: buffer
 glBindTexture: target with: texture
 	"This method was automatically generated."
 	"void glBindTexture(GLenum target, GLuint texture);"
-	<apicall: void 'glBindTexture' (ulong ulong) module: 'opengl32.dll'>
+	<apicall: void 'glBindTexture' (ulong ulong) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:58'!
 glBitmap: width with: height with: xorig with: yorig with: xmove with: ymove with: bitmap
 	"This method was automatically generated."
 	"void glBitmap(GLsizei width, GLsizei height, GLfloat xorig, GLfloat yorig, GLfloat xmove, GLfloat ymove, GLubyte* bitmap);"
-	<apicall: void 'glBitmap' (long long float float float float void*) module: 'opengl32.dll'>
+	<apicall: void 'glBitmap' (long long float float float float void*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:58'!
 glBlendColor: red with: green with: blue with: alpha
 	"This method was automatically generated."
 	"void glBlendColor(GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha);"
-	<apicall: void 'glBlendColor' (float float float float) module: 'opengl32.dll'>
+	<apicall: void 'glBlendColor' (float float float float) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:58'!
 glBlendEquation: mode
 	"This method was automatically generated."
 	"void glBlendEquation(GLenum mode);"
-	<apicall: void 'glBlendEquation' (ulong) module: 'opengl32.dll'>
+	<apicall: void 'glBlendEquation' (ulong) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:58'!
 glBlendFunc: sfactor with: dfactor
 	"This method was automatically generated."
 	"void glBlendFunc(GLenum sfactor, GLenum dfactor);"
-	<apicall: void 'glBlendFunc' (ulong ulong) module: 'opengl32.dll'>
+	<apicall: void 'glBlendFunc' (ulong ulong) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'GL_EXT_framebuffer_blit' stamp: 'daf 4/1/2007 20:24'!
@@ -3823,14 +3829,14 @@ glBufferSubDataARB: target with: offset with: size with: data
 glCallList: list
 	"This method was automatically generated."
 	"void glCallList(GLuint list);"
-	<apicall: void 'glCallList' (ulong) module: 'opengl32.dll'>
+	<apicall: void 'glCallList' (ulong) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:58'!
 glCallLists: n with: type with: lists
 	"This method was automatically generated."
 	"void glCallLists(GLsizei n, GLenum type, GLvoid* lists);"
-	<apicall: void 'glCallLists' (long ulong void*) module: 'opengl32.dll'>
+	<apicall: void 'glCallLists' (long ulong void*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'GL_EXT_framebuffer_object' stamp: 'daf 4/1/2007 20:24'!
@@ -3842,23 +3848,23 @@ glCheckFramebufferStatusEXT: target
 glClear: mask
 	"This method was automatically generated."
 	"void glClear(GLbitfield mask);"
-	<apicall: void 'glClear' (ulong) module: 'opengl32.dll'>
+	<apicall: void 'glClear' (ulong) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:58'!
 glClearAccum: red with: green with: blue with: alpha
 	"This method was automatically generated."
 	"void glClearAccum(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha);"
-	<apicall: void 'glClearAccum' (float float float float) module: 'opengl32.dll'>
+	<apicall: void 'glClearAccum' (float float float float) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'pb 6/6/2012 00:17'!
 glClearColor: red with: green with: blue with: alpha
 	"This method was automatically generated."
 	"void glClearColor(GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha);"
-	<apicall: void 'glClearColor' (float float float float) module: 'opengl32.dll'>
+	<apicall: void 'glClearColor' (float float float float) module: '#openGLLibraryName'>
 	"
-	<apicall: void 'glClearColor' (float float float float) module: 'opengl32.dll'>
+	<apicall: void 'glClearColor' (float float float float) module: '#openGLLibraryName'>
 	"
 	^self externalCallFailed! !
 
@@ -3866,21 +3872,21 @@ glClearColor: red with: green with: blue with: alpha
 glClearDepth: depth
 	"This method was automatically generated."
 	"void glClearDepth(GLclampd depth);"
-	<apicall: void 'glClearDepth' (double) module: 'opengl32.dll'>
+	<apicall: void 'glClearDepth' (double) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:58'!
 glClearIndex: c
 	"This method was automatically generated."
 	"void glClearIndex(GLfloat c);"
-	<apicall: void 'glClearIndex' (float) module: 'opengl32.dll'>
+	<apicall: void 'glClearIndex' (float) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:58'!
 glClearStencil: s
 	"This method was automatically generated."
 	"void glClearStencil(GLint s);"
-	<apicall: void 'glClearStencil' (long) module: 'opengl32.dll'>
+	<apicall: void 'glClearStencil' (long) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'GL_ARB_multitexture' stamp: 'dsa 8/2/2007 14:33'!
@@ -3892,287 +3898,287 @@ glClientActiveTextureARB: texture
 glClipPlane: plane with: equation
 	"This method was automatically generated."
 	"void glClipPlane(GLenum plane, GLdouble* equation);"
-	<apicall: void 'glClipPlane' (ulong double*) module: 'opengl32.dll'>
+	<apicall: void 'glClipPlane' (ulong double*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:58'!
 glColor3b: red with: green with: blue
 	"This method was automatically generated."
 	"void glColor3b(GLbyte red, GLbyte green, GLbyte blue);"
-	<apicall: void 'glColor3b' (byte byte byte) module: 'opengl32.dll'>
+	<apicall: void 'glColor3b' (byte byte byte) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:58'!
 glColor3bv: v
 	"This method was automatically generated."
 	"void glColor3bv(GLbyte* v);"
-	<apicall: void 'glColor3bv' (byte*) module: 'opengl32.dll'>
+	<apicall: void 'glColor3bv' (byte*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:58'!
 glColor3d: red with: green with: blue
 	"This method was automatically generated."
 	"void glColor3d(GLdouble red, GLdouble green, GLdouble blue);"
-	<apicall: void 'glColor3d' (double double double) module: 'opengl32.dll'>
+	<apicall: void 'glColor3d' (double double double) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:58'!
 glColor3dv: v
 	"This method was automatically generated."
 	"void glColor3dv(GLdouble* v);"
-	<apicall: void 'glColor3dv' (double*) module: 'opengl32.dll'>
+	<apicall: void 'glColor3dv' (double*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:58'!
 glColor3f: red with: green with: blue
 	"This method was automatically generated."
 	"void glColor3f(GLfloat red, GLfloat green, GLfloat blue);"
-	<apicall: void 'glColor3f' (float float float) module: 'opengl32.dll'>
+	<apicall: void 'glColor3f' (float float float) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:58'!
 glColor3fv: v
 	"This method was automatically generated."
 	"void glColor3fv(GLfloat* v);"
-	<apicall: void 'glColor3fv' (float*) module: 'opengl32.dll'>
+	<apicall: void 'glColor3fv' (float*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:58'!
 glColor3i: red with: green with: blue
 	"This method was automatically generated."
 	"void glColor3i(GLint red, GLint green, GLint blue);"
-	<apicall: void 'glColor3i' (long long long) module: 'opengl32.dll'>
+	<apicall: void 'glColor3i' (long long long) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:58'!
 glColor3iv: v
 	"This method was automatically generated."
 	"void glColor3iv(GLint* v);"
-	<apicall: void 'glColor3iv' (long*) module: 'opengl32.dll'>
+	<apicall: void 'glColor3iv' (long*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:58'!
 glColor3s: red with: green with: blue
 	"This method was automatically generated."
 	"void glColor3s(GLshort red, GLshort green, GLshort blue);"
-	<apicall: void 'glColor3s' (short short short) module: 'opengl32.dll'>
+	<apicall: void 'glColor3s' (short short short) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:58'!
 glColor3sv: v
 	"This method was automatically generated."
 	"void glColor3sv(GLshort* v);"
-	<apicall: void 'glColor3sv' (short*) module: 'opengl32.dll'>
+	<apicall: void 'glColor3sv' (short*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:58'!
 glColor3ub: red with: green with: blue
 	"This method was automatically generated."
 	"void glColor3ub(GLubyte red, GLubyte green, GLubyte blue);"
-	<apicall: void 'glColor3ub' (byte byte byte) module: 'opengl32.dll'>
+	<apicall: void 'glColor3ub' (byte byte byte) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:58'!
 glColor3ubv: v
 	"This method was automatically generated."
 	"void glColor3ubv(GLubyte* v);"
-	<apicall: void 'glColor3ubv' (byte*) module: 'opengl32.dll'>
+	<apicall: void 'glColor3ubv' (byte*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:58'!
 glColor3ui: red with: green with: blue
 	"This method was automatically generated."
 	"void glColor3ui(GLuint red, GLuint green, GLuint blue);"
-	<apicall: void 'glColor3ui' (ulong ulong ulong) module: 'opengl32.dll'>
+	<apicall: void 'glColor3ui' (ulong ulong ulong) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:58'!
 glColor3uiv: v
 	"This method was automatically generated."
 	"void glColor3uiv(GLuint* v);"
-	<apicall: void 'glColor3uiv' (ulong*) module: 'opengl32.dll'>
+	<apicall: void 'glColor3uiv' (ulong*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:58'!
 glColor3us: red with: green with: blue
 	"This method was automatically generated."
 	"void glColor3us(GLushort red, GLushort green, GLushort blue);"
-	<apicall: void 'glColor3us' (ushort ushort ushort) module: 'opengl32.dll'>
+	<apicall: void 'glColor3us' (ushort ushort ushort) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:58'!
 glColor3usv: v
 	"This method was automatically generated."
 	"void glColor3usv(GLushort* v);"
-	<apicall: void 'glColor3usv' (ushort*) module: 'opengl32.dll'>
+	<apicall: void 'glColor3usv' (ushort*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:58'!
 glColor4b: red with: green with: blue with: alpha
 	"This method was automatically generated."
 	"void glColor4b(GLbyte red, GLbyte green, GLbyte blue, GLbyte alpha);"
-	<apicall: void 'glColor4b' (byte byte byte byte) module: 'opengl32.dll'>
+	<apicall: void 'glColor4b' (byte byte byte byte) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:58'!
 glColor4bv: v
 	"This method was automatically generated."
 	"void glColor4bv(GLbyte* v);"
-	<apicall: void 'glColor4bv' (byte*) module: 'opengl32.dll'>
+	<apicall: void 'glColor4bv' (byte*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:58'!
 glColor4d: red with: green with: blue with: alpha
 	"This method was automatically generated."
 	"void glColor4d(GLdouble red, GLdouble green, GLdouble blue, GLdouble alpha);"
-	<apicall: void 'glColor4d' (double double double double) module: 'opengl32.dll'>
+	<apicall: void 'glColor4d' (double double double double) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:58'!
 glColor4dv: v
 	"This method was automatically generated."
 	"void glColor4dv(GLdouble* v);"
-	<apicall: void 'glColor4dv' (double*) module: 'opengl32.dll'>
+	<apicall: void 'glColor4dv' (double*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:58'!
 glColor4f: red with: green with: blue with: alpha
 	"This method was automatically generated."
 	"void glColor4f(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha);"
-	<apicall: void 'glColor4f' (float float float float) module: 'opengl32.dll'>
+	<apicall: void 'glColor4f' (float float float float) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:58'!
 glColor4fv: v
 	"This method was automatically generated."
 	"void glColor4fv(GLfloat* v);"
-	<apicall: void 'glColor4fv' (float*) module: 'opengl32.dll'>
+	<apicall: void 'glColor4fv' (float*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:58'!
 glColor4i: red with: green with: blue with: alpha
 	"This method was automatically generated."
 	"void glColor4i(GLint red, GLint green, GLint blue, GLint alpha);"
-	<apicall: void 'glColor4i' (long long long long) module: 'opengl32.dll'>
+	<apicall: void 'glColor4i' (long long long long) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:58'!
 glColor4iv: v
 	"This method was automatically generated."
 	"void glColor4iv(GLint* v);"
-	<apicall: void 'glColor4iv' (long*) module: 'opengl32.dll'>
+	<apicall: void 'glColor4iv' (long*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:58'!
 glColor4s: red with: green with: blue with: alpha
 	"This method was automatically generated."
 	"void glColor4s(GLshort red, GLshort green, GLshort blue, GLshort alpha);"
-	<apicall: void 'glColor4s' (short short short short) module: 'opengl32.dll'>
+	<apicall: void 'glColor4s' (short short short short) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:58'!
 glColor4sv: v
 	"This method was automatically generated."
 	"void glColor4sv(GLshort* v);"
-	<apicall: void 'glColor4sv' (short*) module: 'opengl32.dll'>
+	<apicall: void 'glColor4sv' (short*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:58'!
 glColor4ub: red with: green with: blue with: alpha
 	"This method was automatically generated."
 	"void glColor4ub(GLubyte red, GLubyte green, GLubyte blue, GLubyte alpha);"
-	<apicall: void 'glColor4ub' (byte byte byte byte) module: 'opengl32.dll'>
+	<apicall: void 'glColor4ub' (byte byte byte byte) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:58'!
 glColor4ubv: v
 	"This method was automatically generated."
 	"void glColor4ubv(GLubyte* v);"
-	<apicall: void 'glColor4ubv' (byte*) module: 'opengl32.dll'>
+	<apicall: void 'glColor4ubv' (byte*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:58'!
 glColor4ui: red with: green with: blue with: alpha
 	"This method was automatically generated."
 	"void glColor4ui(GLuint red, GLuint green, GLuint blue, GLuint alpha);"
-	<apicall: void 'glColor4ui' (ulong ulong ulong ulong) module: 'opengl32.dll'>
+	<apicall: void 'glColor4ui' (ulong ulong ulong ulong) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:58'!
 glColor4uiv: v
 	"This method was automatically generated."
 	"void glColor4uiv(GLuint* v);"
-	<apicall: void 'glColor4uiv' (ulong*) module: 'opengl32.dll'>
+	<apicall: void 'glColor4uiv' (ulong*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:58'!
 glColor4us: red with: green with: blue with: alpha
 	"This method was automatically generated."
 	"void glColor4us(GLushort red, GLushort green, GLushort blue, GLushort alpha);"
-	<apicall: void 'glColor4us' (ushort ushort ushort ushort) module: 'opengl32.dll'>
+	<apicall: void 'glColor4us' (ushort ushort ushort ushort) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:58'!
 glColor4usv: v
 	"This method was automatically generated."
 	"void glColor4usv(GLushort* v);"
-	<apicall: void 'glColor4usv' (ushort*) module: 'opengl32.dll'>
+	<apicall: void 'glColor4usv' (ushort*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:58'!
 glColorMask: red with: green with: blue with: alpha
 	"This method was automatically generated."
 	"void glColorMask(GLboolean red, GLboolean green, GLboolean blue, GLboolean alpha);"
-	<apicall: void 'glColorMask' (bool bool bool bool) module: 'opengl32.dll'>
+	<apicall: void 'glColorMask' (bool bool bool bool) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:58'!
 glColorMaterial: face with: mode
 	"This method was automatically generated."
 	"void glColorMaterial(GLenum face, GLenum mode);"
-	<apicall: void 'glColorMaterial' (ulong ulong) module: 'opengl32.dll'>
+	<apicall: void 'glColorMaterial' (ulong ulong) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:58'!
 glColorPointer: size with: type with: stride with: pointer
 	"This method was automatically generated."
 	"void glColorPointer(GLint size, GLenum type, GLsizei stride, GLvoid* pointer);"
-	<apicall: void 'glColorPointer' (long ulong long void*) module: 'opengl32.dll'>
+	<apicall: void 'glColorPointer' (long ulong long void*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:58'!
 glColorPointerEXT: size with: type with: stride with: count with: pointer
 	"This method was automatically generated."
 	"void glColorPointerEXT(GLint size, GLenum type, GLsizei stride, GLsizei count, GLvoid* pointer);"
-	<apicall: void 'glColorPointerEXT' (long ulong long long void*) module: 'opengl32.dll'>
+	<apicall: void 'glColorPointerEXT' (long ulong long long void*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glColorSubTable: target with: start with: count with: format with: type with: data
 	"This method was automatically generated."
 	"void glColorSubTable(GLenum target, GLsizei start, GLsizei count, GLenum format, GLenum type, GLvoid* data);"
-	<apicall: void 'glColorSubTable' (ulong long long ulong ulong void*) module: 'opengl32.dll'>
+	<apicall: void 'glColorSubTable' (ulong long long ulong ulong void*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glColorTable: target with: internalformat with: width with: format with: type with: table
 	"This method was automatically generated."
 	"void glColorTable(GLenum target, GLenum internalformat, GLsizei width, GLenum format, GLenum type, GLvoid* table);"
-	<apicall: void 'glColorTable' (ulong ulong long ulong ulong void*) module: 'opengl32.dll'>
+	<apicall: void 'glColorTable' (ulong ulong long ulong ulong void*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glColorTableParameterfv: target with: pname with: params
 	"This method was automatically generated."
 	"void glColorTableParameterfv(GLenum target, GLenum pname, GLfloat* params);"
-	<apicall: void 'glColorTableParameterfv' (ulong ulong float*) module: 'opengl32.dll'>
+	<apicall: void 'glColorTableParameterfv' (ulong ulong float*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glColorTableParameteriv: target with: pname with: params
 	"This method was automatically generated."
 	"void glColorTableParameteriv(GLenum target, GLenum pname, GLint* params);"
-	<apicall: void 'glColorTableParameteriv' (ulong ulong long*) module: 'opengl32.dll'>
+	<apicall: void 'glColorTableParameteriv' (ulong ulong long*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'GL_ARB_shader_objects' stamp: 'daf 4/1/2007 20:24'!
@@ -4214,112 +4220,112 @@ glCompressedTexSubImage3DARB: target with: level with: xoffset with: yoffset wit
 glConvolutionFilter1D: target with: internalformat with: width with: format with: type with: image
 	"This method was automatically generated."
 	"void glConvolutionFilter1D(GLenum target, GLenum internalformat, GLsizei width, GLenum format, GLenum type, GLvoid* image);"
-	<apicall: void 'glConvolutionFilter1D' (ulong ulong long ulong ulong void*) module: 'opengl32.dll'>
+	<apicall: void 'glConvolutionFilter1D' (ulong ulong long ulong ulong void*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glConvolutionFilter2D: target with: internalformat with: width with: height with: format with: type with: image
 	"This method was automatically generated."
 	"void glConvolutionFilter2D(GLenum target, GLenum internalformat, GLsizei width, GLsizei height, GLenum format, GLenum type, GLvoid* image);"
-	<apicall: void 'glConvolutionFilter2D' (ulong ulong long long ulong ulong void*) module: 'opengl32.dll'>
+	<apicall: void 'glConvolutionFilter2D' (ulong ulong long long ulong ulong void*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glConvolutionParameterf: target with: pname with: params
 	"This method was automatically generated."
 	"void glConvolutionParameterf(GLenum target, GLenum pname, GLfloat params);"
-	<apicall: void 'glConvolutionParameterf' (ulong ulong float) module: 'opengl32.dll'>
+	<apicall: void 'glConvolutionParameterf' (ulong ulong float) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glConvolutionParameterfv: target with: pname with: params
 	"This method was automatically generated."
 	"void glConvolutionParameterfv(GLenum target, GLenum pname, GLfloat* params);"
-	<apicall: void 'glConvolutionParameterfv' (ulong ulong float*) module: 'opengl32.dll'>
+	<apicall: void 'glConvolutionParameterfv' (ulong ulong float*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glConvolutionParameteri: target with: pname with: params
 	"This method was automatically generated."
 	"void glConvolutionParameteri(GLenum target, GLenum pname, GLint params);"
-	<apicall: void 'glConvolutionParameteri' (ulong ulong long) module: 'opengl32.dll'>
+	<apicall: void 'glConvolutionParameteri' (ulong ulong long) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glConvolutionParameteriv: target with: pname with: params
 	"This method was automatically generated."
 	"void glConvolutionParameteriv(GLenum target, GLenum pname, GLint* params);"
-	<apicall: void 'glConvolutionParameteriv' (ulong ulong long*) module: 'opengl32.dll'>
+	<apicall: void 'glConvolutionParameteriv' (ulong ulong long*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glCopyColorSubTable: target with: start with: x with: y with: width
 	"This method was automatically generated."
 	"void glCopyColorSubTable(GLenum target, GLsizei start, GLint x, GLint y, GLsizei width);"
-	<apicall: void 'glCopyColorSubTable' (ulong long long long long) module: 'opengl32.dll'>
+	<apicall: void 'glCopyColorSubTable' (ulong long long long long) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glCopyColorTable: target with: internalformat with: x with: y with: width
 	"This method was automatically generated."
 	"void glCopyColorTable(GLenum target, GLenum internalformat, GLint x, GLint y, GLsizei width);"
-	<apicall: void 'glCopyColorTable' (ulong ulong long long long) module: 'opengl32.dll'>
+	<apicall: void 'glCopyColorTable' (ulong ulong long long long) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glCopyConvolutionFilter1D: target with: internalformat with: x with: y with: width
 	"This method was automatically generated."
 	"void glCopyConvolutionFilter1D(GLenum target, GLenum internalformat, GLint x, GLint y, GLsizei width);"
-	<apicall: void 'glCopyConvolutionFilter1D' (ulong ulong long long long) module: 'opengl32.dll'>
+	<apicall: void 'glCopyConvolutionFilter1D' (ulong ulong long long long) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glCopyConvolutionFilter2D: target with: internalformat with: x with: y with: width with: height
 	"This method was automatically generated."
 	"void glCopyConvolutionFilter2D(GLenum target, GLenum internalformat, GLint x, GLint y, GLsizei width, GLsizei height);"
-	<apicall: void 'glCopyConvolutionFilter2D' (ulong ulong long long long long) module: 'opengl32.dll'>
+	<apicall: void 'glCopyConvolutionFilter2D' (ulong ulong long long long long) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glCopyPixels: x with: y with: width with: height with: type
 	"This method was automatically generated."
 	"void glCopyPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum type);"
-	<apicall: void 'glCopyPixels' (long long long long ulong) module: 'opengl32.dll'>
+	<apicall: void 'glCopyPixels' (long long long long ulong) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glCopyTexImage1D: target with: level with: internalformat with: x with: y with: width with: border
 	"This method was automatically generated."
 	"void glCopyTexImage1D(GLenum target, GLint level, GLenum internalformat, GLint x, GLint y, GLsizei width, GLint border);"
-	<apicall: void 'glCopyTexImage1D' (ulong long ulong long long long long) module: 'opengl32.dll'>
+	<apicall: void 'glCopyTexImage1D' (ulong long ulong long long long long) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glCopyTexImage2D: target with: level with: internalformat with: x with: y with: width with: height with: border
 	"This method was automatically generated."
 	"void glCopyTexImage2D(GLenum target, GLint level, GLenum internalformat, GLint x, GLint y, GLsizei width, GLsizei height, GLint border);"
-	<apicall: void 'glCopyTexImage2D' (ulong long ulong long long long long long) module: 'opengl32.dll'>
+	<apicall: void 'glCopyTexImage2D' (ulong long ulong long long long long long) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glCopyTexSubImage1D: target with: level with: xoffset with: x with: y with: width
 	"This method was automatically generated."
 	"void glCopyTexSubImage1D(GLenum target, GLint level, GLint xoffset, GLint x, GLint y, GLsizei width);"
-	<apicall: void 'glCopyTexSubImage1D' (ulong long long long long long) module: 'opengl32.dll'>
+	<apicall: void 'glCopyTexSubImage1D' (ulong long long long long long) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glCopyTexSubImage2D: target with: level with: xoffset with: yoffset with: x with: y with: width with: height
 	"This method was automatically generated."
 	"void glCopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height);"
-	<apicall: void 'glCopyTexSubImage2D' (ulong long long long long long long long) module: 'opengl32.dll'>
+	<apicall: void 'glCopyTexSubImage2D' (ulong long long long long long long long) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glCopyTexSubImage3D: target with: level with: xoffset with: yoffset with: zoffset with: x with: y with: width with: height
 	"This method was automatically generated."
 	"void glCopyTexSubImage3D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height);"
-	<apicall: void 'glCopyTexSubImage3D' (ulong long long long long long long long long) module: 'opengl32.dll'>
+	<apicall: void 'glCopyTexSubImage3D' (ulong long long long long long long long long) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'GL_ARB_shader_objects' stamp: 'daf 4/1/2007 20:24'!
@@ -4336,7 +4342,7 @@ glCreateShaderObjectARB: shaderType
 glCullFace: mode
 	"This method was automatically generated."
 	"void glCullFace(GLenum mode);"
-	<apicall: void 'glCullFace' (ulong) module: 'opengl32.dll'>
+	<apicall: void 'glCullFace' (ulong) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'GL_ARB_vertex_buffer_object' stamp: 'ar 4/5/2006 21:55'!
@@ -4353,7 +4359,7 @@ glDeleteFramebuffersEXT: n with: buffers
 glDeleteLists: list with: range
 	"This method was automatically generated."
 	"void glDeleteLists(GLuint list, GLsizei range);"
-	<apicall: void 'glDeleteLists' (ulong long) module: 'opengl32.dll'>
+	<apicall: void 'glDeleteLists' (ulong long) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'GL_ARB_shader_objects' stamp: 'daf 4/1/2007 20:24'!
@@ -4375,35 +4381,35 @@ glDeleteRenderbuffersEXT: n with: buffers
 glDeleteTextures: n with: textures
 	"This method was automatically generated."
 	"void glDeleteTextures(GLsizei n, GLuint* textures);"
-	<apicall: void 'glDeleteTextures' (long ulong*) module: 'opengl32.dll'>
+	<apicall: void 'glDeleteTextures' (long ulong*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glDeleteTexturesEXT: n with: textures
 	"This method was automatically generated."
 	"void glDeleteTexturesEXT(GLsizei n, GLuint* textures);"
-	<apicall: void 'glDeleteTexturesEXT' (long ulong*) module: 'opengl32.dll'>
+	<apicall: void 'glDeleteTexturesEXT' (long ulong*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glDepthFunc: func
 	"This method was automatically generated."
 	"void glDepthFunc(GLenum func);"
-	<apicall: void 'glDepthFunc' (ulong) module: 'opengl32.dll'>
+	<apicall: void 'glDepthFunc' (ulong) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glDepthMask: flag
 	"This method was automatically generated."
 	"void glDepthMask(GLboolean flag);"
-	<apicall: void 'glDepthMask' (bool) module: 'opengl32.dll'>
+	<apicall: void 'glDepthMask' (bool) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glDepthRange: zNear with: zFar
 	"This method was automatically generated."
 	"void glDepthRange(GLclampd zNear, GLclampd zFar);"
-	<apicall: void 'glDepthRange' (double double) module: 'opengl32.dll'>
+	<apicall: void 'glDepthRange' (double double) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'GL_ARB_shader_objects' stamp: 'daf 4/1/2007 20:24'!
@@ -4415,14 +4421,14 @@ glDetachObjectARB: containerObj with: attachedObj
 glDisable: cap
 	"This method was automatically generated."
 	"void glDisable(GLenum cap);"
-	<apicall: void 'glDisable' (ulong) module: 'opengl32.dll'>
+	<apicall: void 'glDisable' (ulong) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glDisableClientState: array
 	"This method was automatically generated."
 	"void glDisableClientState(GLenum array);"
-	<apicall: void 'glDisableClientState' (ulong) module: 'opengl32.dll'>
+	<apicall: void 'glDisableClientState' (ulong) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'GL_ARB_vertex_program' stamp: 'ar 4/5/2006 21:55'!
@@ -4434,84 +4440,84 @@ glDisableVertexAttribArrayARB: index
 glDrawArrays: mode with: first with: count
 	"This method was automatically generated."
 	"void glDrawArrays(GLenum mode, GLint first, GLsizei count);"
-	<apicall: void 'glDrawArrays' (ulong long long) module: 'opengl32.dll'>
+	<apicall: void 'glDrawArrays' (ulong long long) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glDrawArraysEXT: mode with: first with: count
 	"This method was automatically generated."
 	"void glDrawArraysEXT(GLenum mode, GLint first, GLsizei count);"
-	<apicall: void 'glDrawArraysEXT' (ulong long long) module: 'opengl32.dll'>
+	<apicall: void 'glDrawArraysEXT' (ulong long long) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glDrawBuffer: mode
 	"This method was automatically generated."
 	"void glDrawBuffer(GLenum mode);"
-	<apicall: void 'glDrawBuffer' (ulong) module: 'opengl32.dll'>
+	<apicall: void 'glDrawBuffer' (ulong) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glDrawElements: mode with: count with: type with: indices
 	"This method was automatically generated."
 	"void glDrawElements(GLenum mode, GLsizei count, GLenum type, GLvoid* indices);"
-	<apicall: void 'glDrawElements' (ulong long ulong void*) module: 'opengl32.dll'>
+	<apicall: void 'glDrawElements' (ulong long ulong void*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glDrawPixels: width with: height with: format with: type with: pixels
 	"This method was automatically generated."
 	"void glDrawPixels(GLsizei width, GLsizei height, GLenum format, GLenum type, GLvoid* pixels);"
-	<apicall: void 'glDrawPixels' (long long ulong ulong void*) module: 'opengl32.dll'>
+	<apicall: void 'glDrawPixels' (long long ulong ulong void*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glDrawRangeElements: mode with: start with: end with: count with: type with: indices
 	"This method was automatically generated."
 	"void glDrawRangeElements(GLenum mode, GLuint start, GLuint end, GLsizei count, GLenum type, GLvoid* indices);"
-	<apicall: void 'glDrawRangeElements' (ulong ulong ulong long ulong void*) module: 'opengl32.dll'>
+	<apicall: void 'glDrawRangeElements' (ulong ulong ulong long ulong void*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glEdgeFlag: flag
 	"This method was automatically generated."
 	"void glEdgeFlag(GLboolean flag);"
-	<apicall: void 'glEdgeFlag' (bool) module: 'opengl32.dll'>
+	<apicall: void 'glEdgeFlag' (bool) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glEdgeFlagPointer: stride with: pointer
 	"This method was automatically generated."
 	"void glEdgeFlagPointer(GLsizei stride, GLboolean* pointer);"
-	<apicall: void 'glEdgeFlagPointer' (long ulong*) module: 'opengl32.dll'>
+	<apicall: void 'glEdgeFlagPointer' (long ulong*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glEdgeFlagPointerEXT: stride with: count with: pointer
 	"This method was automatically generated."
 	"void glEdgeFlagPointerEXT(GLsizei stride, GLsizei count, GLboolean* pointer);"
-	<apicall: void 'glEdgeFlagPointerEXT' (long long ulong*) module: 'opengl32.dll'>
+	<apicall: void 'glEdgeFlagPointerEXT' (long long ulong*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glEdgeFlagv: flag
 	"This method was automatically generated."
 	"void glEdgeFlagv(GLboolean* flag);"
-	<apicall: void 'glEdgeFlagv' (ulong*) module: 'opengl32.dll'>
+	<apicall: void 'glEdgeFlagv' (ulong*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glEnable: cap
 	"This method was automatically generated."
 	"void glEnable(GLenum cap);"
-	<apicall: void 'glEnable' (ulong) module: 'opengl32.dll'>
+	<apicall: void 'glEnable' (ulong) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glEnableClientState: array
 	"This method was automatically generated."
 	"void glEnableClientState(GLenum array);"
-	<apicall: void 'glEnableClientState' (ulong) module: 'opengl32.dll'>
+	<apicall: void 'glEnableClientState' (ulong) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'GL_ARB_vertex_program' stamp: 'ar 4/5/2006 21:55'!
@@ -4529,91 +4535,91 @@ glEnd
 glEndList
 	"This method was automatically generated."
 	"void glEndList();"
-	<apicall: void 'glEndList' (void) module: 'opengl32.dll'>
+	<apicall: void 'glEndList' (void) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glEvalCoord1d: u
 	"This method was automatically generated."
 	"void glEvalCoord1d(GLdouble u);"
-	<apicall: void 'glEvalCoord1d' (double) module: 'opengl32.dll'>
+	<apicall: void 'glEvalCoord1d' (double) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glEvalCoord1dv: u
 	"This method was automatically generated."
 	"void glEvalCoord1dv(GLdouble* u);"
-	<apicall: void 'glEvalCoord1dv' (double*) module: 'opengl32.dll'>
+	<apicall: void 'glEvalCoord1dv' (double*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glEvalCoord1f: u
 	"This method was automatically generated."
 	"void glEvalCoord1f(GLfloat u);"
-	<apicall: void 'glEvalCoord1f' (float) module: 'opengl32.dll'>
+	<apicall: void 'glEvalCoord1f' (float) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glEvalCoord1fv: u
 	"This method was automatically generated."
 	"void glEvalCoord1fv(GLfloat* u);"
-	<apicall: void 'glEvalCoord1fv' (float*) module: 'opengl32.dll'>
+	<apicall: void 'glEvalCoord1fv' (float*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glEvalCoord2d: u with: v
 	"This method was automatically generated."
 	"void glEvalCoord2d(GLdouble u, GLdouble v);"
-	<apicall: void 'glEvalCoord2d' (double double) module: 'opengl32.dll'>
+	<apicall: void 'glEvalCoord2d' (double double) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glEvalCoord2dv: u
 	"This method was automatically generated."
 	"void glEvalCoord2dv(GLdouble* u);"
-	<apicall: void 'glEvalCoord2dv' (double*) module: 'opengl32.dll'>
+	<apicall: void 'glEvalCoord2dv' (double*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glEvalCoord2f: u with: v
 	"This method was automatically generated."
 	"void glEvalCoord2f(GLfloat u, GLfloat v);"
-	<apicall: void 'glEvalCoord2f' (float float) module: 'opengl32.dll'>
+	<apicall: void 'glEvalCoord2f' (float float) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glEvalCoord2fv: u
 	"This method was automatically generated."
 	"void glEvalCoord2fv(GLfloat* u);"
-	<apicall: void 'glEvalCoord2fv' (float*) module: 'opengl32.dll'>
+	<apicall: void 'glEvalCoord2fv' (float*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glEvalMesh1: mode with: i1 with: i2
 	"This method was automatically generated."
 	"void glEvalMesh1(GLenum mode, GLint i1, GLint i2);"
-	<apicall: void 'glEvalMesh1' (ulong long long) module: 'opengl32.dll'>
+	<apicall: void 'glEvalMesh1' (ulong long long) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glEvalMesh2: mode with: i1 with: i2 with: j1 with: j2
 	"This method was automatically generated."
 	"void glEvalMesh2(GLenum mode, GLint i1, GLint i2, GLint j1, GLint j2);"
-	<apicall: void 'glEvalMesh2' (ulong long long long long) module: 'opengl32.dll'>
+	<apicall: void 'glEvalMesh2' (ulong long long long long) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glEvalPoint1: i
 	"This method was automatically generated."
 	"void glEvalPoint1(GLint i);"
-	<apicall: void 'glEvalPoint1' (long) module: 'opengl32.dll'>
+	<apicall: void 'glEvalPoint1' (long) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glEvalPoint2: i with: j
 	"This method was automatically generated."
 	"void glEvalPoint2(GLint i, GLint j);"
-	<apicall: void 'glEvalPoint2' (long long) module: 'opengl32.dll'>
+	<apicall: void 'glEvalPoint2' (long long) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'extensions' stamp: 'ar 1/4/2003 00:50'!
@@ -4635,49 +4641,49 @@ glExtModule
 glFeedbackBuffer: size with: type with: buffer
 	"This method was automatically generated."
 	"void glFeedbackBuffer(GLsizei size, GLenum type, GLfloat* buffer);"
-	<apicall: void 'glFeedbackBuffer' (long ulong float*) module: 'opengl32.dll'>
+	<apicall: void 'glFeedbackBuffer' (long ulong float*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glFinish
 	"This method was automatically generated."
 	"void glFinish();"
-	<apicall: void 'glFinish' (void) module: 'opengl32.dll'>
+	<apicall: void 'glFinish' (void) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glFlush
 	"This method was automatically generated."
 	"void glFlush();"
-	<apicall: void 'glFlush' (void) module: 'opengl32.dll'>
+	<apicall: void 'glFlush' (void) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glFogf: pname with: param
 	"This method was automatically generated."
 	"void glFogf(GLenum pname, GLfloat param);"
-	<apicall: void 'glFogf' (ulong float) module: 'opengl32.dll'>
+	<apicall: void 'glFogf' (ulong float) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glFogfv: pname with: params
 	"This method was automatically generated."
 	"void glFogfv(GLenum pname, GLfloat* params);"
-	<apicall: void 'glFogfv' (ulong float*) module: 'opengl32.dll'>
+	<apicall: void 'glFogfv' (ulong float*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glFogi: pname with: param
 	"This method was automatically generated."
 	"void glFogi(GLenum pname, GLint param);"
-	<apicall: void 'glFogi' (ulong long) module: 'opengl32.dll'>
+	<apicall: void 'glFogi' (ulong long) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glFogiv: pname with: params
 	"This method was automatically generated."
 	"void glFogiv(GLenum pname, GLint* params);"
-	<apicall: void 'glFogiv' (ulong long*) module: 'opengl32.dll'>
+	<apicall: void 'glFogiv' (ulong long*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'GL_EXT_framebuffer_object' stamp: 'daf 4/1/2007 20:24'!
@@ -4704,14 +4710,14 @@ glFramebufferTexture3DEXT: target with: attachment with: textarget with: texture
 glFrontFace: mode
 	"This method was automatically generated."
 	"void glFrontFace(GLenum mode);"
-	<apicall: void 'glFrontFace' (ulong) module: 'opengl32.dll'>
+	<apicall: void 'glFrontFace' (ulong) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glFrustum: left with: right with: bottom with: top with: zNear with: zFar
 	"This method was automatically generated."
 	"void glFrustum(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble zNear, GLdouble zFar);"
-	<apicall: void 'glFrustum' (double double double double double double) module: 'opengl32.dll'>
+	<apicall: void 'glFrustum' (double double double double double double) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'GL_ARB_vertex_buffer_object' stamp: 'ar 4/5/2006 21:55'!
@@ -4728,7 +4734,7 @@ glGenFramebuffersEXT: n with: buffers
 glGenLists: range
 	"This method was automatically generated."
 	"GLuint glGenLists(GLsizei range);"
-	<apicall: ulong 'glGenLists' (long) module: 'opengl32.dll'>
+	<apicall: ulong 'glGenLists' (long) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'GL_ARB_vertex_program' stamp: 'ar 4/5/2006 21:55'!
@@ -4745,14 +4751,14 @@ glGenRenderbuffersEXT: n with: buffers
 glGenTextures: n with: textures
 	"This method was automatically generated."
 	"void glGenTextures(GLsizei n, GLuint* textures);"
-	<apicall: void 'glGenTextures' (long ulong*) module: 'opengl32.dll'>
+	<apicall: void 'glGenTextures' (long ulong*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glGenTexturesEXT: n with: textures
 	"This method was automatically generated."
 	"void glGenTexturesEXT(GLsizei n, GLuint* textures);"
-	<apicall: void 'glGenTexturesEXT' (long ulong*) module: 'opengl32.dll'>
+	<apicall: void 'glGenTexturesEXT' (long ulong*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'GL_EXT_framebuffer_object' stamp: 'daf 4/1/2007 20:24'!
@@ -4791,7 +4797,7 @@ glGetBoolean: param
 glGetBooleanv: pname with: params
 	"This method was automatically generated."
 	"void glGetBooleanv(GLenum pname, GLboolean* params);"
-	<apicall: void 'glGetBooleanv' (ulong ulong*) module: 'opengl32.dll'>
+	<apicall: void 'glGetBooleanv' (ulong ulong*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'GL_ARB_vertex_buffer_object' stamp: 'ar 4/5/2006 21:55'!
@@ -4813,28 +4819,28 @@ glGetBufferSubDataARB: target with: offset with: size with: data
 glGetClipPlane: plane with: equation
 	"This method was automatically generated."
 	"void glGetClipPlane(GLenum plane, GLdouble* equation);"
-	<apicall: void 'glGetClipPlane' (ulong double*) module: 'opengl32.dll'>
+	<apicall: void 'glGetClipPlane' (ulong double*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glGetColorTable: target with: format with: type with: table
 	"This method was automatically generated."
 	"void glGetColorTable(GLenum target, GLenum format, GLenum type, GLvoid* table);"
-	<apicall: void 'glGetColorTable' (ulong ulong ulong void*) module: 'opengl32.dll'>
+	<apicall: void 'glGetColorTable' (ulong ulong ulong void*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glGetColorTableParameterfv: target with: pname with: params
 	"This method was automatically generated."
 	"void glGetColorTableParameterfv(GLenum target, GLenum pname, GLfloat* params);"
-	<apicall: void 'glGetColorTableParameterfv' (ulong ulong float*) module: 'opengl32.dll'>
+	<apicall: void 'glGetColorTableParameterfv' (ulong ulong float*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glGetColorTableParameteriv: target with: pname with: params
 	"This method was automatically generated."
 	"void glGetColorTableParameteriv(GLenum target, GLenum pname, GLint* params);"
-	<apicall: void 'glGetColorTableParameteriv' (ulong ulong long*) module: 'opengl32.dll'>
+	<apicall: void 'glGetColorTableParameteriv' (ulong ulong long*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'GL_ARB_texture_compression' stamp: 'ar 4/5/2006 21:55'!
@@ -4846,35 +4852,35 @@ glGetCompressedTexImageARB: target with: lod with: img
 glGetConvolutionFilter: target with: format with: type with: image
 	"This method was automatically generated."
 	"void glGetConvolutionFilter(GLenum target, GLenum format, GLenum type, GLvoid* image);"
-	<apicall: void 'glGetConvolutionFilter' (ulong ulong ulong void*) module: 'opengl32.dll'>
+	<apicall: void 'glGetConvolutionFilter' (ulong ulong ulong void*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glGetConvolutionParameterfv: target with: pname with: params
 	"This method was automatically generated."
 	"void glGetConvolutionParameterfv(GLenum target, GLenum pname, GLfloat* params);"
-	<apicall: void 'glGetConvolutionParameterfv' (ulong ulong float*) module: 'opengl32.dll'>
+	<apicall: void 'glGetConvolutionParameterfv' (ulong ulong float*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glGetConvolutionParameteriv: target with: pname with: params
 	"This method was automatically generated."
 	"void glGetConvolutionParameteriv(GLenum target, GLenum pname, GLint* params);"
-	<apicall: void 'glGetConvolutionParameteriv' (ulong ulong long*) module: 'opengl32.dll'>
+	<apicall: void 'glGetConvolutionParameteriv' (ulong ulong long*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glGetDoublev: pname with: params
 	"This method was automatically generated."
 	"void glGetDoublev(GLenum pname, GLdouble* params);"
-	<apicall: void 'glGetDoublev' (ulong double*) module: 'opengl32.dll'>
+	<apicall: void 'glGetDoublev' (ulong double*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glGetError
 	"This method was automatically generated."
 	"GLenum glGetError();"
-	<apicall: ulong 'glGetError' (void) module: 'opengl32.dll'>
+	<apicall: ulong 'glGetError' (void) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'accessing' stamp: 'ar 6/30/2002 23:40'!
@@ -4888,7 +4894,7 @@ glGetFloat: param
 glGetFloatv: pname with: params
 	"This method was automatically generated."
 	"void glGetFloatv(GLenum pname, GLfloat* params);"
-	<apicall: void 'glGetFloatv' (ulong float*) module: 'opengl32.dll'>
+	<apicall: void 'glGetFloatv' (ulong float*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'GL_EXT_framebuffer_object' stamp: 'daf 4/1/2007 20:24'!
@@ -4905,21 +4911,21 @@ glGetHandleARB: pname
 glGetHistogram: target with: reset with: format with: type with: values
 	"This method was automatically generated."
 	"void glGetHistogram(GLenum target, GLboolean reset, GLenum format, GLenum type, GLvoid* values);"
-	<apicall: void 'glGetHistogram' (ulong bool ulong ulong void*) module: 'opengl32.dll'>
+	<apicall: void 'glGetHistogram' (ulong bool ulong ulong void*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glGetHistogramParameterfv: target with: pname with: params
 	"This method was automatically generated."
 	"void glGetHistogramParameterfv(GLenum target, GLenum pname, GLfloat* params);"
-	<apicall: void 'glGetHistogramParameterfv' (ulong ulong float*) module: 'opengl32.dll'>
+	<apicall: void 'glGetHistogramParameterfv' (ulong ulong float*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glGetHistogramParameteriv: target with: pname with: params
 	"This method was automatically generated."
 	"void glGetHistogramParameteriv(GLenum target, GLenum pname, GLint* params);"
-	<apicall: void 'glGetHistogramParameteriv' (ulong ulong long*) module: 'opengl32.dll'>
+	<apicall: void 'glGetHistogramParameteriv' (ulong ulong long*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'GL_ARB_shader_objects' stamp: 'daf 4/1/2007 20:24'!
@@ -4938,77 +4944,77 @@ glGetInteger: param
 glGetIntegerv: pname with: params
 	"This method was automatically generated."
 	"void glGetIntegerv(GLenum pname, GLint* params);"
-	<apicall: void 'glGetIntegerv' (ulong long*) module: 'opengl32.dll'>
+	<apicall: void 'glGetIntegerv' (ulong long*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glGetLightfv: light with: pname with: params
 	"This method was automatically generated."
 	"void glGetLightfv(GLenum light, GLenum pname, GLfloat* params);"
-	<apicall: void 'glGetLightfv' (ulong ulong float*) module: 'opengl32.dll'>
+	<apicall: void 'glGetLightfv' (ulong ulong float*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glGetLightiv: light with: pname with: params
 	"This method was automatically generated."
 	"void glGetLightiv(GLenum light, GLenum pname, GLint* params);"
-	<apicall: void 'glGetLightiv' (ulong ulong long*) module: 'opengl32.dll'>
+	<apicall: void 'glGetLightiv' (ulong ulong long*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glGetMapdv: target with: query with: v
 	"This method was automatically generated."
 	"void glGetMapdv(GLenum target, GLenum query, GLdouble* v);"
-	<apicall: void 'glGetMapdv' (ulong ulong double*) module: 'opengl32.dll'>
+	<apicall: void 'glGetMapdv' (ulong ulong double*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glGetMapfv: target with: query with: v
 	"This method was automatically generated."
 	"void glGetMapfv(GLenum target, GLenum query, GLfloat* v);"
-	<apicall: void 'glGetMapfv' (ulong ulong float*) module: 'opengl32.dll'>
+	<apicall: void 'glGetMapfv' (ulong ulong float*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glGetMapiv: target with: query with: v
 	"This method was automatically generated."
 	"void glGetMapiv(GLenum target, GLenum query, GLint* v);"
-	<apicall: void 'glGetMapiv' (ulong ulong long*) module: 'opengl32.dll'>
+	<apicall: void 'glGetMapiv' (ulong ulong long*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glGetMaterialfv: face with: pname with: params
 	"This method was automatically generated."
 	"void glGetMaterialfv(GLenum face, GLenum pname, GLfloat* params);"
-	<apicall: void 'glGetMaterialfv' (ulong ulong float*) module: 'opengl32.dll'>
+	<apicall: void 'glGetMaterialfv' (ulong ulong float*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glGetMaterialiv: face with: pname with: params
 	"This method was automatically generated."
 	"void glGetMaterialiv(GLenum face, GLenum pname, GLint* params);"
-	<apicall: void 'glGetMaterialiv' (ulong ulong long*) module: 'opengl32.dll'>
+	<apicall: void 'glGetMaterialiv' (ulong ulong long*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glGetMinmax: target with: reset with: format with: type with: values
 	"This method was automatically generated."
 	"void glGetMinmax(GLenum target, GLboolean reset, GLenum format, GLenum type, GLvoid* values);"
-	<apicall: void 'glGetMinmax' (ulong bool ulong ulong void*) module: 'opengl32.dll'>
+	<apicall: void 'glGetMinmax' (ulong bool ulong ulong void*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glGetMinmaxParameterfv: target with: pname with: params
 	"This method was automatically generated."
 	"void glGetMinmaxParameterfv(GLenum target, GLenum pname, GLfloat* params);"
-	<apicall: void 'glGetMinmaxParameterfv' (ulong ulong float*) module: 'opengl32.dll'>
+	<apicall: void 'glGetMinmaxParameterfv' (ulong ulong float*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glGetMinmaxParameteriv: target with: pname with: params
 	"This method was automatically generated."
 	"void glGetMinmaxParameteriv(GLenum target, GLenum pname, GLint* params);"
-	<apicall: void 'glGetMinmaxParameteriv' (ulong ulong long*) module: 'opengl32.dll'>
+	<apicall: void 'glGetMinmaxParameteriv' (ulong ulong long*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'GL_ARB_shader_objects' stamp: 'daf 4/1/2007 20:24'!
@@ -5025,42 +5031,42 @@ glGetObjectParameterivARB: obj with: pname with: params
 glGetPixelMapfv: map with: values
 	"This method was automatically generated."
 	"void glGetPixelMapfv(GLenum map, GLfloat* values);"
-	<apicall: void 'glGetPixelMapfv' (ulong float*) module: 'opengl32.dll'>
+	<apicall: void 'glGetPixelMapfv' (ulong float*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glGetPixelMapuiv: map with: values
 	"This method was automatically generated."
 	"void glGetPixelMapuiv(GLenum map, GLuint* values);"
-	<apicall: void 'glGetPixelMapuiv' (ulong ulong*) module: 'opengl32.dll'>
+	<apicall: void 'glGetPixelMapuiv' (ulong ulong*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glGetPixelMapusv: map with: values
 	"This method was automatically generated."
 	"void glGetPixelMapusv(GLenum map, GLushort* values);"
-	<apicall: void 'glGetPixelMapusv' (ulong ushort*) module: 'opengl32.dll'>
+	<apicall: void 'glGetPixelMapusv' (ulong ushort*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glGetPointerv: pname with: params
 	"This method was automatically generated."
 	"void glGetPointerv(GLenum pname, GLvoid** params);"
-	<apicall: void 'glGetPointerv' (ulong void*) module: 'opengl32.dll'>
+	<apicall: void 'glGetPointerv' (ulong void*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glGetPointervEXT: pname with: params
 	"This method was automatically generated."
 	"void glGetPointervEXT(GLenum pname, GLvoid** params);"
-	<apicall: void 'glGetPointervEXT' (ulong void*) module: 'opengl32.dll'>
+	<apicall: void 'glGetPointervEXT' (ulong void*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glGetPolygonStipple: mask
 	"This method was automatically generated."
 	"void glGetPolygonStipple(GLubyte* mask);"
-	<apicall: void 'glGetPolygonStipple' (byte*) module: 'opengl32.dll'>
+	<apicall: void 'glGetPolygonStipple' (byte*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'GL_ARB_vertex_program' stamp: 'ar 4/5/2006 21:55'!
@@ -5102,7 +5108,7 @@ glGetRenderbufferParameterivEXT: target with: pnames with: params
 glGetSeparableFilter: target with: format with: type with: row with: column with: span
 	"This method was automatically generated."
 	"void glGetSeparableFilter(GLenum target, GLenum format, GLenum type, GLvoid* row, GLvoid* column, GLvoid* span);"
-	<apicall: void 'glGetSeparableFilter' (ulong ulong ulong void* void* void*) module: 'opengl32.dll'>
+	<apicall: void 'glGetSeparableFilter' (ulong ulong ulong void* void* void*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'GL_ARB_shader_objects' stamp: 'daf 4/1/2007 20:24'!
@@ -5114,49 +5120,49 @@ glGetShaderSourceARB: obj with: maxLength with: length with: source
 glGetString: name
 	"This method was automatically generated."
 	"GLubyte* glGetString(GLenum name);"
-	<apicall: byte* 'glGetString' (ulong) module: 'opengl32.dll'>
+	<apicall: byte* 'glGetString' (ulong) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glGetTexEnvfv: target with: pname with: params
 	"This method was automatically generated."
 	"void glGetTexEnvfv(GLenum target, GLenum pname, GLfloat* params);"
-	<apicall: void 'glGetTexEnvfv' (ulong ulong float*) module: 'opengl32.dll'>
+	<apicall: void 'glGetTexEnvfv' (ulong ulong float*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glGetTexEnviv: target with: pname with: params
 	"This method was automatically generated."
 	"void glGetTexEnviv(GLenum target, GLenum pname, GLint* params);"
-	<apicall: void 'glGetTexEnviv' (ulong ulong long*) module: 'opengl32.dll'>
+	<apicall: void 'glGetTexEnviv' (ulong ulong long*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glGetTexGendv: coord with: pname with: params
 	"This method was automatically generated."
 	"void glGetTexGendv(GLenum coord, GLenum pname, GLdouble* params);"
-	<apicall: void 'glGetTexGendv' (ulong ulong double*) module: 'opengl32.dll'>
+	<apicall: void 'glGetTexGendv' (ulong ulong double*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glGetTexGenfv: coord with: pname with: params
 	"This method was automatically generated."
 	"void glGetTexGenfv(GLenum coord, GLenum pname, GLfloat* params);"
-	<apicall: void 'glGetTexGenfv' (ulong ulong float*) module: 'opengl32.dll'>
+	<apicall: void 'glGetTexGenfv' (ulong ulong float*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glGetTexGeniv: coord with: pname with: params
 	"This method was automatically generated."
 	"void glGetTexGeniv(GLenum coord, GLenum pname, GLint* params);"
-	<apicall: void 'glGetTexGeniv' (ulong ulong long*) module: 'opengl32.dll'>
+	<apicall: void 'glGetTexGeniv' (ulong ulong long*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glGetTexImage: target with: level with: format with: type with: pixels
 	"This method was automatically generated."
 	"void glGetTexImage(GLenum target, GLint level, GLenum format, GLenum type, GLvoid* pixels);"
-	<apicall: void 'glGetTexImage' (ulong long ulong ulong void*) module: 'opengl32.dll'>
+	<apicall: void 'glGetTexImage' (ulong long ulong ulong void*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'accessing' stamp: 'ar 4/26/2003 03:07'!
@@ -5170,7 +5176,7 @@ glGetTexLevelParameterf: aTarget with: level with: param
 glGetTexLevelParameterfv: target with: level with: pname with: params
 	"This method was automatically generated."
 	"void glGetTexLevelParameterfv(GLenum target, GLint level, GLenum pname, GLfloat* params);"
-	<apicall: void 'glGetTexLevelParameterfv' (ulong long ulong float*) module: 'opengl32.dll'>
+	<apicall: void 'glGetTexLevelParameterfv' (ulong long ulong float*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'accessing' stamp: 'ar 4/26/2003 03:07'!
@@ -5184,7 +5190,7 @@ glGetTexLevelParameteri: aTarget with: level with: param
 glGetTexLevelParameteriv: target with: level with: pname with: params
 	"This method was automatically generated."
 	"void glGetTexLevelParameteriv(GLenum target, GLint level, GLenum pname, GLint* params);"
-	<apicall: void 'glGetTexLevelParameteriv' (ulong long ulong long*) module: 'opengl32.dll'>
+	<apicall: void 'glGetTexLevelParameteriv' (ulong long ulong long*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'accessing' stamp: 'ar 4/26/2003 04:30'!
@@ -5198,7 +5204,7 @@ glGetTexParameterf: aTarget with: param
 glGetTexParameterfv: target with: pname with: params
 	"This method was automatically generated."
 	"void glGetTexParameterfv(GLenum target, GLenum pname, GLfloat* params);"
-	<apicall: void 'glGetTexParameterfv' (ulong ulong float*) module: 'opengl32.dll'>
+	<apicall: void 'glGetTexParameterfv' (ulong ulong float*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'accessing' stamp: 'ar 4/26/2003 04:31'!
@@ -5212,7 +5218,7 @@ glGetTexParameteri: aTarget with: param
 glGetTexParameteriv: target with: pname with: params
 	"This method was automatically generated."
 	"void glGetTexParameteriv(GLenum target, GLenum pname, GLint* params);"
-	<apicall: void 'glGetTexParameteriv' (ulong ulong long*) module: 'opengl32.dll'>
+	<apicall: void 'glGetTexParameteriv' (ulong ulong long*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'GL_ARB_shader_objects' stamp: 'daf 4/1/2007 20:24'!
@@ -5254,119 +5260,119 @@ glGetVertexAttribivARB: index with: pname with: params
 glHint: target with: mode
 	"This method was automatically generated."
 	"void glHint(GLenum target, GLenum mode);"
-	<apicall: void 'glHint' (ulong ulong) module: 'opengl32.dll'>
+	<apicall: void 'glHint' (ulong ulong) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glHistogram: target with: width with: internalformat with: sink
 	"This method was automatically generated."
 	"void glHistogram(GLenum target, GLsizei width, GLenum internalformat, GLboolean sink);"
-	<apicall: void 'glHistogram' (ulong long ulong bool) module: 'opengl32.dll'>
+	<apicall: void 'glHistogram' (ulong long ulong bool) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glIndexMask: mask
 	"This method was automatically generated."
 	"void glIndexMask(GLuint mask);"
-	<apicall: void 'glIndexMask' (ulong) module: 'opengl32.dll'>
+	<apicall: void 'glIndexMask' (ulong) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glIndexPointer: type with: stride with: pointer
 	"This method was automatically generated."
 	"void glIndexPointer(GLenum type, GLsizei stride, GLvoid* pointer);"
-	<apicall: void 'glIndexPointer' (ulong long void*) module: 'opengl32.dll'>
+	<apicall: void 'glIndexPointer' (ulong long void*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glIndexPointerEXT: type with: stride with: count with: pointer
 	"This method was automatically generated."
 	"void glIndexPointerEXT(GLenum type, GLsizei stride, GLsizei count, GLvoid* pointer);"
-	<apicall: void 'glIndexPointerEXT' (ulong long long void*) module: 'opengl32.dll'>
+	<apicall: void 'glIndexPointerEXT' (ulong long long void*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glIndexd: c
 	"This method was automatically generated."
 	"void glIndexd(GLdouble c);"
-	<apicall: void 'glIndexd' (double) module: 'opengl32.dll'>
+	<apicall: void 'glIndexd' (double) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glIndexdv: c
 	"This method was automatically generated."
 	"void glIndexdv(GLdouble* c);"
-	<apicall: void 'glIndexdv' (double*) module: 'opengl32.dll'>
+	<apicall: void 'glIndexdv' (double*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glIndexf: c
 	"This method was automatically generated."
 	"void glIndexf(GLfloat c);"
-	<apicall: void 'glIndexf' (float) module: 'opengl32.dll'>
+	<apicall: void 'glIndexf' (float) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glIndexfv: c
 	"This method was automatically generated."
 	"void glIndexfv(GLfloat* c);"
-	<apicall: void 'glIndexfv' (float*) module: 'opengl32.dll'>
+	<apicall: void 'glIndexfv' (float*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glIndexi: c
 	"This method was automatically generated."
 	"void glIndexi(GLint c);"
-	<apicall: void 'glIndexi' (long) module: 'opengl32.dll'>
+	<apicall: void 'glIndexi' (long) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glIndexiv: c
 	"This method was automatically generated."
 	"void glIndexiv(GLint* c);"
-	<apicall: void 'glIndexiv' (long*) module: 'opengl32.dll'>
+	<apicall: void 'glIndexiv' (long*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glIndexs: c
 	"This method was automatically generated."
 	"void glIndexs(GLshort c);"
-	<apicall: void 'glIndexs' (short) module: 'opengl32.dll'>
+	<apicall: void 'glIndexs' (short) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glIndexsv: c
 	"This method was automatically generated."
 	"void glIndexsv(GLshort* c);"
-	<apicall: void 'glIndexsv' (short*) module: 'opengl32.dll'>
+	<apicall: void 'glIndexsv' (short*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glIndexub: c
 	"This method was automatically generated."
 	"void glIndexub(GLubyte c);"
-	<apicall: void 'glIndexub' (byte) module: 'opengl32.dll'>
+	<apicall: void 'glIndexub' (byte) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glIndexubv: c
 	"This method was automatically generated."
 	"void glIndexubv(GLubyte* c);"
-	<apicall: void 'glIndexubv' (byte*) module: 'opengl32.dll'>
+	<apicall: void 'glIndexubv' (byte*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glInitNames
 	"This method was automatically generated."
 	"void glInitNames();"
-	<apicall: void 'glInitNames' (void) module: 'opengl32.dll'>
+	<apicall: void 'glInitNames' (void) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glInterleavedArrays: format with: stride with: pointer
 	"This method was automatically generated."
 	"void glInterleavedArrays(GLenum format, GLsizei stride, GLvoid* pointer);"
-	<apicall: void 'glInterleavedArrays' (ulong long void*) module: 'opengl32.dll'>
+	<apicall: void 'glInterleavedArrays' (ulong long void*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'GL_ARB_vertex_buffer_object' stamp: 'ar 4/5/2006 21:55'!
@@ -5378,7 +5384,7 @@ glIsBufferARB: buffer
 glIsEnabled: cap
 	"This method was automatically generated."
 	"GLboolean glIsEnabled(GLenum cap);"
-	<apicall: bool 'glIsEnabled' (ulong) module: 'opengl32.dll'>
+	<apicall: bool 'glIsEnabled' (ulong) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'GL_EXT_framebuffer_object' stamp: 'daf 4/1/2007 20:24'!
@@ -5390,7 +5396,7 @@ glIsFramebufferEXT: buffer
 glIsList: list
 	"This method was automatically generated."
 	"GLboolean glIsList(GLuint list);"
-	<apicall: bool 'glIsList' (ulong) module: 'opengl32.dll'>
+	<apicall: bool 'glIsList' (ulong) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'GL_ARB_vertex_program' stamp: 'ar 4/5/2006 21:55'!
@@ -5407,84 +5413,84 @@ glIsRenderbufferEXT: buffer
 glIsTexture: texture
 	"This method was automatically generated."
 	"GLboolean glIsTexture(GLuint texture);"
-	<apicall: bool 'glIsTexture' (ulong) module: 'opengl32.dll'>
+	<apicall: bool 'glIsTexture' (ulong) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glIsTextureEXT: texture
 	"This method was automatically generated."
 	"GLboolean glIsTextureEXT(GLuint texture);"
-	<apicall: bool 'glIsTextureEXT' (ulong) module: 'opengl32.dll'>
+	<apicall: bool 'glIsTextureEXT' (ulong) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glLightModelf: pname with: param
 	"This method was automatically generated."
 	"void glLightModelf(GLenum pname, GLfloat param);"
-	<apicall: void 'glLightModelf' (ulong float) module: 'opengl32.dll'>
+	<apicall: void 'glLightModelf' (ulong float) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glLightModelfv: pname with: params
 	"This method was automatically generated."
 	"void glLightModelfv(GLenum pname, GLfloat* params);"
-	<apicall: void 'glLightModelfv' (ulong float*) module: 'opengl32.dll'>
+	<apicall: void 'glLightModelfv' (ulong float*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glLightModeli: pname with: param
 	"This method was automatically generated."
 	"void glLightModeli(GLenum pname, GLint param);"
-	<apicall: void 'glLightModeli' (ulong long) module: 'opengl32.dll'>
+	<apicall: void 'glLightModeli' (ulong long) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glLightModeliv: pname with: params
 	"This method was automatically generated."
 	"void glLightModeliv(GLenum pname, GLint* params);"
-	<apicall: void 'glLightModeliv' (ulong long*) module: 'opengl32.dll'>
+	<apicall: void 'glLightModeliv' (ulong long*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glLightf: light with: pname with: param
 	"This method was automatically generated."
 	"void glLightf(GLenum light, GLenum pname, GLfloat param);"
-	<apicall: void 'glLightf' (ulong ulong float) module: 'opengl32.dll'>
+	<apicall: void 'glLightf' (ulong ulong float) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glLightfv: light with: pname with: params
 	"This method was automatically generated."
 	"void glLightfv(GLenum light, GLenum pname, GLfloat* params);"
-	<apicall: void 'glLightfv' (ulong ulong float*) module: 'opengl32.dll'>
+	<apicall: void 'glLightfv' (ulong ulong float*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glLighti: light with: pname with: param
 	"This method was automatically generated."
 	"void glLighti(GLenum light, GLenum pname, GLint param);"
-	<apicall: void 'glLighti' (ulong ulong long) module: 'opengl32.dll'>
+	<apicall: void 'glLighti' (ulong ulong long) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glLightiv: light with: pname with: params
 	"This method was automatically generated."
 	"void glLightiv(GLenum light, GLenum pname, GLint* params);"
-	<apicall: void 'glLightiv' (ulong ulong long*) module: 'opengl32.dll'>
+	<apicall: void 'glLightiv' (ulong ulong long*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glLineStipple: factor with: pattern
 	"This method was automatically generated."
 	"void glLineStipple(GLint factor, GLushort pattern);"
-	<apicall: void 'glLineStipple' (long ushort) module: 'opengl32.dll'>
+	<apicall: void 'glLineStipple' (long ushort) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glLineWidth: width
 	"This method was automatically generated."
 	"void glLineWidth(GLfloat width);"
-	<apicall: void 'glLineWidth' (float) module: 'opengl32.dll'>
+	<apicall: void 'glLineWidth' (float) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'GL_ARB_shader_objects' stamp: 'daf 4/1/2007 20:24'!
@@ -5496,35 +5502,35 @@ glLinkProgramARB: programObj
 glListBase: base
 	"This method was automatically generated."
 	"void glListBase(GLuint base);"
-	<apicall: void 'glListBase' (ulong) module: 'opengl32.dll'>
+	<apicall: void 'glListBase' (ulong) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glLoadIdentity
 	"This method was automatically generated."
 	"void glLoadIdentity();"
-	<apicall: void 'glLoadIdentity' (void) module: 'opengl32.dll'>
+	<apicall: void 'glLoadIdentity' (void) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glLoadMatrixd: m
 	"This method was automatically generated."
 	"void glLoadMatrixd(GLdouble* m);"
-	<apicall: void 'glLoadMatrixd' (double*) module: 'opengl32.dll'>
+	<apicall: void 'glLoadMatrixd' (double*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glLoadMatrixf: m
 	"This method was automatically generated."
 	"void glLoadMatrixf(GLfloat* m);"
-	<apicall: void 'glLoadMatrixf' (float*) module: 'opengl32.dll'>
+	<apicall: void 'glLoadMatrixf' (float*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glLoadName: name
 	"This method was automatically generated."
 	"void glLoadName(GLuint name);"
-	<apicall: void 'glLoadName' (ulong) module: 'opengl32.dll'>
+	<apicall: void 'glLoadName' (ulong) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'GL_ARB_transpose_matrix' stamp: 'ar 4/5/2006 21:55'!
@@ -5541,35 +5547,35 @@ glLockArraysEXT: first with: count
 glLogicOp: opcode
 	"This method was automatically generated."
 	"void glLogicOp(GLenum opcode);"
-	<apicall: void 'glLogicOp' (ulong) module: 'opengl32.dll'>
+	<apicall: void 'glLogicOp' (ulong) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glMap1d: target with: u1 with: u2 with: stride with: order with: points
 	"This method was automatically generated."
 	"void glMap1d(GLenum target, GLdouble u1, GLdouble u2, GLint stride, GLint order, GLdouble* points);"
-	<apicall: void 'glMap1d' (ulong double double long long double*) module: 'opengl32.dll'>
+	<apicall: void 'glMap1d' (ulong double double long long double*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glMap1f: target with: u1 with: u2 with: stride with: order with: points
 	"This method was automatically generated."
 	"void glMap1f(GLenum target, GLfloat u1, GLfloat u2, GLint stride, GLint order, GLfloat* points);"
-	<apicall: void 'glMap1f' (ulong float float long long float*) module: 'opengl32.dll'>
+	<apicall: void 'glMap1f' (ulong float float long long float*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glMap2d: target with: u1 with: u2 with: ustride with: uorder with: v1 with: v2 with: vstride with: vorder with: points
 	"This method was automatically generated."
 	"void glMap2d(GLenum target, GLdouble u1, GLdouble u2, GLint ustride, GLint uorder, GLdouble v1, GLdouble v2, GLint vstride, GLint vorder, GLdouble* points);"
-	<apicall: void 'glMap2d' (ulong double double long long double double long long double*) module: 'opengl32.dll'>
+	<apicall: void 'glMap2d' (ulong double double long long double double long long double*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glMap2f: target with: u1 with: u2 with: ustride with: uorder with: v1 with: v2 with: vstride with: vorder with: points
 	"This method was automatically generated."
 	"void glMap2f(GLenum target, GLfloat u1, GLfloat u2, GLint ustride, GLint uorder, GLfloat v1, GLfloat v2, GLint vstride, GLint vorder, GLfloat* points);"
-	<apicall: void 'glMap2f' (ulong float float long long float float long long float*) module: 'opengl32.dll'>
+	<apicall: void 'glMap2f' (ulong float float long long float float long long float*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'GL_ARB_vertex_buffer_object' stamp: 'ar 4/5/2006 21:55'!
@@ -5581,84 +5587,84 @@ glMapBufferARB: target with: access
 glMapGrid1d: un with: u1 with: u2
 	"This method was automatically generated."
 	"void glMapGrid1d(GLint un, GLdouble u1, GLdouble u2);"
-	<apicall: void 'glMapGrid1d' (long double double) module: 'opengl32.dll'>
+	<apicall: void 'glMapGrid1d' (long double double) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glMapGrid1f: un with: u1 with: u2
 	"This method was automatically generated."
 	"void glMapGrid1f(GLint un, GLfloat u1, GLfloat u2);"
-	<apicall: void 'glMapGrid1f' (long float float) module: 'opengl32.dll'>
+	<apicall: void 'glMapGrid1f' (long float float) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glMapGrid2d: un with: u1 with: u2 with: vn with: v1 with: v2
 	"This method was automatically generated."
 	"void glMapGrid2d(GLint un, GLdouble u1, GLdouble u2, GLint vn, GLdouble v1, GLdouble v2);"
-	<apicall: void 'glMapGrid2d' (long double double long double double) module: 'opengl32.dll'>
+	<apicall: void 'glMapGrid2d' (long double double long double double) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glMapGrid2f: un with: u1 with: u2 with: vn with: v1 with: v2
 	"This method was automatically generated."
 	"void glMapGrid2f(GLint un, GLfloat u1, GLfloat u2, GLint vn, GLfloat v1, GLfloat v2);"
-	<apicall: void 'glMapGrid2f' (long float float long float float) module: 'opengl32.dll'>
+	<apicall: void 'glMapGrid2f' (long float float long float float) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glMaterialf: face with: pname with: param
 	"This method was automatically generated."
 	"void glMaterialf(GLenum face, GLenum pname, GLfloat param);"
-	<apicall: void 'glMaterialf' (ulong ulong float) module: 'opengl32.dll'>
+	<apicall: void 'glMaterialf' (ulong ulong float) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glMaterialfv: face with: pname with: params
 	"This method was automatically generated."
 	"void glMaterialfv(GLenum face, GLenum pname, GLfloat* params);"
-	<apicall: void 'glMaterialfv' (ulong ulong float*) module: 'opengl32.dll'>
+	<apicall: void 'glMaterialfv' (ulong ulong float*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glMateriali: face with: pname with: param
 	"This method was automatically generated."
 	"void glMateriali(GLenum face, GLenum pname, GLint param);"
-	<apicall: void 'glMateriali' (ulong ulong long) module: 'opengl32.dll'>
+	<apicall: void 'glMateriali' (ulong ulong long) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glMaterialiv: face with: pname with: params
 	"This method was automatically generated."
 	"void glMaterialiv(GLenum face, GLenum pname, GLint* params);"
-	<apicall: void 'glMaterialiv' (ulong ulong long*) module: 'opengl32.dll'>
+	<apicall: void 'glMaterialiv' (ulong ulong long*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glMatrixMode: mode
 	"This method was automatically generated."
 	"void glMatrixMode(GLenum mode);"
-	<apicall: void 'glMatrixMode' (ulong) module: 'opengl32.dll'>
+	<apicall: void 'glMatrixMode' (ulong) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glMinmax: target with: internalformat with: sink
 	"This method was automatically generated."
 	"void glMinmax(GLenum target, GLenum internalformat, GLboolean sink);"
-	<apicall: void 'glMinmax' (ulong ulong bool) module: 'opengl32.dll'>
+	<apicall: void 'glMinmax' (ulong ulong bool) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glMultMatrixd: m
 	"This method was automatically generated."
 	"void glMultMatrixd(GLdouble* m);"
-	<apicall: void 'glMultMatrixd' (double*) module: 'opengl32.dll'>
+	<apicall: void 'glMultMatrixd' (double*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glMultMatrixf: m
 	"This method was automatically generated."
 	"void glMultMatrixf(GLfloat* m);"
-	<apicall: void 'glMultMatrixf' (float*) module: 'opengl32.dll'>
+	<apicall: void 'glMultMatrixf' (float*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'GL_ARB_transpose_matrix' stamp: 'ar 4/5/2006 21:55'!
@@ -5670,448 +5676,448 @@ glMultTransposeMatrixf: m
 glMultiTexCoord1dARB: target with: s
 	"This method was automatically generated."
 	"void glMultiTexCoord1dARB(GLenum target, GLdouble s);"
-	<apicall: void 'glMultiTexCoord1dARB' (ulong double) module: 'opengl32.dll'>
+	<apicall: void 'glMultiTexCoord1dARB' (ulong double) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glMultiTexCoord1dvARB: target with: v
 	"This method was automatically generated."
 	"void glMultiTexCoord1dvARB(GLenum target, GLdouble* v);"
-	<apicall: void 'glMultiTexCoord1dvARB' (ulong double*) module: 'opengl32.dll'>
+	<apicall: void 'glMultiTexCoord1dvARB' (ulong double*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glMultiTexCoord1fARB: target with: s
 	"This method was automatically generated."
 	"void glMultiTexCoord1fARB(GLenum target, GLfloat s);"
-	<apicall: void 'glMultiTexCoord1fARB' (ulong float) module: 'opengl32.dll'>
+	<apicall: void 'glMultiTexCoord1fARB' (ulong float) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glMultiTexCoord1fvARB: target with: v
 	"This method was automatically generated."
 	"void glMultiTexCoord1fvARB(GLenum target, GLfloat* v);"
-	<apicall: void 'glMultiTexCoord1fvARB' (ulong float*) module: 'opengl32.dll'>
+	<apicall: void 'glMultiTexCoord1fvARB' (ulong float*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glMultiTexCoord1iARB: target with: s
 	"This method was automatically generated."
 	"void glMultiTexCoord1iARB(GLenum target, GLint s);"
-	<apicall: void 'glMultiTexCoord1iARB' (ulong long) module: 'opengl32.dll'>
+	<apicall: void 'glMultiTexCoord1iARB' (ulong long) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glMultiTexCoord1ivARB: target with: v
 	"This method was automatically generated."
 	"void glMultiTexCoord1ivARB(GLenum target, GLint* v);"
-	<apicall: void 'glMultiTexCoord1ivARB' (ulong long*) module: 'opengl32.dll'>
+	<apicall: void 'glMultiTexCoord1ivARB' (ulong long*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glMultiTexCoord1sARB: target with: s
 	"This method was automatically generated."
 	"void glMultiTexCoord1sARB(GLenum target, GLshort s);"
-	<apicall: void 'glMultiTexCoord1sARB' (ulong short) module: 'opengl32.dll'>
+	<apicall: void 'glMultiTexCoord1sARB' (ulong short) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glMultiTexCoord1svARB: target with: v
 	"This method was automatically generated."
 	"void glMultiTexCoord1svARB(GLenum target, GLshort* v);"
-	<apicall: void 'glMultiTexCoord1svARB' (ulong short*) module: 'opengl32.dll'>
+	<apicall: void 'glMultiTexCoord1svARB' (ulong short*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glMultiTexCoord2dARB: target with: s with: t
 	"This method was automatically generated."
 	"void glMultiTexCoord2dARB(GLenum target, GLdouble s, GLdouble t);"
-	<apicall: void 'glMultiTexCoord2dARB' (ulong double double) module: 'opengl32.dll'>
+	<apicall: void 'glMultiTexCoord2dARB' (ulong double double) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glMultiTexCoord2dvARB: target with: v
 	"This method was automatically generated."
 	"void glMultiTexCoord2dvARB(GLenum target, GLdouble* v);"
-	<apicall: void 'glMultiTexCoord2dvARB' (ulong double*) module: 'opengl32.dll'>
+	<apicall: void 'glMultiTexCoord2dvARB' (ulong double*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glMultiTexCoord2fARB: target with: s with: t
 	"This method was automatically generated."
 	"void glMultiTexCoord2fARB(GLenum target, GLfloat s, GLfloat t);"
-	<apicall: void 'glMultiTexCoord2fARB' (ulong float float) module: 'opengl32.dll'>
+	<apicall: void 'glMultiTexCoord2fARB' (ulong float float) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glMultiTexCoord2fvARB: target with: v
 	"This method was automatically generated."
 	"void glMultiTexCoord2fvARB(GLenum target, GLfloat* v);"
-	<apicall: void 'glMultiTexCoord2fvARB' (ulong float*) module: 'opengl32.dll'>
+	<apicall: void 'glMultiTexCoord2fvARB' (ulong float*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glMultiTexCoord2iARB: target with: s with: t
 	"This method was automatically generated."
 	"void glMultiTexCoord2iARB(GLenum target, GLint s, GLint t);"
-	<apicall: void 'glMultiTexCoord2iARB' (ulong long long) module: 'opengl32.dll'>
+	<apicall: void 'glMultiTexCoord2iARB' (ulong long long) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glMultiTexCoord2ivARB: target with: v
 	"This method was automatically generated."
 	"void glMultiTexCoord2ivARB(GLenum target, GLint* v);"
-	<apicall: void 'glMultiTexCoord2ivARB' (ulong long*) module: 'opengl32.dll'>
+	<apicall: void 'glMultiTexCoord2ivARB' (ulong long*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glMultiTexCoord2sARB: target with: s with: t
 	"This method was automatically generated."
 	"void glMultiTexCoord2sARB(GLenum target, GLshort s, GLshort t);"
-	<apicall: void 'glMultiTexCoord2sARB' (ulong short short) module: 'opengl32.dll'>
+	<apicall: void 'glMultiTexCoord2sARB' (ulong short short) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glMultiTexCoord2svARB: target with: v
 	"This method was automatically generated."
 	"void glMultiTexCoord2svARB(GLenum target, GLshort* v);"
-	<apicall: void 'glMultiTexCoord2svARB' (ulong short*) module: 'opengl32.dll'>
+	<apicall: void 'glMultiTexCoord2svARB' (ulong short*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glMultiTexCoord3dARB: target with: s with: t with: r
 	"This method was automatically generated."
 	"void glMultiTexCoord3dARB(GLenum target, GLdouble s, GLdouble t, GLdouble r);"
-	<apicall: void 'glMultiTexCoord3dARB' (ulong double double double) module: 'opengl32.dll'>
+	<apicall: void 'glMultiTexCoord3dARB' (ulong double double double) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glMultiTexCoord3dvARB: target with: v
 	"This method was automatically generated."
 	"void glMultiTexCoord3dvARB(GLenum target, GLdouble* v);"
-	<apicall: void 'glMultiTexCoord3dvARB' (ulong double*) module: 'opengl32.dll'>
+	<apicall: void 'glMultiTexCoord3dvARB' (ulong double*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glMultiTexCoord3fARB: target with: s with: t with: r
 	"This method was automatically generated."
 	"void glMultiTexCoord3fARB(GLenum target, GLfloat s, GLfloat t, GLfloat r);"
-	<apicall: void 'glMultiTexCoord3fARB' (ulong float float float) module: 'opengl32.dll'>
+	<apicall: void 'glMultiTexCoord3fARB' (ulong float float float) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glMultiTexCoord3fvARB: target with: v
 	"This method was automatically generated."
 	"void glMultiTexCoord3fvARB(GLenum target, GLfloat* v);"
-	<apicall: void 'glMultiTexCoord3fvARB' (ulong float*) module: 'opengl32.dll'>
+	<apicall: void 'glMultiTexCoord3fvARB' (ulong float*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glMultiTexCoord3iARB: target with: s with: t with: r
 	"This method was automatically generated."
 	"void glMultiTexCoord3iARB(GLenum target, GLint s, GLint t, GLint r);"
-	<apicall: void 'glMultiTexCoord3iARB' (ulong long long long) module: 'opengl32.dll'>
+	<apicall: void 'glMultiTexCoord3iARB' (ulong long long long) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glMultiTexCoord3ivARB: target with: v
 	"This method was automatically generated."
 	"void glMultiTexCoord3ivARB(GLenum target, GLint* v);"
-	<apicall: void 'glMultiTexCoord3ivARB' (ulong long*) module: 'opengl32.dll'>
+	<apicall: void 'glMultiTexCoord3ivARB' (ulong long*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glMultiTexCoord3sARB: target with: s with: t with: r
 	"This method was automatically generated."
 	"void glMultiTexCoord3sARB(GLenum target, GLshort s, GLshort t, GLshort r);"
-	<apicall: void 'glMultiTexCoord3sARB' (ulong short short short) module: 'opengl32.dll'>
+	<apicall: void 'glMultiTexCoord3sARB' (ulong short short short) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glMultiTexCoord3svARB: target with: v
 	"This method was automatically generated."
 	"void glMultiTexCoord3svARB(GLenum target, GLshort* v);"
-	<apicall: void 'glMultiTexCoord3svARB' (ulong short*) module: 'opengl32.dll'>
+	<apicall: void 'glMultiTexCoord3svARB' (ulong short*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glMultiTexCoord4dARB: target with: s with: t with: r with: q
 	"This method was automatically generated."
 	"void glMultiTexCoord4dARB(GLenum target, GLdouble s, GLdouble t, GLdouble r, GLdouble q);"
-	<apicall: void 'glMultiTexCoord4dARB' (ulong double double double double) module: 'opengl32.dll'>
+	<apicall: void 'glMultiTexCoord4dARB' (ulong double double double double) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glMultiTexCoord4dvARB: target with: v
 	"This method was automatically generated."
 	"void glMultiTexCoord4dvARB(GLenum target, GLdouble* v);"
-	<apicall: void 'glMultiTexCoord4dvARB' (ulong double*) module: 'opengl32.dll'>
+	<apicall: void 'glMultiTexCoord4dvARB' (ulong double*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glMultiTexCoord4fARB: target with: s with: t with: r with: q
 	"This method was automatically generated."
 	"void glMultiTexCoord4fARB(GLenum target, GLfloat s, GLfloat t, GLfloat r, GLfloat q);"
-	<apicall: void 'glMultiTexCoord4fARB' (ulong float float float float) module: 'opengl32.dll'>
+	<apicall: void 'glMultiTexCoord4fARB' (ulong float float float float) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glMultiTexCoord4fvARB: target with: v
 	"This method was automatically generated."
 	"void glMultiTexCoord4fvARB(GLenum target, GLfloat* v);"
-	<apicall: void 'glMultiTexCoord4fvARB' (ulong float*) module: 'opengl32.dll'>
+	<apicall: void 'glMultiTexCoord4fvARB' (ulong float*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glMultiTexCoord4iARB: target with: s with: t with: r with: q
 	"This method was automatically generated."
 	"void glMultiTexCoord4iARB(GLenum target, GLint s, GLint t, GLint r, GLint q);"
-	<apicall: void 'glMultiTexCoord4iARB' (ulong long long long long) module: 'opengl32.dll'>
+	<apicall: void 'glMultiTexCoord4iARB' (ulong long long long long) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glMultiTexCoord4ivARB: target with: v
 	"This method was automatically generated."
 	"void glMultiTexCoord4ivARB(GLenum target, GLint* v);"
-	<apicall: void 'glMultiTexCoord4ivARB' (ulong long*) module: 'opengl32.dll'>
+	<apicall: void 'glMultiTexCoord4ivARB' (ulong long*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glMultiTexCoord4sARB: target with: s with: t with: r with: q
 	"This method was automatically generated."
 	"void glMultiTexCoord4sARB(GLenum target, GLshort s, GLshort t, GLshort r, GLshort q);"
-	<apicall: void 'glMultiTexCoord4sARB' (ulong short short short short) module: 'opengl32.dll'>
+	<apicall: void 'glMultiTexCoord4sARB' (ulong short short short short) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glMultiTexCoord4svARB: target with: v
 	"This method was automatically generated."
 	"void glMultiTexCoord4svARB(GLenum target, GLshort* v);"
-	<apicall: void 'glMultiTexCoord4svARB' (ulong short*) module: 'opengl32.dll'>
+	<apicall: void 'glMultiTexCoord4svARB' (ulong short*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glNewList: list with: mode
 	"This method was automatically generated."
 	"void glNewList(GLuint list, GLenum mode);"
-	<apicall: void 'glNewList' (ulong ulong) module: 'opengl32.dll'>
+	<apicall: void 'glNewList' (ulong ulong) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glNormal3b: nx with: ny with: nz
 	"This method was automatically generated."
 	"void glNormal3b(GLbyte nx, GLbyte ny, GLbyte nz);"
-	<apicall: void 'glNormal3b' (byte byte byte) module: 'opengl32.dll'>
+	<apicall: void 'glNormal3b' (byte byte byte) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glNormal3bv: v
 	"This method was automatically generated."
 	"void glNormal3bv(GLbyte* v);"
-	<apicall: void 'glNormal3bv' (byte*) module: 'opengl32.dll'>
+	<apicall: void 'glNormal3bv' (byte*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glNormal3d: nx with: ny with: nz
 	"This method was automatically generated."
 	"void glNormal3d(GLdouble nx, GLdouble ny, GLdouble nz);"
-	<apicall: void 'glNormal3d' (double double double) module: 'opengl32.dll'>
+	<apicall: void 'glNormal3d' (double double double) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glNormal3dv: v
 	"This method was automatically generated."
 	"void glNormal3dv(GLdouble* v);"
-	<apicall: void 'glNormal3dv' (double*) module: 'opengl32.dll'>
+	<apicall: void 'glNormal3dv' (double*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glNormal3f: nx with: ny with: nz
 	"This method was automatically generated."
 	"void glNormal3f(GLfloat nx, GLfloat ny, GLfloat nz);"
-	<apicall: void 'glNormal3f' (float float float) module: 'opengl32.dll'>
+	<apicall: void 'glNormal3f' (float float float) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glNormal3fv: v
 	"This method was automatically generated."
 	"void glNormal3fv(GLfloat* v);"
-	<apicall: void 'glNormal3fv' (float*) module: 'opengl32.dll'>
+	<apicall: void 'glNormal3fv' (float*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glNormal3i: nx with: ny with: nz
 	"This method was automatically generated."
 	"void glNormal3i(GLint nx, GLint ny, GLint nz);"
-	<apicall: void 'glNormal3i' (long long long) module: 'opengl32.dll'>
+	<apicall: void 'glNormal3i' (long long long) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glNormal3iv: v
 	"This method was automatically generated."
 	"void glNormal3iv(GLint* v);"
-	<apicall: void 'glNormal3iv' (long*) module: 'opengl32.dll'>
+	<apicall: void 'glNormal3iv' (long*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glNormal3s: nx with: ny with: nz
 	"This method was automatically generated."
 	"void glNormal3s(GLshort nx, GLshort ny, GLshort nz);"
-	<apicall: void 'glNormal3s' (short short short) module: 'opengl32.dll'>
+	<apicall: void 'glNormal3s' (short short short) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glNormal3sv: v
 	"This method was automatically generated."
 	"void glNormal3sv(GLshort* v);"
-	<apicall: void 'glNormal3sv' (short*) module: 'opengl32.dll'>
+	<apicall: void 'glNormal3sv' (short*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glNormalPointer: type with: stride with: pointer
 	"This method was automatically generated."
 	"void glNormalPointer(GLenum type, GLsizei stride, GLvoid* pointer);"
-	<apicall: void 'glNormalPointer' (ulong long void*) module: 'opengl32.dll'>
+	<apicall: void 'glNormalPointer' (ulong long void*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glNormalPointerEXT: type with: stride with: count with: pointer
 	"This method was automatically generated."
 	"void glNormalPointerEXT(GLenum type, GLsizei stride, GLsizei count, GLvoid* pointer);"
-	<apicall: void 'glNormalPointerEXT' (ulong long long void*) module: 'opengl32.dll'>
+	<apicall: void 'glNormalPointerEXT' (ulong long long void*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glOrtho: left with: right with: bottom with: top with: zNear with: zFar
 	"This method was automatically generated."
 	"void glOrtho(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble zNear, GLdouble zFar);"
-	<apicall: void 'glOrtho' (double double double double double double) module: 'opengl32.dll'>
+	<apicall: void 'glOrtho' (double double double double double double) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glPassThrough: token
 	"This method was automatically generated."
 	"void glPassThrough(GLfloat token);"
-	<apicall: void 'glPassThrough' (float) module: 'opengl32.dll'>
+	<apicall: void 'glPassThrough' (float) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glPixelMapfv: map with: mapsize with: values
 	"This method was automatically generated."
 	"void glPixelMapfv(GLenum map, GLint mapsize, GLfloat* values);"
-	<apicall: void 'glPixelMapfv' (ulong long float*) module: 'opengl32.dll'>
+	<apicall: void 'glPixelMapfv' (ulong long float*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glPixelMapuiv: map with: mapsize with: values
 	"This method was automatically generated."
 	"void glPixelMapuiv(GLenum map, GLint mapsize, GLuint* values);"
-	<apicall: void 'glPixelMapuiv' (ulong long ulong*) module: 'opengl32.dll'>
+	<apicall: void 'glPixelMapuiv' (ulong long ulong*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glPixelMapusv: map with: mapsize with: values
 	"This method was automatically generated."
 	"void glPixelMapusv(GLenum map, GLint mapsize, GLushort* values);"
-	<apicall: void 'glPixelMapusv' (ulong long ushort*) module: 'opengl32.dll'>
+	<apicall: void 'glPixelMapusv' (ulong long ushort*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glPixelStoref: pname with: param
 	"This method was automatically generated."
 	"void glPixelStoref(GLenum pname, GLfloat param);"
-	<apicall: void 'glPixelStoref' (ulong float) module: 'opengl32.dll'>
+	<apicall: void 'glPixelStoref' (ulong float) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glPixelStorei: pname with: param
 	"This method was automatically generated."
 	"void glPixelStorei(GLenum pname, GLint param);"
-	<apicall: void 'glPixelStorei' (ulong long) module: 'opengl32.dll'>
+	<apicall: void 'glPixelStorei' (ulong long) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glPixelTransferf: pname with: param
 	"This method was automatically generated."
 	"void glPixelTransferf(GLenum pname, GLfloat param);"
-	<apicall: void 'glPixelTransferf' (ulong float) module: 'opengl32.dll'>
+	<apicall: void 'glPixelTransferf' (ulong float) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glPixelTransferi: pname with: param
 	"This method was automatically generated."
 	"void glPixelTransferi(GLenum pname, GLint param);"
-	<apicall: void 'glPixelTransferi' (ulong long) module: 'opengl32.dll'>
+	<apicall: void 'glPixelTransferi' (ulong long) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glPixelZoom: xfactor with: yfactor
 	"This method was automatically generated."
 	"void glPixelZoom(GLfloat xfactor, GLfloat yfactor);"
-	<apicall: void 'glPixelZoom' (float float) module: 'opengl32.dll'>
+	<apicall: void 'glPixelZoom' (float float) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glPointSize: size
 	"This method was automatically generated."
 	"void glPointSize(GLfloat size);"
-	<apicall: void 'glPointSize' (float) module: 'opengl32.dll'>
+	<apicall: void 'glPointSize' (float) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glPolygonMode: face with: mode
 	"This method was automatically generated."
 	"void glPolygonMode(GLenum face, GLenum mode);"
-	<apicall: void 'glPolygonMode' (ulong ulong) module: 'opengl32.dll'>
+	<apicall: void 'glPolygonMode' (ulong ulong) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glPolygonOffset: factor with: units
 	"This method was automatically generated."
 	"void glPolygonOffset(GLfloat factor, GLfloat units);"
-	<apicall: void 'glPolygonOffset' (float float) module: 'opengl32.dll'>
+	<apicall: void 'glPolygonOffset' (float float) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glPolygonStipple: mask
 	"This method was automatically generated."
 	"void glPolygonStipple(GLubyte* mask);"
-	<apicall: void 'glPolygonStipple' (byte*) module: 'opengl32.dll'>
+	<apicall: void 'glPolygonStipple' (byte*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glPopAttrib
 	"This method was automatically generated."
 	"void glPopAttrib();"
-	<apicall: void 'glPopAttrib' (void) module: 'opengl32.dll'>
+	<apicall: void 'glPopAttrib' (void) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glPopClientAttrib
 	"This method was automatically generated."
 	"void glPopClientAttrib();"
-	<apicall: void 'glPopClientAttrib' (void) module: 'opengl32.dll'>
+	<apicall: void 'glPopClientAttrib' (void) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glPopMatrix
 	"This method was automatically generated."
 	"void glPopMatrix();"
-	<apicall: void 'glPopMatrix' (void) module: 'opengl32.dll'>
+	<apicall: void 'glPopMatrix' (void) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glPopName
 	"This method was automatically generated."
 	"void glPopName();"
-	<apicall: void 'glPopName' (void) module: 'opengl32.dll'>
+	<apicall: void 'glPopName' (void) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glPrioritizeTextures: n with: textures with: priorities
 	"This method was automatically generated."
 	"void glPrioritizeTextures(GLsizei n, GLuint* textures, GLclampf* priorities);"
-	<apicall: void 'glPrioritizeTextures' (long ulong* float*) module: 'opengl32.dll'>
+	<apicall: void 'glPrioritizeTextures' (long ulong* float*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'GL_ARB_vertex_program' stamp: 'ar 4/5/2006 21:55'!
@@ -6163,273 +6169,273 @@ glProgramStringARB: target with: format with: len with: string
 glPushAttrib: mask
 	"This method was automatically generated."
 	"void glPushAttrib(GLbitfield mask);"
-	<apicall: void 'glPushAttrib' (ulong) module: 'opengl32.dll'>
+	<apicall: void 'glPushAttrib' (ulong) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glPushClientAttrib: mask
 	"This method was automatically generated."
 	"void glPushClientAttrib(GLbitfield mask);"
-	<apicall: void 'glPushClientAttrib' (ulong) module: 'opengl32.dll'>
+	<apicall: void 'glPushClientAttrib' (ulong) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glPushMatrix
 	"This method was automatically generated."
 	"void glPushMatrix();"
-	<apicall: void 'glPushMatrix' (void) module: 'opengl32.dll'>
+	<apicall: void 'glPushMatrix' (void) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glPushName: name
 	"This method was automatically generated."
 	"void glPushName(GLuint name);"
-	<apicall: void 'glPushName' (ulong) module: 'opengl32.dll'>
+	<apicall: void 'glPushName' (ulong) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glRasterPos2d: x with: y
 	"This method was automatically generated."
 	"void glRasterPos2d(GLdouble x, GLdouble y);"
-	<apicall: void 'glRasterPos2d' (double double) module: 'opengl32.dll'>
+	<apicall: void 'glRasterPos2d' (double double) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glRasterPos2dv: v
 	"This method was automatically generated."
 	"void glRasterPos2dv(GLdouble* v);"
-	<apicall: void 'glRasterPos2dv' (double*) module: 'opengl32.dll'>
+	<apicall: void 'glRasterPos2dv' (double*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glRasterPos2f: x with: y
 	"This method was automatically generated."
 	"void glRasterPos2f(GLfloat x, GLfloat y);"
-	<apicall: void 'glRasterPos2f' (float float) module: 'opengl32.dll'>
+	<apicall: void 'glRasterPos2f' (float float) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glRasterPos2fv: v
 	"This method was automatically generated."
 	"void glRasterPos2fv(GLfloat* v);"
-	<apicall: void 'glRasterPos2fv' (float*) module: 'opengl32.dll'>
+	<apicall: void 'glRasterPos2fv' (float*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glRasterPos2i: x with: y
 	"This method was automatically generated."
 	"void glRasterPos2i(GLint x, GLint y);"
-	<apicall: void 'glRasterPos2i' (long long) module: 'opengl32.dll'>
+	<apicall: void 'glRasterPos2i' (long long) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glRasterPos2iv: v
 	"This method was automatically generated."
 	"void glRasterPos2iv(GLint* v);"
-	<apicall: void 'glRasterPos2iv' (long*) module: 'opengl32.dll'>
+	<apicall: void 'glRasterPos2iv' (long*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glRasterPos2s: x with: y
 	"This method was automatically generated."
 	"void glRasterPos2s(GLshort x, GLshort y);"
-	<apicall: void 'glRasterPos2s' (short short) module: 'opengl32.dll'>
+	<apicall: void 'glRasterPos2s' (short short) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glRasterPos2sv: v
 	"This method was automatically generated."
 	"void glRasterPos2sv(GLshort* v);"
-	<apicall: void 'glRasterPos2sv' (short*) module: 'opengl32.dll'>
+	<apicall: void 'glRasterPos2sv' (short*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glRasterPos3d: x with: y with: z
 	"This method was automatically generated."
 	"void glRasterPos3d(GLdouble x, GLdouble y, GLdouble z);"
-	<apicall: void 'glRasterPos3d' (double double double) module: 'opengl32.dll'>
+	<apicall: void 'glRasterPos3d' (double double double) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glRasterPos3dv: v
 	"This method was automatically generated."
 	"void glRasterPos3dv(GLdouble* v);"
-	<apicall: void 'glRasterPos3dv' (double*) module: 'opengl32.dll'>
+	<apicall: void 'glRasterPos3dv' (double*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glRasterPos3f: x with: y with: z
 	"This method was automatically generated."
 	"void glRasterPos3f(GLfloat x, GLfloat y, GLfloat z);"
-	<apicall: void 'glRasterPos3f' (float float float) module: 'opengl32.dll'>
+	<apicall: void 'glRasterPos3f' (float float float) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glRasterPos3fv: v
 	"This method was automatically generated."
 	"void glRasterPos3fv(GLfloat* v);"
-	<apicall: void 'glRasterPos3fv' (float*) module: 'opengl32.dll'>
+	<apicall: void 'glRasterPos3fv' (float*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glRasterPos3i: x with: y with: z
 	"This method was automatically generated."
 	"void glRasterPos3i(GLint x, GLint y, GLint z);"
-	<apicall: void 'glRasterPos3i' (long long long) module: 'opengl32.dll'>
+	<apicall: void 'glRasterPos3i' (long long long) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glRasterPos3iv: v
 	"This method was automatically generated."
 	"void glRasterPos3iv(GLint* v);"
-	<apicall: void 'glRasterPos3iv' (long*) module: 'opengl32.dll'>
+	<apicall: void 'glRasterPos3iv' (long*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glRasterPos3s: x with: y with: z
 	"This method was automatically generated."
 	"void glRasterPos3s(GLshort x, GLshort y, GLshort z);"
-	<apicall: void 'glRasterPos3s' (short short short) module: 'opengl32.dll'>
+	<apicall: void 'glRasterPos3s' (short short short) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glRasterPos3sv: v
 	"This method was automatically generated."
 	"void glRasterPos3sv(GLshort* v);"
-	<apicall: void 'glRasterPos3sv' (short*) module: 'opengl32.dll'>
+	<apicall: void 'glRasterPos3sv' (short*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glRasterPos4d: x with: y with: z with: w
 	"This method was automatically generated."
 	"void glRasterPos4d(GLdouble x, GLdouble y, GLdouble z, GLdouble w);"
-	<apicall: void 'glRasterPos4d' (double double double double) module: 'opengl32.dll'>
+	<apicall: void 'glRasterPos4d' (double double double double) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glRasterPos4dv: v
 	"This method was automatically generated."
 	"void glRasterPos4dv(GLdouble* v);"
-	<apicall: void 'glRasterPos4dv' (double*) module: 'opengl32.dll'>
+	<apicall: void 'glRasterPos4dv' (double*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glRasterPos4f: x with: y with: z with: w
 	"This method was automatically generated."
 	"void glRasterPos4f(GLfloat x, GLfloat y, GLfloat z, GLfloat w);"
-	<apicall: void 'glRasterPos4f' (float float float float) module: 'opengl32.dll'>
+	<apicall: void 'glRasterPos4f' (float float float float) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glRasterPos4fv: v
 	"This method was automatically generated."
 	"void glRasterPos4fv(GLfloat* v);"
-	<apicall: void 'glRasterPos4fv' (float*) module: 'opengl32.dll'>
+	<apicall: void 'glRasterPos4fv' (float*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glRasterPos4i: x with: y with: z with: w
 	"This method was automatically generated."
 	"void glRasterPos4i(GLint x, GLint y, GLint z, GLint w);"
-	<apicall: void 'glRasterPos4i' (long long long long) module: 'opengl32.dll'>
+	<apicall: void 'glRasterPos4i' (long long long long) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glRasterPos4iv: v
 	"This method was automatically generated."
 	"void glRasterPos4iv(GLint* v);"
-	<apicall: void 'glRasterPos4iv' (long*) module: 'opengl32.dll'>
+	<apicall: void 'glRasterPos4iv' (long*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glRasterPos4s: x with: y with: z with: w
 	"This method was automatically generated."
 	"void glRasterPos4s(GLshort x, GLshort y, GLshort z, GLshort w);"
-	<apicall: void 'glRasterPos4s' (short short short short) module: 'opengl32.dll'>
+	<apicall: void 'glRasterPos4s' (short short short short) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glRasterPos4sv: v
 	"This method was automatically generated."
 	"void glRasterPos4sv(GLshort* v);"
-	<apicall: void 'glRasterPos4sv' (short*) module: 'opengl32.dll'>
+	<apicall: void 'glRasterPos4sv' (short*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glReadBuffer: mode
 	"This method was automatically generated."
 	"void glReadBuffer(GLenum mode);"
-	<apicall: void 'glReadBuffer' (ulong) module: 'opengl32.dll'>
+	<apicall: void 'glReadBuffer' (ulong) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glReadPixels: x with: y with: width with: height with: format with: type with: pixels
 	"This method was automatically generated."
 	"void glReadPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, GLvoid* pixels);"
-	<apicall: void 'glReadPixels' (long long long long ulong ulong void*) module: 'opengl32.dll'>
+	<apicall: void 'glReadPixels' (long long long long ulong ulong void*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glRectd: x1 with: y1 with: x2 with: y2
 	"This method was automatically generated."
 	"void glRectd(GLdouble x1, GLdouble y1, GLdouble x2, GLdouble y2);"
-	<apicall: void 'glRectd' (double double double double) module: 'opengl32.dll'>
+	<apicall: void 'glRectd' (double double double double) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glRectdv: v1 with: v2
 	"This method was automatically generated."
 	"void glRectdv(GLdouble* v1, GLdouble* v2);"
-	<apicall: void 'glRectdv' (double* double*) module: 'opengl32.dll'>
+	<apicall: void 'glRectdv' (double* double*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glRectf: x1 with: y1 with: x2 with: y2
 	"This method was automatically generated."
 	"void glRectf(GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2);"
-	<apicall: void 'glRectf' (float float float float) module: 'opengl32.dll'>
+	<apicall: void 'glRectf' (float float float float) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glRectfv: v1 with: v2
 	"This method was automatically generated."
 	"void glRectfv(GLfloat* v1, GLfloat* v2);"
-	<apicall: void 'glRectfv' (float* float*) module: 'opengl32.dll'>
+	<apicall: void 'glRectfv' (float* float*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glRecti: x1 with: y1 with: x2 with: y2
 	"This method was automatically generated."
 	"void glRecti(GLint x1, GLint y1, GLint x2, GLint y2);"
-	<apicall: void 'glRecti' (long long long long) module: 'opengl32.dll'>
+	<apicall: void 'glRecti' (long long long long) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glRectiv: v1 with: v2
 	"This method was automatically generated."
 	"void glRectiv(GLint* v1, GLint* v2);"
-	<apicall: void 'glRectiv' (long* long*) module: 'opengl32.dll'>
+	<apicall: void 'glRectiv' (long* long*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glRects: x1 with: y1 with: x2 with: y2
 	"This method was automatically generated."
 	"void glRects(GLshort x1, GLshort y1, GLshort x2, GLshort y2);"
-	<apicall: void 'glRects' (short short short short) module: 'opengl32.dll'>
+	<apicall: void 'glRects' (short short short short) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glRectsv: v1 with: v2
 	"This method was automatically generated."
 	"void glRectsv(GLshort* v1, GLshort* v2);"
-	<apicall: void 'glRectsv' (short* short*) module: 'opengl32.dll'>
+	<apicall: void 'glRectsv' (short* short*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glRenderMode: mode
 	"This method was automatically generated."
 	"GLint glRenderMode(GLenum mode);"
-	<apicall: long 'glRenderMode' (ulong) module: 'opengl32.dll'>
+	<apicall: long 'glRenderMode' (ulong) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'GL_EXT_framebuffer_object' stamp: 'daf 4/1/2007 20:24'!
@@ -6441,70 +6447,70 @@ glRenderbufferStorageEXT: target with: internalformat with: width with: height
 glResetHistogram: target
 	"This method was automatically generated."
 	"void glResetHistogram(GLenum target);"
-	<apicall: void 'glResetHistogram' (ulong) module: 'opengl32.dll'>
+	<apicall: void 'glResetHistogram' (ulong) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glResetMinmax: target
 	"This method was automatically generated."
 	"void glResetMinmax(GLenum target);"
-	<apicall: void 'glResetMinmax' (ulong) module: 'opengl32.dll'>
+	<apicall: void 'glResetMinmax' (ulong) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glRotated: angle with: x with: y with: z
 	"This method was automatically generated."
 	"void glRotated(GLdouble angle, GLdouble x, GLdouble y, GLdouble z);"
-	<apicall: void 'glRotated' (double double double double) module: 'opengl32.dll'>
+	<apicall: void 'glRotated' (double double double double) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glRotatef: angle with: x with: y with: z
 	"This method was automatically generated."
 	"void glRotatef(GLfloat angle, GLfloat x, GLfloat y, GLfloat z);"
-	<apicall: void 'glRotatef' (float float float float) module: 'opengl32.dll'>
+	<apicall: void 'glRotatef' (float float float float) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glScaled: x with: y with: z
 	"This method was automatically generated."
 	"void glScaled(GLdouble x, GLdouble y, GLdouble z);"
-	<apicall: void 'glScaled' (double double double) module: 'opengl32.dll'>
+	<apicall: void 'glScaled' (double double double) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glScalef: x with: y with: z
 	"This method was automatically generated."
 	"void glScalef(GLfloat x, GLfloat y, GLfloat z);"
-	<apicall: void 'glScalef' (float float float) module: 'opengl32.dll'>
+	<apicall: void 'glScalef' (float float float) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glScissor: x with: y with: width with: height
 	"This method was automatically generated."
 	"void glScissor(GLint x, GLint y, GLsizei width, GLsizei height);"
-	<apicall: void 'glScissor' (long long long long) module: 'opengl32.dll'>
+	<apicall: void 'glScissor' (long long long long) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glSelectBuffer: size with: buffer
 	"This method was automatically generated."
 	"void glSelectBuffer(GLsizei size, GLuint* buffer);"
-	<apicall: void 'glSelectBuffer' (long ulong*) module: 'opengl32.dll'>
+	<apicall: void 'glSelectBuffer' (long ulong*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glSeparableFilter2D: target with: internalformat with: width with: height with: format with: type with: row with: column
 	"This method was automatically generated."
 	"void glSeparableFilter2D(GLenum target, GLenum internalformat, GLsizei width, GLsizei height, GLenum format, GLenum type, GLvoid* row, GLvoid* column);"
-	<apicall: void 'glSeparableFilter2D' (ulong ulong long long ulong ulong void* void*) module: 'opengl32.dll'>
+	<apicall: void 'glSeparableFilter2D' (ulong ulong long long ulong ulong void* void*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glShadeModel: mode
 	"This method was automatically generated."
 	"void glShadeModel(GLenum mode);"
-	<apicall: void 'glShadeModel' (ulong) module: 'opengl32.dll'>
+	<apicall: void 'glShadeModel' (ulong) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'GL_ARB_shader_objects' stamp: 'daf 4/1/2007 20:24'!
@@ -6516,413 +6522,413 @@ glShaderSourceARB: shaderObj with: count with: string with: length
 glStencilFunc: func with: ref with: mask
 	"This method was automatically generated."
 	"void glStencilFunc(GLenum func, GLint ref, GLuint mask);"
-	<apicall: void 'glStencilFunc' (ulong long ulong) module: 'opengl32.dll'>
+	<apicall: void 'glStencilFunc' (ulong long ulong) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glStencilMask: mask
 	"This method was automatically generated."
 	"void glStencilMask(GLuint mask);"
-	<apicall: void 'glStencilMask' (ulong) module: 'opengl32.dll'>
+	<apicall: void 'glStencilMask' (ulong) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glStencilOp: fail with: zfail with: zpass
 	"This method was automatically generated."
 	"void glStencilOp(GLenum fail, GLenum zfail, GLenum zpass);"
-	<apicall: void 'glStencilOp' (ulong ulong ulong) module: 'opengl32.dll'>
+	<apicall: void 'glStencilOp' (ulong ulong ulong) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexCoord1d: s
 	"This method was automatically generated."
 	"void glTexCoord1d(GLdouble s);"
-	<apicall: void 'glTexCoord1d' (double) module: 'opengl32.dll'>
+	<apicall: void 'glTexCoord1d' (double) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexCoord1dv: v
 	"This method was automatically generated."
 	"void glTexCoord1dv(GLdouble* v);"
-	<apicall: void 'glTexCoord1dv' (double*) module: 'opengl32.dll'>
+	<apicall: void 'glTexCoord1dv' (double*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexCoord1f: s
 	"This method was automatically generated."
 	"void glTexCoord1f(GLfloat s);"
-	<apicall: void 'glTexCoord1f' (float) module: 'opengl32.dll'>
+	<apicall: void 'glTexCoord1f' (float) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexCoord1fv: v
 	"This method was automatically generated."
 	"void glTexCoord1fv(GLfloat* v);"
-	<apicall: void 'glTexCoord1fv' (float*) module: 'opengl32.dll'>
+	<apicall: void 'glTexCoord1fv' (float*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexCoord1i: s
 	"This method was automatically generated."
 	"void glTexCoord1i(GLint s);"
-	<apicall: void 'glTexCoord1i' (long) module: 'opengl32.dll'>
+	<apicall: void 'glTexCoord1i' (long) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexCoord1iv: v
 	"This method was automatically generated."
 	"void glTexCoord1iv(GLint* v);"
-	<apicall: void 'glTexCoord1iv' (long*) module: 'opengl32.dll'>
+	<apicall: void 'glTexCoord1iv' (long*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexCoord1s: s
 	"This method was automatically generated."
 	"void glTexCoord1s(GLshort s);"
-	<apicall: void 'glTexCoord1s' (short) module: 'opengl32.dll'>
+	<apicall: void 'glTexCoord1s' (short) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexCoord1sv: v
 	"This method was automatically generated."
 	"void glTexCoord1sv(GLshort* v);"
-	<apicall: void 'glTexCoord1sv' (short*) module: 'opengl32.dll'>
+	<apicall: void 'glTexCoord1sv' (short*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexCoord2d: s with: t
 	"This method was automatically generated."
 	"void glTexCoord2d(GLdouble s, GLdouble t);"
-	<apicall: void 'glTexCoord2d' (double double) module: 'opengl32.dll'>
+	<apicall: void 'glTexCoord2d' (double double) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexCoord2dv: v
 	"This method was automatically generated."
 	"void glTexCoord2dv(GLdouble* v);"
-	<apicall: void 'glTexCoord2dv' (double*) module: 'opengl32.dll'>
+	<apicall: void 'glTexCoord2dv' (double*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexCoord2f: s with: t
 	"This method was automatically generated."
 	"void glTexCoord2f(GLfloat s, GLfloat t);"
-	<apicall: void 'glTexCoord2f' (float float) module: 'opengl32.dll'>
+	<apicall: void 'glTexCoord2f' (float float) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexCoord2fv: v
 	"This method was automatically generated."
 	"void glTexCoord2fv(GLfloat* v);"
-	<apicall: void 'glTexCoord2fv' (float*) module: 'opengl32.dll'>
+	<apicall: void 'glTexCoord2fv' (float*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexCoord2i: s with: t
 	"This method was automatically generated."
 	"void glTexCoord2i(GLint s, GLint t);"
-	<apicall: void 'glTexCoord2i' (long long) module: 'opengl32.dll'>
+	<apicall: void 'glTexCoord2i' (long long) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexCoord2iv: v
 	"This method was automatically generated."
 	"void glTexCoord2iv(GLint* v);"
-	<apicall: void 'glTexCoord2iv' (long*) module: 'opengl32.dll'>
+	<apicall: void 'glTexCoord2iv' (long*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexCoord2s: s with: t
 	"This method was automatically generated."
 	"void glTexCoord2s(GLshort s, GLshort t);"
-	<apicall: void 'glTexCoord2s' (short short) module: 'opengl32.dll'>
+	<apicall: void 'glTexCoord2s' (short short) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexCoord2sv: v
 	"This method was automatically generated."
 	"void glTexCoord2sv(GLshort* v);"
-	<apicall: void 'glTexCoord2sv' (short*) module: 'opengl32.dll'>
+	<apicall: void 'glTexCoord2sv' (short*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexCoord3d: s with: t with: r
 	"This method was automatically generated."
 	"void glTexCoord3d(GLdouble s, GLdouble t, GLdouble r);"
-	<apicall: void 'glTexCoord3d' (double double double) module: 'opengl32.dll'>
+	<apicall: void 'glTexCoord3d' (double double double) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexCoord3dv: v
 	"This method was automatically generated."
 	"void glTexCoord3dv(GLdouble* v);"
-	<apicall: void 'glTexCoord3dv' (double*) module: 'opengl32.dll'>
+	<apicall: void 'glTexCoord3dv' (double*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexCoord3f: s with: t with: r
 	"This method was automatically generated."
 	"void glTexCoord3f(GLfloat s, GLfloat t, GLfloat r);"
-	<apicall: void 'glTexCoord3f' (float float float) module: 'opengl32.dll'>
+	<apicall: void 'glTexCoord3f' (float float float) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexCoord3fv: v
 	"This method was automatically generated."
 	"void glTexCoord3fv(GLfloat* v);"
-	<apicall: void 'glTexCoord3fv' (float*) module: 'opengl32.dll'>
+	<apicall: void 'glTexCoord3fv' (float*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexCoord3i: s with: t with: r
 	"This method was automatically generated."
 	"void glTexCoord3i(GLint s, GLint t, GLint r);"
-	<apicall: void 'glTexCoord3i' (long long long) module: 'opengl32.dll'>
+	<apicall: void 'glTexCoord3i' (long long long) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexCoord3iv: v
 	"This method was automatically generated."
 	"void glTexCoord3iv(GLint* v);"
-	<apicall: void 'glTexCoord3iv' (long*) module: 'opengl32.dll'>
+	<apicall: void 'glTexCoord3iv' (long*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexCoord3s: s with: t with: r
 	"This method was automatically generated."
 	"void glTexCoord3s(GLshort s, GLshort t, GLshort r);"
-	<apicall: void 'glTexCoord3s' (short short short) module: 'opengl32.dll'>
+	<apicall: void 'glTexCoord3s' (short short short) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexCoord3sv: v
 	"This method was automatically generated."
 	"void glTexCoord3sv(GLshort* v);"
-	<apicall: void 'glTexCoord3sv' (short*) module: 'opengl32.dll'>
+	<apicall: void 'glTexCoord3sv' (short*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexCoord4d: s with: t with: r with: q
 	"This method was automatically generated."
 	"void glTexCoord4d(GLdouble s, GLdouble t, GLdouble r, GLdouble q);"
-	<apicall: void 'glTexCoord4d' (double double double double) module: 'opengl32.dll'>
+	<apicall: void 'glTexCoord4d' (double double double double) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexCoord4dv: v
 	"This method was automatically generated."
 	"void glTexCoord4dv(GLdouble* v);"
-	<apicall: void 'glTexCoord4dv' (double*) module: 'opengl32.dll'>
+	<apicall: void 'glTexCoord4dv' (double*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexCoord4f: s with: t with: r with: q
 	"This method was automatically generated."
 	"void glTexCoord4f(GLfloat s, GLfloat t, GLfloat r, GLfloat q);"
-	<apicall: void 'glTexCoord4f' (float float float float) module: 'opengl32.dll'>
+	<apicall: void 'glTexCoord4f' (float float float float) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexCoord4fv: v
 	"This method was automatically generated."
 	"void glTexCoord4fv(GLfloat* v);"
-	<apicall: void 'glTexCoord4fv' (float*) module: 'opengl32.dll'>
+	<apicall: void 'glTexCoord4fv' (float*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexCoord4i: s with: t with: r with: q
 	"This method was automatically generated."
 	"void glTexCoord4i(GLint s, GLint t, GLint r, GLint q);"
-	<apicall: void 'glTexCoord4i' (long long long long) module: 'opengl32.dll'>
+	<apicall: void 'glTexCoord4i' (long long long long) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexCoord4iv: v
 	"This method was automatically generated."
 	"void glTexCoord4iv(GLint* v);"
-	<apicall: void 'glTexCoord4iv' (long*) module: 'opengl32.dll'>
+	<apicall: void 'glTexCoord4iv' (long*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexCoord4s: s with: t with: r with: q
 	"This method was automatically generated."
 	"void glTexCoord4s(GLshort s, GLshort t, GLshort r, GLshort q);"
-	<apicall: void 'glTexCoord4s' (short short short short) module: 'opengl32.dll'>
+	<apicall: void 'glTexCoord4s' (short short short short) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexCoord4sv: v
 	"This method was automatically generated."
 	"void glTexCoord4sv(GLshort* v);"
-	<apicall: void 'glTexCoord4sv' (short*) module: 'opengl32.dll'>
+	<apicall: void 'glTexCoord4sv' (short*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexCoordPointer: size with: type with: stride with: pointer
 	"This method was automatically generated."
 	"void glTexCoordPointer(GLint size, GLenum type, GLsizei stride, GLvoid* pointer);"
-	<apicall: void 'glTexCoordPointer' (long ulong long void*) module: 'opengl32.dll'>
+	<apicall: void 'glTexCoordPointer' (long ulong long void*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexCoordPointerEXT: size with: type with: stride with: count with: pointer
 	"This method was automatically generated."
 	"void glTexCoordPointerEXT(GLint size, GLenum type, GLsizei stride, GLsizei count, GLvoid* pointer);"
-	<apicall: void 'glTexCoordPointerEXT' (long ulong long long void*) module: 'opengl32.dll'>
+	<apicall: void 'glTexCoordPointerEXT' (long ulong long long void*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexEnvf: target with: pname with: param
 	"This method was automatically generated."
 	"void glTexEnvf(GLenum target, GLenum pname, GLfloat param);"
-	<apicall: void 'glTexEnvf' (ulong ulong float) module: 'opengl32.dll'>
+	<apicall: void 'glTexEnvf' (ulong ulong float) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexEnvfv: target with: pname with: params
 	"This method was automatically generated."
 	"void glTexEnvfv(GLenum target, GLenum pname, GLfloat* params);"
-	<apicall: void 'glTexEnvfv' (ulong ulong float*) module: 'opengl32.dll'>
+	<apicall: void 'glTexEnvfv' (ulong ulong float*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexEnvi: target with: pname with: param
 	"This method was automatically generated."
 	"void glTexEnvi(GLenum target, GLenum pname, GLint param);"
-	<apicall: void 'glTexEnvi' (ulong ulong long) module: 'opengl32.dll'>
+	<apicall: void 'glTexEnvi' (ulong ulong long) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexEnviv: target with: pname with: params
 	"This method was automatically generated."
 	"void glTexEnviv(GLenum target, GLenum pname, GLint* params);"
-	<apicall: void 'glTexEnviv' (ulong ulong long*) module: 'opengl32.dll'>
+	<apicall: void 'glTexEnviv' (ulong ulong long*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexGend: coord with: pname with: param
 	"This method was automatically generated."
 	"void glTexGend(GLenum coord, GLenum pname, GLdouble param);"
-	<apicall: void 'glTexGend' (ulong ulong double) module: 'opengl32.dll'>
+	<apicall: void 'glTexGend' (ulong ulong double) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexGendv: coord with: pname with: params
 	"This method was automatically generated."
 	"void glTexGendv(GLenum coord, GLenum pname, GLdouble* params);"
-	<apicall: void 'glTexGendv' (ulong ulong double*) module: 'opengl32.dll'>
+	<apicall: void 'glTexGendv' (ulong ulong double*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexGenf: coord with: pname with: param
 	"This method was automatically generated."
 	"void glTexGenf(GLenum coord, GLenum pname, GLfloat param);"
-	<apicall: void 'glTexGenf' (ulong ulong float) module: 'opengl32.dll'>
+	<apicall: void 'glTexGenf' (ulong ulong float) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexGenfv: coord with: pname with: params
 	"This method was automatically generated."
 	"void glTexGenfv(GLenum coord, GLenum pname, GLfloat* params);"
-	<apicall: void 'glTexGenfv' (ulong ulong float*) module: 'opengl32.dll'>
+	<apicall: void 'glTexGenfv' (ulong ulong float*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexGeni: coord with: pname with: param
 	"This method was automatically generated."
 	"void glTexGeni(GLenum coord, GLenum pname, GLint param);"
-	<apicall: void 'glTexGeni' (ulong ulong long) module: 'opengl32.dll'>
+	<apicall: void 'glTexGeni' (ulong ulong long) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexGeniv: coord with: pname with: params
 	"This method was automatically generated."
 	"void glTexGeniv(GLenum coord, GLenum pname, GLint* params);"
-	<apicall: void 'glTexGeniv' (ulong ulong long*) module: 'opengl32.dll'>
+	<apicall: void 'glTexGeniv' (ulong ulong long*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexImage1D: target with: level with: internalformat with: width with: border with: format with: type with: pixels
 	"This method was automatically generated."
 	"void glTexImage1D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLint border, GLenum format, GLenum type, GLvoid* pixels);"
-	<apicall: void 'glTexImage1D' (ulong long long long long ulong ulong void*) module: 'opengl32.dll'>
+	<apicall: void 'glTexImage1D' (ulong long long long long ulong ulong void*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexImage2D: target with: level with: internalformat with: width with: height with: border with: format with: type with: pixels
 	"This method was automatically generated."
 	"void glTexImage2D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, GLvoid* pixels);"
-	<apicall: void 'glTexImage2D' (ulong long long long long long ulong ulong void*) module: 'opengl32.dll'>
+	<apicall: void 'glTexImage2D' (ulong long long long long long ulong ulong void*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexImage3D: target with: level with: internalformat with: width with: height with: depth with: border with: format with: type with: pixels
 	"This method was automatically generated."
 	"void glTexImage3D(GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, GLint border, GLenum format, GLenum type, GLvoid* pixels);"
-	<apicall: void 'glTexImage3D' (ulong long ulong long long long long ulong ulong void*) module: 'opengl32.dll'>
+	<apicall: void 'glTexImage3D' (ulong long ulong long long long long ulong ulong void*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexParameterf: target with: pname with: param
 	"This method was automatically generated."
 	"void glTexParameterf(GLenum target, GLenum pname, GLfloat param);"
-	<apicall: void 'glTexParameterf' (ulong ulong float) module: 'opengl32.dll'>
+	<apicall: void 'glTexParameterf' (ulong ulong float) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexParameterfv: target with: pname with: params
 	"This method was automatically generated."
 	"void glTexParameterfv(GLenum target, GLenum pname, GLfloat* params);"
-	<apicall: void 'glTexParameterfv' (ulong ulong float*) module: 'opengl32.dll'>
+	<apicall: void 'glTexParameterfv' (ulong ulong float*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexParameteri: target with: pname with: param
 	"This method was automatically generated."
 	"void glTexParameteri(GLenum target, GLenum pname, GLint param);"
-	<apicall: void 'glTexParameteri' (ulong ulong long) module: 'opengl32.dll'>
+	<apicall: void 'glTexParameteri' (ulong ulong long) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexParameteriv: target with: pname with: params
 	"This method was automatically generated."
 	"void glTexParameteriv(GLenum target, GLenum pname, GLint* params);"
-	<apicall: void 'glTexParameteriv' (ulong ulong long*) module: 'opengl32.dll'>
+	<apicall: void 'glTexParameteriv' (ulong ulong long*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexSubImage1D: target with: level with: xoffset with: width with: format with: type with: pixels
 	"This method was automatically generated."
 	"void glTexSubImage1D(GLenum target, GLint level, GLint xoffset, GLsizei width, GLenum format, GLenum type, GLvoid* pixels);"
-	<apicall: void 'glTexSubImage1D' (ulong long long long ulong ulong void*) module: 'opengl32.dll'>
+	<apicall: void 'glTexSubImage1D' (ulong long long long ulong ulong void*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexSubImage2D: target with: level with: xoffset with: yoffset with: width with: height with: format with: type with: pixels
 	"This method was automatically generated."
 	"void glTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, GLvoid* pixels);"
-	<apicall: void 'glTexSubImage2D' (ulong long long long long long ulong ulong void*) module: 'opengl32.dll'>
+	<apicall: void 'glTexSubImage2D' (ulong long long long long long ulong ulong void*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTexSubImage3D: target with: level with: xoffset with: yoffset with: zoffset with: width with: height with: depth with: format with: type with: pixels
 	"This method was automatically generated."
 	"void glTexSubImage3D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, GLvoid* pixels);"
-	<apicall: void 'glTexSubImage3D' (ulong long long long long long long long ulong ulong void*) module: 'opengl32.dll'>
+	<apicall: void 'glTexSubImage3D' (ulong long long long long long long long ulong ulong void*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTranslated: x with: y with: z
 	"This method was automatically generated."
 	"void glTranslated(GLdouble x, GLdouble y, GLdouble z);"
-	<apicall: void 'glTranslated' (double double double) module: 'opengl32.dll'>
+	<apicall: void 'glTranslated' (double double double) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glTranslatef: x with: y with: z
 	"This method was automatically generated."
 	"void glTranslatef(GLfloat x, GLfloat y, GLfloat z);"
-	<apicall: void 'glTranslatef' (float float float) module: 'opengl32.dll'>
+	<apicall: void 'glTranslatef' (float float float) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'GL_ARB_shader_objects' stamp: 'daf 4/1/2007 20:24'!
@@ -7044,168 +7050,168 @@ glValidateProgramARB: programObj
 glVertex2d: x with: y
 	"This method was automatically generated."
 	"void glVertex2d(GLdouble x, GLdouble y);"
-	<apicall: void 'glVertex2d' (double double) module: 'opengl32.dll'>
+	<apicall: void 'glVertex2d' (double double) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glVertex2dv: v
 	"This method was automatically generated."
 	"void glVertex2dv(GLdouble* v);"
-	<apicall: void 'glVertex2dv' (double*) module: 'opengl32.dll'>
+	<apicall: void 'glVertex2dv' (double*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glVertex2f: x with: y
 	"This method was automatically generated."
 	"void glVertex2f(GLfloat x, GLfloat y);"
-	<apicall: void 'glVertex2f' (float float) module: 'opengl32.dll'>
+	<apicall: void 'glVertex2f' (float float) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glVertex2fv: v
 	"This method was automatically generated."
 	"void glVertex2fv(GLfloat* v);"
-	<apicall: void 'glVertex2fv' (float*) module: 'opengl32.dll'>
+	<apicall: void 'glVertex2fv' (float*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glVertex2i: x with: y
 	"This method was automatically generated."
 	"void glVertex2i(GLint x, GLint y);"
-	<apicall: void 'glVertex2i' (long long) module: 'opengl32.dll'>
+	<apicall: void 'glVertex2i' (long long) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glVertex2iv: v
 	"This method was automatically generated."
 	"void glVertex2iv(GLint* v);"
-	<apicall: void 'glVertex2iv' (long*) module: 'opengl32.dll'>
+	<apicall: void 'glVertex2iv' (long*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glVertex2s: x with: y
 	"This method was automatically generated."
 	"void glVertex2s(GLshort x, GLshort y);"
-	<apicall: void 'glVertex2s' (short short) module: 'opengl32.dll'>
+	<apicall: void 'glVertex2s' (short short) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glVertex2sv: v
 	"This method was automatically generated."
 	"void glVertex2sv(GLshort* v);"
-	<apicall: void 'glVertex2sv' (short*) module: 'opengl32.dll'>
+	<apicall: void 'glVertex2sv' (short*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glVertex3d: x with: y with: z
 	"This method was automatically generated."
 	"void glVertex3d(GLdouble x, GLdouble y, GLdouble z);"
-	<apicall: void 'glVertex3d' (double double double) module: 'opengl32.dll'>
+	<apicall: void 'glVertex3d' (double double double) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glVertex3dv: v
 	"This method was automatically generated."
 	"void glVertex3dv(GLdouble* v);"
-	<apicall: void 'glVertex3dv' (double*) module: 'opengl32.dll'>
+	<apicall: void 'glVertex3dv' (double*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glVertex3f: x with: y with: z
 	"This method was automatically generated."
 	"void glVertex3f(GLfloat x, GLfloat y, GLfloat z);"
-	<apicall: void 'glVertex3f' (float float float) module: 'opengl32.dll'>
+	<apicall: void 'glVertex3f' (float float float) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glVertex3fv: v
 	"This method was automatically generated."
 	"void glVertex3fv(GLfloat* v);"
-	<apicall: void 'glVertex3fv' (float*) module: 'opengl32.dll'>
+	<apicall: void 'glVertex3fv' (float*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glVertex3i: x with: y with: z
 	"This method was automatically generated."
 	"void glVertex3i(GLint x, GLint y, GLint z);"
-	<apicall: void 'glVertex3i' (long long long) module: 'opengl32.dll'>
+	<apicall: void 'glVertex3i' (long long long) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glVertex3iv: v
 	"This method was automatically generated."
 	"void glVertex3iv(GLint* v);"
-	<apicall: void 'glVertex3iv' (long*) module: 'opengl32.dll'>
+	<apicall: void 'glVertex3iv' (long*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glVertex3s: x with: y with: z
 	"This method was automatically generated."
 	"void glVertex3s(GLshort x, GLshort y, GLshort z);"
-	<apicall: void 'glVertex3s' (short short short) module: 'opengl32.dll'>
+	<apicall: void 'glVertex3s' (short short short) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glVertex3sv: v
 	"This method was automatically generated."
 	"void glVertex3sv(GLshort* v);"
-	<apicall: void 'glVertex3sv' (short*) module: 'opengl32.dll'>
+	<apicall: void 'glVertex3sv' (short*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glVertex4d: x with: y with: z with: w
 	"This method was automatically generated."
 	"void glVertex4d(GLdouble x, GLdouble y, GLdouble z, GLdouble w);"
-	<apicall: void 'glVertex4d' (double double double double) module: 'opengl32.dll'>
+	<apicall: void 'glVertex4d' (double double double double) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glVertex4dv: v
 	"This method was automatically generated."
 	"void glVertex4dv(GLdouble* v);"
-	<apicall: void 'glVertex4dv' (double*) module: 'opengl32.dll'>
+	<apicall: void 'glVertex4dv' (double*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glVertex4f: x with: y with: z with: w
 	"This method was automatically generated."
 	"void glVertex4f(GLfloat x, GLfloat y, GLfloat z, GLfloat w);"
-	<apicall: void 'glVertex4f' (float float float float) module: 'opengl32.dll'>
+	<apicall: void 'glVertex4f' (float float float float) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glVertex4fv: v
 	"This method was automatically generated."
 	"void glVertex4fv(GLfloat* v);"
-	<apicall: void 'glVertex4fv' (float*) module: 'opengl32.dll'>
+	<apicall: void 'glVertex4fv' (float*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glVertex4i: x with: y with: z with: w
 	"This method was automatically generated."
 	"void glVertex4i(GLint x, GLint y, GLint z, GLint w);"
-	<apicall: void 'glVertex4i' (long long long long) module: 'opengl32.dll'>
+	<apicall: void 'glVertex4i' (long long long long) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glVertex4iv: v
 	"This method was automatically generated."
 	"void glVertex4iv(GLint* v);"
-	<apicall: void 'glVertex4iv' (long*) module: 'opengl32.dll'>
+	<apicall: void 'glVertex4iv' (long*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glVertex4s: x with: y with: z with: w
 	"This method was automatically generated."
 	"void glVertex4s(GLshort x, GLshort y, GLshort z, GLshort w);"
-	<apicall: void 'glVertex4s' (short short short short) module: 'opengl32.dll'>
+	<apicall: void 'glVertex4s' (short short short short) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glVertex4sv: v
 	"This method was automatically generated."
 	"void glVertex4sv(GLshort* v);"
-	<apicall: void 'glVertex4sv' (short*) module: 'opengl32.dll'>
+	<apicall: void 'glVertex4sv' (short*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'GL_ARB_vertex_program' stamp: 'ar 4/5/2006 21:55'!
@@ -7397,21 +7403,21 @@ glVertexAttribPointerARB: index with: size with: type with: normalized with: str
 glVertexPointer: size with: type with: stride with: pointer
 	"This method was automatically generated."
 	"void glVertexPointer(GLint size, GLenum type, GLsizei stride, GLvoid* pointer);"
-	<apicall: void 'glVertexPointer' (long ulong long void*) module: 'opengl32.dll'>
+	<apicall: void 'glVertexPointer' (long ulong long void*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glVertexPointerEXT: size with: type with: stride with: count with: pointer
 	"This method was automatically generated."
 	"void glVertexPointerEXT(GLint size, GLenum type, GLsizei stride, GLsizei count, GLvoid* pointer);"
-	<apicall: void 'glVertexPointerEXT' (long ulong long long void*) module: 'opengl32.dll'>
+	<apicall: void 'glVertexPointerEXT' (long ulong long long void*) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'ar 12/4/2003 20:59'!
 glViewport: x with: y with: width with: height
 	"This method was automatically generated."
 	"void glViewport(GLint x, GLint y, GLsizei width, GLsizei height);"
-	<apicall: void 'glViewport' (long long long long) module: 'opengl32.dll'>
+	<apicall: void 'glViewport' (long long long long) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'dsa 6/12/2007 16:54'!
@@ -7790,14 +7796,22 @@ openGLLibraryName
 origin
 	^bufRect origin! !
 
-!OpenGL methodsFor: 'as yet unclassified' stamp: 'pb 4/6/2010 14:02'!
+!OpenGL methodsFor: 'as yet unclassified' stamp: 'pb 6/9/2012 14:31'!
 pbPerspective: aFOVY aspect: aAspect zNear: aZNear zFar: aZFar
-|xmin xmax ymin ymax|
-		ymax := aZNear * (((aFOVY * Float pi) / 360.0) tan).
-		ymin := ymax negated.
-		xmin := ymin * aAspect.
-		xmax := ymax * aAspect.
-		self glFrustum: xmin with: xmax with: ymin with: ymax with: aZNear with: aZFar! !
+	"iirc, this was originally created to address problems I was having with gluPerspective:aspect:zNear:zFar:... need to take a fresh look at it as well as the code that depends on this to see if there's still a valid reason for it."
+	| xmin xmax ymin ymax |
+	self flag: #pbfix.
+	ymax := aZNear * (aFOVY * Float pi / 360.0) tan.
+	ymin := ymax negated.
+	xmin := ymin * aAspect.
+	xmax := ymax * aAspect.
+	self
+		glFrustum: xmin
+		with: xmax
+		with: ymin
+		with: ymax
+		with: aZNear
+		with: aZFar.! !
 
 !OpenGL methodsFor: 'accessing' stamp: 'das 6/6/2006 21:27'!
 peekMatrix
@@ -7906,14 +7920,14 @@ pushMatrix
 realglBegin: mode
 	"This method was automatically generated."
 	"void glBegin(GLenum mode);"
-	<apicall: void 'glBegin' (ulong) module: 'opengl32.dll'>
+	<apicall: void 'glBegin' (ulong) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'Keyword API' stamp: 'das 1/19/2005 23:54'!
 realglEnd
 	"This method was automatically generated."
 	"void glEnd();"
-	<apicall: void 'glEnd' (void) module: 'opengl32.dll'>
+	<apicall: void 'glEnd' (void) module: '#openGLLibraryName'>
 	^self externalCallFailed! !
 
 !OpenGL methodsFor: 'textures' stamp: 'das 1/2/2006 23:31'!

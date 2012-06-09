@@ -24,11 +24,9 @@ Math
 FFI
 ===
 
-FFI - Based on FFI-Kernel-ar.9.mcz
+FFI - Using FFI from https://github.com/bpieber/Cuis-StyledTextEditor 
 
-FFITests - Based on FFI-Tests-ar.2.mcz
-
-OpenGL - Based on OpenGL-Core-jrd.6.mcz.  Depends on 3DTransform and FFI.  This was pushed out prematurely and has at least a couple of issues yet to be resolved: font handling is broken, and there are a couple of remaining hacks that were forgotten about that need to be fixed. 
+OpenGL - Originally based on OpenGL-Core-jrd.6.mcz and have merged in some of the changes from OpenGL-Core-bf.17.mcz.  Depends on 3DTransform and FFI.  If you are running on a Unix or Linux system, see the comment in OGLUnix openGLLibraryName. This was pushed out prematurely and has at least a couple of issues yet to be resolved: font handling is broken, and there are at least one or two hacks that were forgotten about that need to be fixed. 
 
 Note: after loading FFI projects, you must call 'Smalltalk recreateSpecialObjectsArray.'
 
