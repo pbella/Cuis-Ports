@@ -8,13 +8,12 @@ Text Processing
 
 HTML - a tolerant HTML parser.  Does a decent job of consuming the various malformed/invalid HTML out on the web.  Based on HTML-sd.2.mcz found at http://squeaksource.com/@HDNjkoaXwriIV8js/Q0l6qq8Y
 
-XML-Parser - I *believe* this is based on XML-Parser-AlexandreBergel.15.mcz but need to confirm.
+XML-Parser - Based on http://squeaksource.cdn.st/XMLSupport/XML-Parser-NorbertHartl.141.mcz
 
-XPath - Split out from, and depends on XMLParser.
+XPath - Based on XML-Parser-AlexandreBergel.15.mcz XPath.  Split out from XML-Parser
 
 VBRegex - A native regex implementation - no plugin required.  Based on http://www.squeaksource.com/Regex/VB-Regex-damienpollet.17.mcz
 
-The *Tests.pck files contain the SUnit tests for their base package name and can be ignored unless you have problems or plan to make changes to the package.  (i.e. if you just want to use the package and it's working for you, don't worry about the test projects)
 
 Math
 ====
@@ -32,5 +31,7 @@ Note: after loading FFI projects, you must call 'Smalltalk recreateSpecialObject
 
 Misc notes:
 ===========
+
+The *Tests.pck files contain the SUnit tests for their base package name and can be ignored unless you have problems or plan to make changes to the package.  (i.e. if you just want to use the package and it's working for you, don't worry about the test projects)
 
 It is intended that this repository will *not* contain any non-permissive licenses (i.e. requiring more than attribution credit) such as GPL'd code to avoid potential issues.  Any ports that are distributed under less permissive licenses will be distributed via separate repositories as needed.

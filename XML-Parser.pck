@@ -1,130 +1,170 @@
-'From Cuis 4.0 of 21 April 2012 [latest update: #1260] on 5 June 2012 at 8:22:08 pm'!
-'Description Based on XML-Parser-AlexandreBergel.15.mcz (pbfix - need to confirm)
+'From Cuis 4.0 of 21 April 2012 [latest update: #1260] on 10 June 2012 at 11:09:12 pm'!
+'Description Based on http://squeaksource.cdn.st/XMLSupport/XML-Parser-NorbertHartl.141.mcz
 
-Work in progress'!
-!classDefinition: #DTDEntityDeclaration category: #'XML-Parser'!
+Tests have been split out into XMLParserTests'!
+!classDefinition: #DTDEntityDeclaration category: #'XML-Parser-DTD'!
 Object subclass: #DTDEntityDeclaration
 	instanceVariableNames: 'name value ndata'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'XML-Parser'!
-!classDefinition: 'DTDEntityDeclaration class' category: #'XML-Parser'!
+	category: 'XML-Parser-DTD'!
+!classDefinition: 'DTDEntityDeclaration class' category: #'XML-Parser-DTD'!
 DTDEntityDeclaration class
 	instanceVariableNames: 'contextBehavior'!
 
-!classDefinition: #DTDExternalEntityDeclaration category: #'XML-Parser'!
+!classDefinition: #DTDExternalEntityDeclaration category: #'XML-Parser-DTD'!
 DTDEntityDeclaration subclass: #DTDExternalEntityDeclaration
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'XML-Parser'!
-!classDefinition: 'DTDExternalEntityDeclaration class' category: #'XML-Parser'!
+	category: 'XML-Parser-DTD'!
+!classDefinition: 'DTDExternalEntityDeclaration class' category: #'XML-Parser-DTD'!
 DTDExternalEntityDeclaration class
 	instanceVariableNames: ''!
 
-!classDefinition: #DTDParameterEntityDeclaration category: #'XML-Parser'!
+!classDefinition: #DTDParameterEntityDeclaration category: #'XML-Parser-DTD'!
 DTDEntityDeclaration subclass: #DTDParameterEntityDeclaration
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'XML-Parser'!
-!classDefinition: 'DTDParameterEntityDeclaration class' category: #'XML-Parser'!
+	category: 'XML-Parser-DTD'!
+!classDefinition: 'DTDParameterEntityDeclaration class' category: #'XML-Parser-DTD'!
 DTDParameterEntityDeclaration class
 	instanceVariableNames: ''!
 
-!classDefinition: #SAXException category: #'XML-Parser'!
+!classDefinition: #OPGenericElement category: #'XML-Parser-Opax'!
+Object subclass: #OPGenericElement
+	instanceVariableNames: 'tag attributes children characters'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'XML-Parser-Opax'!
+!classDefinition: 'OPGenericElement class' category: #'XML-Parser-Opax'!
+OPGenericElement class
+	instanceVariableNames: ''!
+
+!classDefinition: #OPRootElement category: #'XML-Parser-Opax'!
+OPGenericElement subclass: #OPRootElement
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'XML-Parser-Opax'!
+!classDefinition: 'OPRootElement class' category: #'XML-Parser-Opax'!
+OPRootElement class
+	instanceVariableNames: ''!
+
+!classDefinition: #SAXException category: #'XML-Parser-Exception'!
 Error subclass: #SAXException
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'XML-Parser'!
-!classDefinition: 'SAXException class' category: #'XML-Parser'!
+	category: 'XML-Parser-Exception'!
+!classDefinition: 'SAXException class' category: #'XML-Parser-Exception'!
 SAXException class
 	instanceVariableNames: ''!
 
-!classDefinition: #SAXHandler category: #'XML-Parser'!
+!classDefinition: #SAXHandler category: #'XML-Parser-Parser'!
 Object subclass: #SAXHandler
-	instanceVariableNames: 'document driver eod'
+	instanceVariableNames: 'driver eod'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'XML-Parser'!
-!classDefinition: 'SAXHandler class' category: #'XML-Parser'!
+	category: 'XML-Parser-Parser'!
+!classDefinition: 'SAXHandler class' category: #'XML-Parser-Parser'!
 SAXHandler class
 	instanceVariableNames: ''!
 
-!classDefinition: #SAXMalformedException category: #'XML-Parser'!
-SAXException subclass: #SAXMalformedException
+!classDefinition: #OPOpaxHandler category: #'XML-Parser-Opax'!
+SAXHandler subclass: #OPOpaxHandler
+	instanceVariableNames: 'stack'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'XML-Parser-Opax'!
+!classDefinition: 'OPOpaxHandler class' category: #'XML-Parser-Opax'!
+OPOpaxHandler class
+	instanceVariableNames: ''!
+
+!classDefinition: #SAXNotWellFormedException category: #'XML-Parser-Exception'!
+SAXException subclass: #SAXNotWellFormedException
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'XML-Parser'!
-!classDefinition: 'SAXMalformedException class' category: #'XML-Parser'!
-SAXMalformedException class
+	category: 'XML-Parser-Exception'!
+!classDefinition: 'SAXNotWellFormedException class' category: #'XML-Parser-Exception'!
+SAXNotWellFormedException class
 	instanceVariableNames: ''!
 
-!classDefinition: #SAXParseException category: #'XML-Parser'!
+!classDefinition: #SAXParseException category: #'XML-Parser-Exception'!
 SAXException subclass: #SAXParseException
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'XML-Parser'!
-!classDefinition: 'SAXParseException class' category: #'XML-Parser'!
+	category: 'XML-Parser-Exception'!
+!classDefinition: 'SAXParseException class' category: #'XML-Parser-Exception'!
 SAXParseException class
 	instanceVariableNames: ''!
 
-!classDefinition: #SAXWarning category: #'XML-Parser'!
+!classDefinition: #SAXWarning category: #'XML-Parser-Exception'!
 Warning subclass: #SAXWarning
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'XML-Parser'!
-!classDefinition: 'SAXWarning class' category: #'XML-Parser'!
+	category: 'XML-Parser-Exception'!
+!classDefinition: 'SAXWarning class' category: #'XML-Parser-Exception'!
 SAXWarning class
 	instanceVariableNames: ''!
 
-!classDefinition: #XMLDOMParser category: #'XML-Parser'!
+!classDefinition: #XMLDOMParser category: #'XML-Parser-Parser'!
 SAXHandler subclass: #XMLDOMParser
-	instanceVariableNames: 'entity stack incremental'
+	instanceVariableNames: 'document incremental nodeStack preservesCDataSections isInCDataSection'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'XML-Parser'!
-!classDefinition: 'XMLDOMParser class' category: #'XML-Parser'!
+	category: 'XML-Parser-Parser'!
+!classDefinition: 'XMLDOMParser class' category: #'XML-Parser-Parser'!
 XMLDOMParser class
 	instanceVariableNames: ''!
 
-!classDefinition: #XMLException category: #'XML-Parser'!
+!classDefinition: #XMLElementCache category: #'XML-Parser-Nodes'!
+Object subclass: #XMLElementCache
+	instanceVariableNames: 'elements elementsByName'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'XML-Parser-Nodes'!
+!classDefinition: 'XMLElementCache class' category: #'XML-Parser-Nodes'!
+XMLElementCache class
+	instanceVariableNames: ''!
+
+!classDefinition: #XMLException category: #'XML-Parser-Exception'!
 Error subclass: #XMLException
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'XML-Parser'!
-!classDefinition: 'XMLException class' category: #'XML-Parser'!
+	category: 'XML-Parser-Exception'!
+!classDefinition: 'XMLException class' category: #'XML-Parser-Exception'!
 XMLException class
 	instanceVariableNames: ''!
 
-!classDefinition: #XMLInvalidException category: #'XML-Parser'!
-XMLException subclass: #XMLInvalidException
+!classDefinition: #XMLDOMException category: #'XML-Parser-Exception'!
+XMLException subclass: #XMLDOMException
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'XML-Parser'!
-!classDefinition: 'XMLInvalidException class' category: #'XML-Parser'!
-XMLInvalidException class
+	category: 'XML-Parser-Exception'!
+!classDefinition: 'XMLDOMException class' category: #'XML-Parser-Exception'!
+XMLDOMException class
 	instanceVariableNames: ''!
 
-!classDefinition: #XMLMalformedException category: #'XML-Parser'!
-XMLException subclass: #XMLMalformedException
+!classDefinition: #XMLNamespaceException category: #'XML-Parser-Exception'!
+XMLException subclass: #XMLNamespaceException
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'XML-Parser'!
-!classDefinition: 'XMLMalformedException class' category: #'XML-Parser'!
-XMLMalformedException class
+	category: 'XML-Parser-Exception'!
+!classDefinition: 'XMLNamespaceException class' category: #'XML-Parser-Exception'!
+XMLNamespaceException class
 	instanceVariableNames: ''!
 
 !classDefinition: #XMLNamespaceScope category: #'XML-Parser'!
 Object subclass: #XMLNamespaceScope
-	instanceVariableNames: 'scope currentBindings useNamespaces validateAttributes'
+	instanceVariableNames: 'defaultNamespace prefixMappings'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'XML-Parser'!
@@ -132,124 +172,286 @@ Object subclass: #XMLNamespaceScope
 XMLNamespaceScope class
 	instanceVariableNames: ''!
 
-!classDefinition: #XMLNode category: #'XML-Parser'!
-Object subclass: #XMLNode
-	instanceVariableNames: 'parent'
-	classVariableNames: 'CanonicalTable'
-	poolDictionaries: ''
-	category: 'XML-Parser'!
-!classDefinition: 'XMLNode class' category: #'XML-Parser'!
-XMLNode class
-	instanceVariableNames: ''!
-
-!classDefinition: #XMLNodeWithElements category: #'XML-Parser'!
-XMLNode subclass: #XMLNodeWithElements
-	instanceVariableNames: 'elementsAndContents uri namespace'
+!classDefinition: #XMLNestedNamespaceScopes category: #'XML-Parser'!
+Object subclass: #XMLNestedNamespaceScopes
+	instanceVariableNames: 'scopes'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'XML-Parser'!
-!classDefinition: 'XMLNodeWithElements class' category: #'XML-Parser'!
+!classDefinition: 'XMLNestedNamespaceScopes class' category: #'XML-Parser'!
+XMLNestedNamespaceScopes class
+	instanceVariableNames: ''!
+
+!classDefinition: #XMLNode category: #'XML-Parser-Nodes'!
+Object subclass: #XMLNode
+	instanceVariableNames: 'parent'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'XML-Parser-Nodes'!
+!classDefinition: 'XMLNode class' category: #'XML-Parser-Nodes'!
+XMLNode class
+	instanceVariableNames: ''!
+
+!classDefinition: #XMLAttribute category: #'XML-Parser-Nodes'!
+XMLNode subclass: #XMLAttribute
+	instanceVariableNames: 'name value'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'XML-Parser-Nodes'!
+!classDefinition: 'XMLAttribute class' category: #'XML-Parser-Nodes'!
+XMLAttribute class
+	instanceVariableNames: ''!
+
+!classDefinition: #XMLNodeName category: #'XML-Parser-Nodes'!
+Object subclass: #XMLNodeName
+	instanceVariableNames: 'qualifiedName prefix localName'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'XML-Parser-Nodes'!
+!classDefinition: 'XMLNodeName class' category: #'XML-Parser-Nodes'!
+XMLNodeName class
+	instanceVariableNames: ''!
+
+!classDefinition: #XMLNodeWithChildren category: #'XML-Parser-Nodes'!
+XMLNode subclass: #XMLNodeWithChildren
+	instanceVariableNames: 'nodes'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'XML-Parser-Nodes'!
+!classDefinition: 'XMLNodeWithChildren class' category: #'XML-Parser-Nodes'!
+XMLNodeWithChildren class
+	instanceVariableNames: ''!
+
+!classDefinition: #XMLNodeWithElements category: #'XML-Parser-Nodes'!
+XMLNodeWithChildren subclass: #XMLNodeWithElements
+	instanceVariableNames: 'elementCache'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'XML-Parser-Nodes'!
+!classDefinition: 'XMLNodeWithElements class' category: #'XML-Parser-Nodes'!
 XMLNodeWithElements class
 	instanceVariableNames: ''!
 
-!classDefinition: #XMLDocument category: #'XML-Parser'!
+!classDefinition: #XMLDocument category: #'XML-Parser-Nodes'!
 XMLNodeWithElements subclass: #XMLDocument
 	instanceVariableNames: 'dtd version encoding requiredMarkup'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'XML-Parser'!
-!classDefinition: 'XMLDocument class' category: #'XML-Parser'!
+	category: 'XML-Parser-Nodes'!
+!classDefinition: 'XMLDocument class' category: #'XML-Parser-Nodes'!
 XMLDocument class
 	instanceVariableNames: ''!
 
-!classDefinition: #XMLElement category: #'XML-Parser'!
+!classDefinition: #XMLElement category: #'XML-Parser-Nodes'!
 XMLNodeWithElements subclass: #XMLElement
-	instanceVariableNames: 'name attributes'
+	instanceVariableNames: 'name attributes scope usesNamespaces'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'XML-Parser'!
-!classDefinition: 'XMLElement class' category: #'XML-Parser'!
+	category: 'XML-Parser-Nodes'!
+!classDefinition: 'XMLElement class' category: #'XML-Parser-Nodes'!
 XMLElement class
 	instanceVariableNames: ''!
 
-!classDefinition: #XMLPI category: #'XML-Parser'!
+!classDefinition: #XMLOpenTags category: #'XML-Parser-Parser'!
+Object subclass: #XMLOpenTags
+	instanceVariableNames: 'tags'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'XML-Parser-Parser'!
+!classDefinition: 'XMLOpenTags class' category: #'XML-Parser-Parser'!
+XMLOpenTags class
+	instanceVariableNames: ''!
+
+!classDefinition: #XMLOrderPreservingDictionary category: #'XML-Parser'!
+Dictionary subclass: #XMLOrderPreservingDictionary
+	instanceVariableNames: 'orderedKeys'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'XML-Parser'!
+!classDefinition: 'XMLOrderPreservingDictionary class' category: #'XML-Parser'!
+XMLOrderPreservingDictionary class
+	instanceVariableNames: ''!
+
+!classDefinition: #XMLOrderedList category: #'XML-Parser-Nodes'!
+OrderedCollection subclass: #XMLOrderedList
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'XML-Parser-Nodes'!
+!classDefinition: 'XMLOrderedList class' category: #'XML-Parser-Nodes'!
+XMLOrderedList class
+	instanceVariableNames: ''!
+
+!classDefinition: #XMLNodeList category: #'XML-Parser-Nodes'!
+XMLOrderedList subclass: #XMLNodeList
+	instanceVariableNames: 'parent'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'XML-Parser-Nodes'!
+!classDefinition: 'XMLNodeList class' category: #'XML-Parser-Nodes'!
+XMLNodeList class
+	instanceVariableNames: ''!
+
+!classDefinition: #XMLAttributeList category: #'XML-Parser-Nodes'!
+XMLNodeList subclass: #XMLAttributeList
+	instanceVariableNames: 'nodesByName'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'XML-Parser-Nodes'!
+!classDefinition: 'XMLAttributeList class' category: #'XML-Parser-Nodes'!
+XMLAttributeList class
+	instanceVariableNames: ''!
+
+!classDefinition: #XMLPI category: #'XML-Parser-Nodes'!
 XMLNode subclass: #XMLPI
 	instanceVariableNames: 'target data'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'XML-Parser'!
-!classDefinition: 'XMLPI class' category: #'XML-Parser'!
+	category: 'XML-Parser-Nodes'!
+!classDefinition: 'XMLPI class' category: #'XML-Parser-Nodes'!
 XMLPI class
 	instanceVariableNames: ''!
 
-!classDefinition: #XMLStringNode category: #'XML-Parser'!
-XMLNode subclass: #XMLStringNode
+!classDefinition: #XMLStreamReader category: #'XML-Parser-Parser'!
+Object subclass: #XMLStreamReader
+	instanceVariableNames: 'stream nestedStreams peekChar buffer'
+	classVariableNames: 'CarriageReturn DigitTable LineFeed SeparatorTable'
+	poolDictionaries: ''
+	category: 'XML-Parser-Parser'!
+!classDefinition: 'XMLStreamReader class' category: #'XML-Parser-Parser'!
+XMLStreamReader class
+	instanceVariableNames: ''!
+
+!classDefinition: #XMLStreamWriter category: #'XML-Parser-Parser'!
+Object subclass: #XMLStreamWriter
+	instanceVariableNames: 'streams nextStream'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'XML-Parser-Parser'!
+!classDefinition: 'XMLStreamWriter class' category: #'XML-Parser-Parser'!
+XMLStreamWriter class
+	instanceVariableNames: ''!
+
+!classDefinition: #XMLString category: #'XML-Parser-Nodes'!
+XMLNode subclass: #XMLString
 	instanceVariableNames: 'string'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'XML-Parser'!
-!classDefinition: 'XMLStringNode class' category: #'XML-Parser'!
-XMLStringNode class
+	category: 'XML-Parser-Nodes'!
+!classDefinition: 'XMLString class' category: #'XML-Parser-Nodes'!
+XMLString class
 	instanceVariableNames: ''!
 
-!classDefinition: #XMLTokenizer category: #'XML-Parser'!
-Object subclass: #XMLTokenizer
-	instanceVariableNames: 'stream nestedStreams entities externalEntities parameterEntities parsingMarkup markedPosition peekChar validating nameBuffer attributeBuffer'
-	classVariableNames: 'CharEscapes DigitTable LiteralChars NameDelimiters SeparatorTable'
+!classDefinition: #XMLCData category: #'XML-Parser-Nodes'!
+XMLString subclass: #XMLCData
+	instanceVariableNames: ''
+	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'XML-Parser'!
-!classDefinition: 'XMLTokenizer class' category: #'XML-Parser'!
+	category: 'XML-Parser-Nodes'!
+!classDefinition: 'XMLCData class' category: #'XML-Parser-Nodes'!
+XMLCData class
+	instanceVariableNames: ''!
+
+!classDefinition: #XMLTokenizer category: #'XML-Parser-Parser'!
+Object subclass: #XMLTokenizer
+	instanceVariableNames: 'streamReader streamWriter entities externalEntities parameterEntities isValidating parsingMarkup'
+	classVariableNames: 'CharEscapes LiteralChars NameDelimiters'
+	poolDictionaries: ''
+	category: 'XML-Parser-Parser'!
+!classDefinition: 'XMLTokenizer class' category: #'XML-Parser-Parser'!
 XMLTokenizer class
 	instanceVariableNames: ''!
 
-!classDefinition: #SAXDriver category: #'XML-Parser'!
+!classDefinition: #SAXDriver category: #'XML-Parser-Parser'!
 XMLTokenizer subclass: #SAXDriver
-	instanceVariableNames: 'saxHandler scope useNamespaces validateAttributes languageEnvironment'
+	instanceVariableNames: 'saxHandler openTags nestedScopes useNamespaces validateAttributes languageEnvironment'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'XML-Parser'!
-!classDefinition: 'SAXDriver class' category: #'XML-Parser'!
+	category: 'XML-Parser-Parser'!
+!classDefinition: 'SAXDriver class' category: #'XML-Parser-Parser'!
 SAXDriver class
 	instanceVariableNames: ''!
 
-!classDefinition: #XMLParser category: #'XML-Parser'!
-XMLTokenizer subclass: #XMLParser
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'XML-Parser'!
-!classDefinition: 'XMLParser class' category: #'XML-Parser'!
-XMLParser class
-	instanceVariableNames: ''!
-
-!classDefinition: #XMLWarningException category: #'XML-Parser'!
-XMLException subclass: #XMLWarningException
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'XML-Parser'!
-!classDefinition: 'XMLWarningException class' category: #'XML-Parser'!
-XMLWarningException class
-	instanceVariableNames: ''!
-
-!classDefinition: #XMLWriter category: #'XML-Parser'!
+!classDefinition: #XMLWriter category: #'XML-Parser-Parser'!
 Object subclass: #XMLWriter
-	instanceVariableNames: 'stream stack scope scanner canonical currentIndent indentString'
+	instanceVariableNames: 'stream openTags nestedScopes canonical currentIndent indentString newLinesAllowed'
 	classVariableNames: 'XMLTranslation XMLTranslationMap'
 	poolDictionaries: ''
-	category: 'XML-Parser'!
-!classDefinition: 'XMLWriter class' category: #'XML-Parser'!
+	category: 'XML-Parser-Parser'!
+!classDefinition: 'XMLWriter class' category: #'XML-Parser-Parser'!
 XMLWriter class
 	instanceVariableNames: ''!
 
 
-!XMLTokenizer commentStamp: '<historical>' prior: 0!
-XMLTokenizer
+!SAXDriver commentStamp: 'JAAyer 3/23/2010 16:10' prior: 0!
+SAXDriver together with SAXHandler provides a SAX-like API for XML parsing. A SAXDriver processes XML tokens and signals SAX events to a SAXHandler. To use it, create a subclass of SAXHandler and override messages that handle SAX events of interest. See "instance creation" on the class-side of SAXHandler for ways to instantiate such a parser.!
 
-bolot@cc.gatech.edu
+!SAXHandler commentStamp: 'JAAyer 3/9/2010 12:11' prior: 0!
+A SAXHandler is an XML parser that uses event handling. The acronym "SAX" refers to Java's "Simple API for XML," on which SAXHandler's API is based. To use this class, create a subclass and override handlers in "content" and "lexical" as needed. To instantiate it you can send #on: or any of the #parse- messages. The former creates a new parser on the given input stream and returns it; the instance can then be sent #parseDocument to parse the input. The #parse- messages take some input source and parse it, returning the result of #parseDocument.
 
-breaks the stream of characters into a stream of XMLnodes (aka token stream)
-token stream is used by XMLparser to generate XMLdocument tree!
+By default, namespace support is enabled.!
+
+!XMLAttribute commentStamp: 'JAAyer 3/23/2010 14:24' prior: 0!
+The class represents an attribute node, to be stored in an XMLAttributeList. You should seldom need to interact with these objects directly; XMLElement's various #attribute- messages will usually suffice.
+
+The name of an XMLAttribute can be namespaced using prefixes; however, the prefix must be mapped to a namespace in the parent XMLElement.!
+
+!XMLDOMParser commentStamp: 'JAAyer 3/23/2010 14:08' prior: 0!
+XMLDOMParser parses XML into a tree of XML nodes representing the document structure. To see what kinds of nodes it produces and what can be done with them, browse XML-Parser-Nodes. !
+
+!XMLElement commentStamp: 'JAAyer 3/23/2010 15:43' prior: 0!
+The class represents an XML element node. It can have a name, attributes, associated namespace information and any number child nodes/elements.
+
+The #attribute- messages provide a Dictionary-like prototcol for manipulating attributes. The underlying XMLAttributeList can be accessed using #attributeNodes, and an order-preserving dictionary of attribute names/values can be obtained using #attributes.
+
+Namespaces can be declared using #declareNamespace:uri: or simultaniously with changing the element's name or prefix using #name:namespaceURI: or #prefix:uri:. The default namespace can be accessed through #defaultNamespace and #defaultNamespace:.
+
+Character data can be obtained using #contentString, which returns content of the first XMLString node, or through #contents, which returns all child XMLString nodes.!
+
+!XMLNamespaceScope commentStamp: 'JAAyer 3/11/2010 00:01' prior: 0!
+An XMLNamespaceScope is a set of mappings from namespace prefixes to URIs, and also a default URI. Scopes can be created from other scopes by sending #enclosingScope: to XMLNamespaceScope with the other XMLNamespaceScope as the argument.!
+
+!XMLNestedNamespaceScopes commentStamp: 'JAAyer 3/11/2010 00:00' prior: 0!
+An XMLNestedNamespaceScopes represents a stack of XMLNamespaceScopes. Sending #enterScope to an instance will cause it to push a new scope onto the stack that inherits all mappings from the previous, enclosing scope. Sending #leaveScop causes that scope to be removed.!
+
+!XMLNode commentStamp: 'JAAyer 3/5/2010 03:47' prior: 0!
+This is a base class for XML nodes. It contains testing messages and methods to set and access the parent node.!
+
+!XMLNodeName commentStamp: 'JAAyer 3/23/2010 14:10' prior: 0!
+The class represents a name for an element or attribute.!
+
+!XMLNodeWithChildren commentStamp: 'JAAyer 3/23/2010 14:13' prior: 0!
+This class represents a node that has child nodes. It provides a basic protocol to add/remove nodes and iterate over them. You will likely use its API through either XMLElement or XMLDocument.!
+
+!XMLNodeWithElements commentStamp: 'JAAyer 3/23/2010 14:30' prior: 0!
+This class represents a node with elements. You will likely use its API through XMLDocument or XMLElement.
+
+To retrieve child elements by name, you can send any of the #element- messages in "accessing." The #firstTag- messages search the receiver and its descendants using depth-first traversal for specific elements, and the #tagsNamed- messages iterate over descendent elements also using depth-first traversal.!
+
+!XMLOpenTags commentStamp: 'JAAyer 3/23/2010 14:07' prior: 0!
+The class represents a list of currently open tags. It ensures tags are opened and closed in the right order.!
+
+!XMLOrderPreservingDictionary commentStamp: 'JAAyer 3/10/2010 23:59' prior: 0!
+The class is a Dictionary that preserves the order in which associations are added to it.!
+
+!XMLPI commentStamp: 'JAAyer 3/5/2010 03:43' prior: 0!
+This class represents processing instructions.
+!
+
+!XMLStreamReader commentStamp: 'JAAyer 3/24/2010 12:27' prior: 0!
+This class represents a stream reader that implements pushBack: using nested streams. This enables subsitution/replacement to be performed without modifying the underlying collections streamed-over or copying them. It also performs line-ending normalization, returning CR and CRLF sequences read from the input stream as a single LF character.
+
+(The code in this class looks the way it does for performance reasons.)!
+
+!XMLStreamWriter commentStamp: 'JAAyer 3/24/2010 12:33' prior: 0!
+This class handles the allocation and reuse of multiple WriteStreams. It uses a single execute-around method, #writeWith:, which takes a block that it evaluates with a WriteStream.
+!
+
+!XMLString commentStamp: 'JAAyer 3/23/2010 14:11' prior: 0!
+XMLString nodes can be created directly using the class-side #string: message or by sending a string #asXMLNode. When printing, they XML-escape their content.!
+
+!XMLTokenizer commentStamp: 'JAAyer 3/23/2010 16:01' prior: 0!
+This class reads XML tokens from a stream using an XMLStreamReader. To create a parser, subclass XMLTokenizer and override the #handle- messages to handle tokens as they are read. To cause a token to be read, send #nextToken to an instance.!
 
 !DTDEntityDeclaration methodsFor: 'behaviors' stamp: 'mir 1/15/2002 11:29'!
 bypass
@@ -274,9 +476,9 @@ includedInLiteral
 name
 	^name! !
 
-!DTDEntityDeclaration methodsFor: 'accessing' stamp: 'mir 1/17/2002 15:25'!
+!DTDEntityDeclaration methodsFor: 'accessing' stamp: 'JAAyer 3/8/2010 04:52'!
 name: aString
-	name := aString asSymbol! !
+	name := aString! !
 
 !DTDEntityDeclaration methodsFor: 'accessing' stamp: 'mir 12/8/2000 17:22'!
 ndata
@@ -286,10 +488,10 @@ ndata
 ndata: aString
 	ndata := aString! !
 
-!DTDEntityDeclaration methodsFor: 'behaviors' stamp: 'mir 1/15/2002 11:30'!
+!DTDEntityDeclaration methodsFor: 'behaviors' stamp: 'JAAyer 3/11/2010 09:50'!
 reference
 	"Return my reference as is."
-	^self class leadIn , self name , ';'! !
+	^self class leadIn, self name, ';'! !
 
 !DTDEntityDeclaration methodsFor: 'invocation' stamp: 'mir 11/16/2000 21:23'!
 registerIn: aParser
@@ -354,9 +556,9 @@ includePE
 	"Return my expanded value."
 	^self include! !
 
-!DTDParameterEntityDeclaration methodsFor: 'behaviors' stamp: 'mir 1/15/2002 23:21'!
+!DTDParameterEntityDeclaration methodsFor: 'behaviors' stamp: 'JAAyer 3/19/2010 19:11'!
 notRecognized
-	SAXMalformedException signal: 'Malformed entity.'! !
+	SAXNotWellFormedException signal: 'Malformed entity.'! !
 
 !DTDParameterEntityDeclaration methodsFor: 'invocation' stamp: 'mir 11/28/2000 17:26'!
 registerIn: aParser
@@ -378,219 +580,457 @@ initialize
 leadIn
 	^'%'! !
 
-!SAXDriver methodsFor: 'handling tokens' stamp: 'mir 1/16/2002 00:33'!
-handleCData: aString
-	self saxHandler
-		checkEOD; 
-		characters: aString! !
+!OPGenericElement methodsFor: 'accessing' stamp: 'FP 7/21/2009 16:36'!
+addChildLast: anElement
+	self children addLast: anElement! !
 
-!SAXDriver methodsFor: 'handling tokens' stamp: 'cwp 6/17/2003 18:26'!
+!OPGenericElement methodsFor: 'accessing' stamp: 'FP 7/21/2009 16:36'!
+allChildren
+
+	| all |
+	all := OrderedCollection new.
+	self allChildrenDo: [:each | all addLast: each].
+	^all! !
+
+!OPGenericElement methodsFor: 'accessing' stamp: 'FP 7/21/2009 16:36'!
+allChildrenDo: aBlock
+
+	self children do: [:each |
+		aBlock value: each.
+		each allChildrenDo: aBlock
+	]! !
+
+!OPGenericElement methodsFor: 'accessing' stamp: 'tg 1/29/2010 00:54'!
+attributeAt: aString
+	| result |
+	result := self attributes at: aString.
+	^ result isEmpty ifFalse: [result] ifTrue: [nil].! !
+
+!OPGenericElement methodsFor: 'accessing' stamp: 'tg 1/23/2010 23:09'!
+attributeAt: aString ifPresent: aBlock
+	^ self attributes at: aString ifPresent: aBlock! !
+
+!OPGenericElement methodsFor: 'accessing' stamp: 'tg 1/29/2010 00:55'!
+attributeNamed: aString
+	^ self attributeAt: aString! !
+
+!OPGenericElement methodsFor: 'accessing' stamp: 'FP 7/21/2009 16:36'!
+attributes
+	^attributes! !
+
+!OPGenericElement methodsFor: 'accessing' stamp: 'tg 1/24/2010 22:59'!
+attributes: anObject
+	attributes := anObject.
+	attributes associationsDo: [:assoc |
+		attributes at: assoc key asLowercase put: assoc value ]! !
+
+!OPGenericElement methodsFor: 'accessing' stamp: 'FP 7/21/2009 16:37'!
+characters
+	^characters ifNil: ['']! !
+
+!OPGenericElement methodsFor: 'accessing' stamp: 'FP 7/21/2009 16:37'!
+characters: aString
+	characters := aString! !
+
+!OPGenericElement methodsFor: 'accessing' stamp: 'FP 7/21/2009 16:37'!
+children
+	^children isNil 
+		ifTrue: [children := OrderedCollection new]
+		ifFalse: [children].! !
+
+!OPGenericElement methodsFor: 'accessing' stamp: 'tg 1/29/2010 01:07'!
+childrenNamed: aTag do: aBlock
+	self allChildrenDo: [:each |
+		each tag asLowercase = aTag asLowercase ifTrue: [ 
+			aBlock value: each ] ]! !
+
+!OPGenericElement methodsFor: 'accessing' stamp: 'tg 1/23/2010 23:29'!
+deepChildNamed: aTag do: aBlock
+
+	self allChildrenDo: [:each |
+		each tag = aTag ifTrue: [
+			aBlock value: each.
+			^ self ]
+	]! !
+
+!OPGenericElement methodsFor: 'testing' stamp: 'tg 1/29/2010 01:42'!
+hasTag: aTag
+	^ self tag asLowercase = aTag asLowercase! !
+
+!OPGenericElement methodsFor: 'printing' stamp: 'FabrizioPerin 10/22/2009 19:48'!
+printAttributesOn: aStream
+	self attributes ifNotNil: [
+		self attributes keys do: [ :key | aStream nextPutAll: ' ', key asString, '="', (attributes at: key) asString, '"' ]
+	].! !
+
+!OPGenericElement methodsFor: 'printing' stamp: 'fabrizio_perin 8/12/2009 17:05'!
+printChildrenOn: aStream
+	| childStream |
+
+	aStream nextPut: Character cr.
+	childStream := ReadWriteStream on: String new.
+
+	self children do: [ :each | each printOn: childStream ].
+
+	childStream reset.
+	[ childStream atEnd ] whileFalse: [
+		aStream nextPutAll: '    '.
+		aStream nextPutAll: (childStream upTo: Character cr).
+		aStream nextPut: Character cr.
+	
+	]! !
+
+!OPGenericElement methodsFor: 'printing' stamp: 'FP 7/21/2009 16:38'!
+printLongTagOn: aStream
+	aStream nextPutAll: '<', self tag.
+	self printAttributesOn: aStream.
+	aStream nextPutAll: '>'.
+
+	self children isEmpty ifTrue: [
+		aStream nextPutAll: self characters.
+	] ifFalse: [
+		self printChildrenOn: aStream.
+	].
+
+	aStream nextPutAll: '</', self tag, '>','
+'! !
+
+!OPGenericElement methodsFor: 'printing' stamp: 'fabrizio_perin 8/12/2009 16:35'!
+printOn: aStream
+"	(self children isEmpty & self characters trimSeparators isEmpty)
+		ifTrue: [ self printShortTagOn: aStream ]
+		ifFalse: [ "
+			
+			self printLongTagOn: aStream.
+			 "]."! !
+
+!OPGenericElement methodsFor: 'printing' stamp: 'FP 7/21/2009 16:40'!
+printShortTagOn: aStream
+	aStream nextPutAll: '<', self tag.
+	self printAttributesOn: aStream.
+	aStream nextPutAll: '/>'.! !
+
+!OPGenericElement methodsFor: 'accessing' stamp: 'FP 7/21/2009 16:37'!
+tag
+	^tag! !
+
+!OPGenericElement methodsFor: 'accessing' stamp: 'FP 7/21/2009 16:37'!
+tag: anObject
+	tag := anObject! !
+
+!OPGenericElement class methodsFor: 'instance creation' stamp: 'FP 7/21/2009 16:53'!
+newElementWithTag: aString
+	"returns an instance of a generic element or of a subclass"
+	| wantedClass |
+	wantedClass := self allSubclasses
+		detect: [:each | each xmlTags includes: aString] ifNone: [ self ].
+	^ wantedClass new tag: aString! !
+
+!OPGenericElement class methodsFor: 'instance creation' stamp: 'FP 7/21/2009 16:52'!
+xmlTags
+	"returns the xml tags that are to be handled by the element"
+	^OrderedCollection new! !
+
+!OPOpaxHandler methodsFor: 'public interface' stamp: 'FP 7/21/2009 16:45'!
+characters: aString
+	self stack last characters: aString.! !
+
+!OPOpaxHandler methodsFor: 'public interface' stamp: 'FabrizioPerin 3/26/2010 15:38'!
+endDocument
+	^super endDocument! !
+
+!OPOpaxHandler methodsFor: 'public interface' stamp: 'FabrizioPerin 3/26/2010 15:32'!
+endElement: qualifiedName prefix: prefix uri: namespaceURI localName: localName 
+	"indicates the end of an element. See startElement"
+	((stack last class xmlTags includes: localName) or: [stack last isMemberOf: OPGenericElement]) ifTrue: [stack removeLast: 1].! !
+
+!OPOpaxHandler methodsFor: 'initialize' stamp: 'fabrizio.perin 7/27/2009 16:50'!
+initialize
+	super initialize.! !
+
+!OPOpaxHandler methodsFor: 'accessing' stamp: 'FP 7/21/2009 16:45'!
+stack
+	^stack! !
+
+!OPOpaxHandler methodsFor: 'accessing' stamp: 'FP 7/21/2009 16:45'!
+stack: anObject
+	stack := anObject! !
+
+!OPOpaxHandler methodsFor: 'public interface' stamp: 'fabrizio.perin 7/27/2009 16:14'!
+startDocument
+	stack := OrderedCollection with: (OPRootElement new).
+! !
+
+!OPOpaxHandler methodsFor: 'public interface' stamp: 'FabrizioPerin 3/9/2010 12:54'!
+startElement: localName prefix: prefix uri: namespaceUri attributes: attributes
+"	localName = 'Class' ifTrue: [self halt.]."
+"	(ElementManager uniqueInstance elementNamesWithoutPrefix includes: localName) ifTrue: [ |currentElement|
+		pName := (attributes select: [ :each | each key type = 'name']) first.
+		id := (attributes select: [ :each | each key type = 'xmi.id']) first value.
+		currentElement := (ElementManager uniqueInstance elementNamedWithoutPrefix: localName) named: pName in: stack last withId: id."
+	| currentElement |
+	currentElement := OPGenericElement newElementWithTag: localName.
+	currentElement attributes: attributes.
+	stack last addChildLast: currentElement.
+	stack addLast: currentElement.
+"	]."! !
+
+!OPOpaxHandler methodsFor: 'public interface' stamp: 'FabrizioPerin 3/26/2010 15:36'!
+startElement: aQualifiedName prefix: prefix uri: namespaceUri localName: localName attributes: attributes
+"	localName = 'Class' ifTrue: [self halt.]."
+"	(ElementManager uniqueInstance elementNamesWithoutPrefix includes: localName) ifTrue: [ |currentElement|
+		pName := (attributes select: [ :each | each key type = 'name']) first.
+		id := (attributes select: [ :each | each key type = 'xmi.id']) first value.
+		currentElement := (ElementManager uniqueInstance elementNamedWithoutPrefix: localName) named: pName in: stack last withId: id."
+	| currentElement |
+	currentElement := OPGenericElement newElementWithTag: localName.
+	currentElement attributes: attributes.
+	stack last addChildLast: currentElement.
+	stack addLast: currentElement.
+"	]."! !
+
+!OPOpaxHandler class methodsFor: 'instance creation' stamp: 'FabrizioPerin 3/15/2010 13:04'!
+on: aStream
+	| driver parser |
+	driver := SAXDriver on: aStream.
+	"driver validating: false."
+	parser := self new driver: driver.
+	^parser! !
+
+!OPRootElement methodsFor: 'printing' stamp: 'FP 7/22/2009 14:00'!
+printOn: aStream
+	aStream
+		nextPutAll: '<?xml version="1.0" encoding="utf-8"?>';
+		nextPut: Character cr.
+	self children do: [ :each | each printOn: aStream ].! !
+
+!SAXDriver methodsFor: 'content' stamp: 'JAAyer 3/5/2010 10:38'!
+activeSaxHandler
+	saxHandler eod
+		ifTrue: [self errorExpected: 'No more data expected.'].
+	^ saxHandler.! !
+
+!SAXDriver methodsFor: 'accessing' stamp: 'JAAyer 3/19/2010 19:12'!
+closeTag: anElementName
+	^ [self openTags closeTag: anElementName]
+		on: Error
+		do: [:error | self notWellFormedError: error messageText]! !
+
+!SAXDriver methodsFor: 'accessing' stamp: 'JAAyer 3/13/2010 13:47'!
+currentScope
+	^ self usesNamespaces
+		ifTrue: [self nestedScopes currentScope]
+		ifFalse: [nil]! !
+
+!SAXDriver methodsFor: 'namespaces' stamp: 'JAAyer 3/14/2010 11:49'!
+declareNamespaces: aDictionary
+	aDictionary keysAndValuesDo: [:prefix :uri |
+		self nestedScopes declareNamespace: prefix uri: uri.
+		self activeSaxHandler startPrefixMapping: prefix uri: uri]! !
+
+!SAXDriver methodsFor: 'errors' stamp: 'JAAyer 3/22/2010 21:25'!
+errorBadPrefix: aPrefix inStartTag: aStartTag
+	XMLNamespaceException signal:
+		'Start tag <', aStartTag, '> refers to unmapped prefix ', aPrefix! !
+
+!SAXDriver methodsFor: 'handling tokens' stamp: 'JAAyer 3/5/2010 10:33'!
+handleCData: aString
+	self activeSaxHandler
+		startCData;
+		characters: aString;
+		endCData! !
+
+!SAXDriver methodsFor: 'handling tokens' stamp: 'JAAyer 3/5/2010 10:33'!
 handleComment: aString
-	self saxHandler
-		checkEOD; 
+	self activeSaxHandler 
 		comment: aString! !
 
-!SAXDriver methodsFor: 'handling tokens' stamp: 'mir 1/8/2002 18:38'!
+!SAXDriver methodsFor: 'handling tokens' stamp: 'JAAyer 3/19/2010 19:12'!
 handleEndDocument
+	self openTags hasOpenTags
+		ifTrue: [self notWellFormedError: 'Unclosed tags: ', self openTags printString].
 	self saxHandler endDocument! !
 
-!SAXDriver methodsFor: 'handling tokens' stamp: 'mir 6/24/2003 13:36'!
-handleEndTag: elementName
-	| namespace localName namespaceURI qualifiedName |
+!SAXDriver methodsFor: 'handling tokens' stamp: 'JAAyer 3/24/2010 17:26'!
+handleEndTag: anElementName
+	| prefix localName namespaceURI |
+
+	self closeTag: anElementName.
+
+	anElementName splitQualifiedNameInto: [:prefixPart :localPart |
+		prefix := prefixPart.
+		localName := localPart].
+	self usesNamespaces
+		ifTrue: [namespaceURI := self nestedScopes resolvePrefix: prefix].
+
+	self activeSaxHandler 
+		endElement: anElementName
+		prefix: prefix
+		uri: namespaceURI
+		localName: localName.
 
 	self usesNamespaces
 		ifTrue: [
-			self splitName: elementName into: [:ns :ln |
-				namespace := ns.
-				localName := ln].
+			self undeclareNamespaces.
+			self nestedScopes leaveScope].! !
 
-			"ensure our namespace is defined"
-			namespace
-				ifNil: [
-					namespace := self scope defaultNamespace.
-					qualifiedName := namespace , ':' , elementName]
-				ifNotNil: [
-					namespaceURI := self scope namespaceURIOf: namespace.
-					namespaceURI
-						ifNil: [self parseError: 'Start tag ' , elementName , ' refers to undefined namespace ' , namespace asString].
-					qualifiedName := elementName].
-
-			"call the handler"
-			self saxHandler
-				checkEOD; 
-				endElement: localName namespace: namespace namespaceURI: namespaceURI qualifiedName: qualifiedName.
-			self scope leaveScope]
-		ifFalse: [
-			"call the handler"
-			self saxHandler
-				checkEOD; 
-				endElement: elementName namespace: nil namespaceURI: nil qualifiedName: elementName]! !
-
-!SAXDriver methodsFor: 'handling tokens' stamp: 'mir 7/14/2006 11:55'!
+!SAXDriver methodsFor: 'handling tokens' stamp: 'JAAyer 3/5/2010 10:33'!
 handlePCData: aString
 	self languageEnvironment
 		ifNotNil: [aString applyLanguageInfomation: self languageEnvironment].
-	self saxHandler
-		checkEOD; 
+	self activeSaxHandler 
 		characters: aString! !
 
-!SAXDriver methodsFor: 'handling tokens' stamp: 'mir 1/8/2002 18:24'!
+!SAXDriver methodsFor: 'handling tokens' stamp: 'JAAyer 3/5/2010 10:33'!
 handlePI: piTarget data: piData
-	self saxHandler
-		checkEOD; 
+	self activeSaxHandler 
 		processingInstruction: piTarget data: piData! !
 
 !SAXDriver methodsFor: 'handling tokens' stamp: 'mir 8/14/2000 18:29'!
 handleStartDocument
 	self saxHandler startDocument! !
 
-!SAXDriver methodsFor: 'handling tokens' stamp: 'pb 6/4/2012 16:32'!
-handleStartTag: elementName attributes: attributeList namespaces: namespaces
-	| localName namespace namespaceURI |
+!SAXDriver methodsFor: 'handling tokens' stamp: 'pb 6/10/2012 18:07'!
+handleStartTag: anElementName attributes: anAttributeDictionary namespaces: aNamespaceDictionary
+	| prefix localName namespaceURI |
 	self flag: #pbfix.
 	"no language/locale support in cuis"
-	"(attributeList includesKey: 'xml:lang')
-		ifTrue: [languageEnvironment := LanguageEnvironment localeID: (LocaleID isoString: (attributeList at: 'xml:lang'))]."
-	self usesNamespaces
-		ifTrue: [
-			self scope enterScope.
-			"declare any namespaces"
-			namespaces keysAndValuesDo: [ :ns :uri |
-				self scope
-					declareNamespace: ns
-					uri: uri ].
-			self
-				splitName: elementName
-				into: [ :ns :ln |
-					namespace := ns.
-					localName := ln ].
-			"ensure our namespace is defined"
-			namespace
-				ifNil: [ namespace := self scope defaultNamespace ]
-				ifNotNil: [
-					namespaceURI := self scope namespaceURIOf: namespace.
-					namespaceURI ifNil: [ self parseError: 'Start tag ' , elementName , ' refers to undefined namespace ' , namespace asString ]].
-			self validatesAttributes ifTrue: [ self scope validateAttributes: attributeList ].
-			"call the handler"
-			self saxHandler
-				 checkEOD;
-				
-				startElement: localName
-				namespaceURI: namespaceURI
-				namespace: namespace
-				attributeList: attributeList ]
-		ifFalse: [
-			"call the handler"
-			self saxHandler
-				 checkEOD;
-				
-				startElement: elementName
-				namespaceURI: nil
-				namespace: nil
-				attributeList: attributeList ].! !
+	self openTag: anElementName.
+	"
+	(anAttributeDictionary includesKey: 'xml:lang')
+		ifTrue: [self languageEnvironment: (anAttributeDictionary at: 'xml:lang')].
+		"
+	anElementName splitQualifiedNameInto: [:prefixPart :localPart |
+		prefix := prefixPart.
+		localName := localPart].
 
-!SAXDriver methodsFor: 'handling tokens' stamp: 'cwp 6/18/2003 01:00'!
+	self usesNamespaces ifTrue: [
+		self nestedScopes enterScope.
+		self declareNamespaces: aNamespaceDictionary.
+		namespaceURI := self nestedScopes resolvePrefix: prefix.
+		self
+			validateStartTag: anElementName
+			prefix: prefix
+			attributes: anAttributeDictionary].
+
+	self activeSaxHandler 
+		startElement: anElementName
+		prefix: prefix
+		uri: namespaceURI
+		localName: localName
+		attributes: anAttributeDictionary! !
+
+!SAXDriver methodsFor: 'handling tokens' stamp: 'JAAyer 3/5/2010 10:33'!
 handleWhitespace: aString
-	self saxHandler
-		checkEOD; 
+	self activeSaxHandler 
 		ignorableWhitespace: aString! !
 
-!SAXDriver methodsFor: 'handling tokens' stamp: 'mir 6/24/2003 13:39'!
-handleXMLDecl: attributes namespaces: namespaces
-	self saxHandler
-		checkEOD; 
-		documentAttributes: attributes.
-	self usesNamespaces
-		ifTrue: [
-			namespaces keysAndValuesDo: [:ns :uri |
-				self scope declareNamespace: ns uri: uri]]! !
+!SAXDriver methodsFor: 'handling tokens' stamp: 'JAAyer 3/5/2010 10:33'!
+handleXMLDecl: attributes
+	self activeSaxHandler 
+		documentAttributes: attributes! !
 
-!SAXDriver methodsFor: 'initialization' stamp: 'mir 6/5/2003 16:29'!
-initialize
-	super initialize.
-	useNamespaces := false.
-	validateAttributes := false! !
-
-!SAXDriver methodsFor: 'accessing' stamp: 'mir 7/14/2006 11:48'!
+!SAXDriver methodsFor: 'accessing' stamp: 'JAAyer 3/11/2010 07:21'!
 languageEnvironment
-	^languageEnvironment! !
+	^ languageEnvironment! !
 
-!SAXDriver methodsFor: 'accessing' stamp: 'mir 8/11/2000 17:51'!
+!SAXDriver methodsFor: 'accessing' stamp: 'pb 6/10/2012 18:01'!
+languageEnvironment: anIsoString
+	self flag: #pbfix.
+	"Cuis doesn't support"
+	"
+	languageEnvironment := LanguageEnvironment localeID: (LocaleID isoString: anIsoString)
+	"! !
+
+!SAXDriver methodsFor: 'namespaces' stamp: 'JAAyer 3/11/2010 07:21'!
+nestedScopes
+	^ nestedScopes ifNil: [nestedScopes := XMLNestedNamespaceScopes new]! !
+
+!SAXDriver methodsFor: 'errors' stamp: 'JAAyer 3/19/2010 19:12'!
+notWellFormedError: anErrorMessage
+	SAXNotWellFormedException signal: anErrorMessage! !
+
+!SAXDriver methodsFor: 'accessing' stamp: 'JAAyer 3/16/2010 09:49'!
+openTag: anElementName
+	^ self openTags openTag: anElementName! !
+
+!SAXDriver methodsFor: 'accessing' stamp: 'JAAyer 3/16/2010 09:24'!
+openTags
+	^ openTags ifNil: [openTags := XMLOpenTags new]! !
+
+!SAXDriver methodsFor: 'accessing' stamp: 'JAAyer 3/14/2010 10:52'!
 saxHandler
-	^saxHandler! !
+	^ saxHandler! !
 
 !SAXDriver methodsFor: 'accessing' stamp: 'mir 8/11/2000 17:52'!
 saxHandler: aHandler
 	saxHandler := aHandler! !
 
-!SAXDriver methodsFor: 'namespaces' stamp: 'mir 6/24/2003 13:40'!
-scope
-	scope ifNil: [scope := XMLNamespaceScope new].
-	^scope! !
+!SAXDriver methodsFor: 'namespaces' stamp: 'JAAyer 3/19/2010 18:57'!
+undeclareNamespaces
+	| currentScope enclosingScope |
 
-!SAXDriver methodsFor: 'namespaces' stamp: 'mir 6/16/2003 13:09'!
-splitName: aName into: twoArgsBlock
-	"Split the name into namespace and local name (the block arguments).
-	Handle both qualified and unqualified names using the default name space"
+	currentScope := self nestedScopes currentScope.
+	enclosingScope := self nestedScopes enclosingScope.
 
-	| i ns ln |
-	i := aName lastIndexOf: $:.
-	i = 0
-		ifTrue: [
-			ns := nil.
-			ln := aName]
-		ifFalse: [
-			ns := aName copyFrom: 1 to: (i - 1).
-			ln := aName copyFrom: i+1 to: aName size].
-	twoArgsBlock value: ns value: ln! !
+	currentScope prefixMappingsDo: [:prefix :uri |
+		(enclosingScope isPrefix: prefix mappedTo: uri)
+			ifFalse: [self activeSaxHandler endPrefixMapping: prefix]].
 
-!SAXDriver methodsFor: 'accessing' stamp: 'mir 6/24/2003 14:51'!
+	(currentScope defaultNamespace notNil
+		and: [currentScope defaultNamespace ~= enclosingScope defaultNamespace])
+		ifTrue: [self activeSaxHandler endPrefixMapping: 'xmlns']! !
+
+!SAXDriver methodsFor: 'accessing' stamp: 'JAAyer 3/14/2010 03:14'!
 useNamespaces: aBoolean
 	useNamespaces := aBoolean! !
 
-!SAXDriver methodsFor: 'testing' stamp: 'mir 6/5/2003 16:30'!
+!SAXDriver methodsFor: 'testing' stamp: 'JAAyer 3/16/2010 09:25'!
 usesNamespaces
-	^useNamespaces! !
+	^ useNamespaces ifNil: [useNamespaces := false]! !
 
-!SAXDriver methodsFor: 'testing' stamp: 'mir 6/5/2003 17:06'!
+!SAXDriver methodsFor: 'namespaces' stamp: 'JAAyer 3/14/2010 11:44'!
+validateStartTag: aStartTag prefix: aPrefix attributes: attributeList
+	(aPrefix isNil or: [self nestedScopes isMappedPrefix: aPrefix])
+		ifFalse: [self errorBadPrefix: aPrefix inStartTag: aStartTag].
+
+	self validatesAttributes
+		ifTrue: [self nestedScopes validateAttributes: attributeList].! !
+
+!SAXDriver methodsFor: 'testing' stamp: 'JAAyer 3/19/2010 18:22'!
 validatesAttributes
-	^validateAttributes! !
+	^ validateAttributes ifNil: [validateAttributes := true]! !
 
 !SAXHandler methodsFor: 'content' stamp: 'mir 1/8/2002 18:27'!
 characters: aString
 	"This call corresponds to the Java SAX call
 	characters(char[] ch, int start, int length)."! !
 
-!SAXHandler methodsFor: 'content' stamp: 'mir 1/8/2002 18:24'!
-checkEOD
-	"Check if the document shouldn't be ended already"
-	self eod
-		ifTrue: [self driver errorExpected: 'No more data expected,']! !
-
 !SAXHandler methodsFor: 'lexical' stamp: 'mir 8/11/2000 18:52'!
 comment: commentString
 	"This call corresponds to the Java SAX ext call
 	comment(char[] ch, int start, int length)."! !
 
-!SAXHandler methodsFor: 'accessing' stamp: 'mir 11/30/2000 18:12'!
-document
-	^document! !
+!SAXHandler methodsFor: 'accessing' stamp: 'JAAyer 3/5/2010 22:56'!
+currentScope
+	^ self driver currentScope! !
 
-!SAXHandler methodsFor: 'accessing' stamp: 'mir 11/30/2000 18:12'!
-document: aDocument
-	document := aDocument! !
+!SAXHandler methodsFor: 'content' stamp: 'JAAyer 3/16/2010 09:26'!
+documentAttributes: aDictionary! !
 
-!SAXHandler methodsFor: 'content' stamp: 'mir 1/17/2002 13:12'!
-documentAttributes: attributeList! !
-
-!SAXHandler methodsFor: 'accessing' stamp: 'mir 12/7/2000 15:34'!
+!SAXHandler methodsFor: 'accessing' stamp: 'JAAyer 3/23/2010 15:55'!
 driver
-	^driver! !
+	^ driver! !
 
 !SAXHandler methodsFor: 'accessing' stamp: 'mir 12/7/2000 15:34'!
 driver: aDriver
 	driver := aDriver.
 	driver saxHandler: self! !
+
+!SAXHandler methodsFor: 'lexical' stamp: 'JAAyer 2/21/2010 15:13'!
+endCData
+	"This call corresponds to the Java SAX ext call
+	endCData()."! !
 
 !SAXHandler methodsFor: 'content' stamp: 'mir 1/8/2002 18:26'!
 endDocument
@@ -602,13 +1042,25 @@ endDocument
 endElement: elementName
 ! !
 
-!SAXHandler methodsFor: 'content' stamp: 'mir 6/5/2003 19:05'!
-endElement: elementName namespace: namespace namespaceURI: namespaceURI qualifiedName: qualifiedName
+!SAXHandler methodsFor: 'content' stamp: 'JAAyer 3/24/2010 16:50'!
+endElement: aQualifiedName prefix: aPrefix uri: aUri
 	"This call corresponds to the Java SAX call
 	endElement(java.lang.String namespaceURI, java.lang.String localName, java.lang.String qName).
 	By default this call is mapped to the following more convenient call:"
 
-	self endElement: elementName! !
+	self endElement: aQualifiedName! !
+
+!SAXHandler methodsFor: 'content' stamp: 'JAAyer 3/24/2010 17:06'!
+endElement: aQualifiedName prefix: aPrefix uri: aUri localName: aLocalName
+	"This call corresponds to the Java SAX call
+	endElement(java.lang.String namespaceURI, java.lang.String localName, java.lang.String qName).
+	By default this call is mapped to the following more convenient call:"
+
+	self
+		invokeDeprecated: #endElement:namespace:namespaceURI:qualifiedName:
+		withArguments: (Array with: aLocalName with: aPrefix with: aUri with: aQualifiedName)
+		orForwardTo: #endElement:prefix:uri:
+		withArguments: (Array with: aQualifiedName with: aPrefix with: aUri)! !
 
 !SAXHandler methodsFor: 'lexical' stamp: 'mir 8/11/2000 18:53'!
 endEntity: entityName
@@ -620,22 +1072,51 @@ endPrefixMapping: prefix
 	"This call corresonds to the Java SAX call
 	endPrefixMapping(java.lang.String prefix)."! !
 
-!SAXHandler methodsFor: 'accessing' stamp: 'mir 1/8/2002 18:18'!
+!SAXHandler methodsFor: 'accessing' stamp: 'JAAyer 3/16/2010 09:27'!
 eod
-	^eod! !
+	^ eod ifNil: [eod := false]! !
 
 !SAXHandler methodsFor: 'content' stamp: 'mir 8/11/2000 16:25'!
 ignorableWhitespace: aString
 	"This call corresonds to the Java SAX call
 	ignorableWhitespace(char[] ch, int start, int length)."! !
 
-!SAXHandler methodsFor: 'initialize' stamp: 'mir 1/8/2002 18:18'!
-initialize
-	eod := false! !
+!SAXHandler methodsFor: 'error handling' stamp: 'JAAyer 3/24/2010 17:06'!
+invokeDeprecated: aDeprecatedSelector withArguments: anOldArgumentArray orForwardTo: aNewSelector withArguments: aNewArgumentArray
+	| parentContext |
 
-!SAXHandler methodsFor: 'parsing' stamp: 'mir 1/8/2002 18:18'!
+	parentContext := thisContext sender.
+	(self class includesSelector: aDeprecatedSelector)
+		ifFalse: [
+			aNewSelector ifNil: [^ self].
+			^ self
+				perform: aNewSelector
+				withArguments: aNewArgumentArray].
+
+	(Deprecation
+		method: (self class lookupSelector: aDeprecatedSelector)
+		explanation: 'use ', parentContext selector, ' instead'
+		on: nil
+		in: nil) signal.
+	self
+		perform: aDeprecatedSelector
+		withArguments: anOldArgumentArray.! !
+
+!SAXHandler methodsFor: 'testing' stamp: 'JAAyer 3/11/2010 06:43'!
+isValidating
+	self driver isValidating! !
+
+!SAXHandler methodsFor: 'accessing' stamp: 'JAAyer 3/11/2010 06:45'!
+isValidating: aBoolean
+	self driver isValidating: aBoolean! !
+
+!SAXHandler methodsFor: 'parsing' stamp: 'JAAyer 3/9/2010 01:32'!
 parseDocument
-	[self driver nextEntity isNil or: [self eod]] whileFalse! !
+	self startDocument.
+	[self driver nextToken isNil or: [self eod]] whileFalse.
+
+	"Result of parsing"
+	^ self.! !
 
 !SAXHandler methodsFor: 'content' stamp: 'mir 8/11/2000 16:26'!
 processingInstruction: piName data: dataString
@@ -667,17 +1148,29 @@ startDocument
 	"This call corresonds to the Java SAX call
 	startDocument()."! !
 
-!SAXHandler methodsFor: 'content' stamp: 'mir 8/14/2000 18:07'!
-startElement: elementName attributeList: attributeList
-! !
+!SAXHandler methodsFor: 'content' stamp: 'JAAyer 3/24/2010 17:06'!
+startElement: aQualifiedName attributes: aDictionary
+	self
+		invokeDeprecated: #startElement:attributeList:
+		withArguments: (Array with: aQualifiedName with: aDictionary)
+		orForwardTo: nil
+		withArguments: nil.! !
 
-!SAXHandler methodsFor: 'content' stamp: 'mir 6/5/2003 16:50'!
-startElement: localName namespaceURI: namespaceUri namespace: namespace attributeList: attributeList
+!SAXHandler methodsFor: 'content' stamp: 'JAAyer 3/24/2010 16:47'!
+startElement: aQualifiedName prefix: aPrefix uri: aUri attributes: aDictionary
+	self startElement: aQualifiedName attributes: aDictionary! !
+
+!SAXHandler methodsFor: 'content' stamp: 'JAAyer 8/9/2010 17:20'!
+startElement: aQualifiedName prefix: aPrefix uri: aUri localName: aLocalName attributes: aDictionary
 	"This call corresonds to the Java SAX call
-	startElement(java.lang.String namespaceURI, java.lang.String localName, java.lang.String qName, Attributes atts).
-	By default this call is mapped to the following more convenient call:"
+	startElement(java.lang.String namespaceURI, java.lang.String localName,
+		java.lang.String qName, Attributes atts)."
 
-	self startElement: localName attributeList: attributeList! !
+	self
+		invokeDeprecated: #startElement:namespaceURI:namespace:attributeList:
+		withArguments: (Array with: aLocalName with: aUri with: aPrefix with: aDictionary)
+		orForwardTo: #startElement:prefix:uri:attributes:
+		withArguments: (Array with: aQualifiedName with: aPrefix with: aUri with: aDictionary).! !
 
 !SAXHandler methodsFor: 'lexical' stamp: 'mir 8/11/2000 18:54'!
 startEntity: entityName
@@ -693,51 +1186,55 @@ startPrefixMapping: prefix uri: uri
 useNamespaces: aBoolean
 	self driver useNamespaces: aBoolean! !
 
-!SAXHandler class methodsFor: 'instance creation' stamp: 'sd 5/23/2003 15:19'!
+!SAXHandler methodsFor: 'testing' stamp: 'JAAyer 3/8/2010 10:38'!
+usesNamespaces
+	^ self driver usesNamespaces! !
+
+!SAXHandler class methodsFor: 'instance creation' stamp: 'pb 6/10/2012 18:57'!
 on: aStream
-	| driver parser |
-	driver := SAXDriver on: aStream.
-	driver validating: true.
-	parser := self new driver: driver.
-	^parser! !
+	| driver |
+	driver := SAXDriver on:
+		((aStream is: #Stream)
+			ifTrue: [aStream]
+			ifFalse: [aStream readStream]).
+	^ self new
+		driver: driver;
+		isValidating: true.! !
 
-!SAXHandler class methodsFor: 'instance creation' stamp: 'cwp 5/28/2003 02:08'!
+!SAXHandler class methodsFor: 'instance creation' stamp: 'JAAyer 3/8/2010 10:14'!
+parse: aStream
+	^ self parseDocumentFrom: aStream! !
+
+!SAXHandler class methodsFor: 'instance creation' stamp: 'JAAyer 3/11/2010 02:03'!
 parseDTDFrom: aStream
-	| driver parser |
-	driver := SAXDriver on: aStream.
-	driver validating: true.
-	driver startParsingMarkup.
-	parser := self new driver: driver.
-	parser startDocument.
-	parser parseDocument.
-	^parser! !
+	| parser |
 
-!SAXHandler class methodsFor: 'instance creation' stamp: 'mir 7/12/2006 16:24'!
+	parser := self on: aStream.
+	parser driver startParsingMarkup.
+	^ parser parseDocument.! !
+
+!SAXHandler class methodsFor: 'instance creation' stamp: 'JAAyer 3/9/2010 01:29'!
 parseDocumentFrom: aStream
-	^self parseDocumentFrom: aStream useNamespaces: false! !
+	^ self parseDocumentFrom: aStream useNamespaces: true! !
 
-!SAXHandler class methodsFor: 'instance creation' stamp: 'mir 7/12/2006 16:26'!
+!SAXHandler class methodsFor: 'instance creation' stamp: 'JAAyer 3/9/2010 00:07'!
 parseDocumentFrom: aStream useNamespaces: aBoolean
 	|  parser |
 	parser := self on: aStream.
 	parser useNamespaces: aBoolean.
-	parser startDocument.
-	parser parseDocument.
-	^parser! !
+	^ parser parseDocument.! !
 
 !SAXHandler class methodsFor: 'instance creation' stamp: 'mir 1/8/2002 15:55'!
 parseDocumentFromFileNamed: fileName
 	^self parseDocumentFromFileNamed: fileName readIntoMemory: false! !
 
-!SAXHandler class methodsFor: 'instance creation' stamp: 'mir 1/8/2002 15:55'!
+!SAXHandler class methodsFor: 'instance creation' stamp: 'JAAyer 3/24/2010 18:56'!
 parseDocumentFromFileNamed: fileName readIntoMemory: readIntoMemory
-	| stream xmlDoc |
+	| stream |
 	stream := FileDirectory default readOnlyFileNamed: fileName.
 	readIntoMemory
 		ifTrue: [stream := stream contentsOfEntireFile readStream].
-	[xmlDoc := self parseDocumentFrom: stream]
-		ensure: [stream close].
-	^xmlDoc! !
+	^ [self parseDocumentFrom: stream] ensure: [stream close].! !
 
 !SAXHandler class methodsFor: 'instance creation' stamp: 'mir 6/5/2003 19:15'!
 parserOnFileNamed: fileName
@@ -751,149 +1248,341 @@ parserOnFileNamed: fileName readIntoMemory: readIntoMemory
 		ifTrue: [stream := stream contentsOfEntireFile readStream].
 	^self on: stream! !
 
-!XMLDOMParser methodsFor: 'private' stamp: 'mir 6/16/2003 17:20'!
-defaultNamespace
-	^self top
-		ifNotNil: [self top namespace]! !
+!String methodsFor: '*xml-parser' stamp: 'mir 7/14/2006 11:54'!
+applyLanguageInfomation: languageEnvironment
+	
+	| leadingChar |
+	leadingChar := languageEnvironment leadingChar.
+	self withIndexDo: [:each :idx |
+		each asciiValue > 255
+			ifTrue: [self at: idx put: (Character leadingChar: leadingChar code: each asUnicode)]]! !
 
-!XMLDOMParser methodsFor: 'content' stamp: 'thf 9/2/2005 14:09'!
+!String methodsFor: '*xml-parser' stamp: 'JAAyer 3/19/2010 19:16'!
+asXMLNode
+	^ XMLString string: self! !
+
+!String methodsFor: '*xml-parser' stamp: 'JAAyer 3/19/2010 18:18'!
+splitQualifiedNameInto: aTwoArgumentBlock
+	"Split the name into namespace prefix and local name (the block arguments)."
+
+	| i |
+	i := self size.
+	[i > 1]
+		whileTrue: [
+			((self at: i) == $:)
+				ifTrue: [
+					^ aTwoArgumentBlock
+						value: (self copyFrom: 1 to: i - 1)
+						value: (self copyFrom: i + 1 to: self size)].
+			i := i - 1].
+	^ aTwoArgumentBlock
+		value: nil
+		value: self! !
+
+!WriteStream methodsFor: '*xml-parser' stamp: 'JAAyer 6/24/2010 13:07'!
+stringContents
+	| newSize |
+
+	newSize := position.
+	^ (collection class new: newSize)	
+		replaceFrom: 1
+		to: newSize
+		with: collection
+		startingAt: 1! !
+
+!XMLAttribute methodsFor: 'accessing' stamp: 'JAAyer 3/22/2010 00:32'!
+expandedName
+	^ self nodeName expandedWith: self namespaceURI! !
+
+!XMLAttribute methodsFor: 'testing' stamp: 'JAAyer 3/17/2010 03:48'!
+hasPrefix
+	^ self nodeName hasPrefix! !
+
+!XMLAttribute methodsFor: 'testing' stamp: 'JAAyer 3/7/2010 04:38'!
+isAttribute
+	^ true! !
+
+!XMLAttribute methodsFor: 'accessing' stamp: 'JAAyer 3/17/2010 03:48'!
+localName
+	^ self nodeName localName! !
+
+!XMLAttribute methodsFor: 'accessing' stamp: 'JAAyer 3/17/2010 03:48'!
+name
+	^ self nodeName asString! !
+
+!XMLAttribute methodsFor: 'accessing' stamp: 'JAAyer 3/22/2010 20:50'!
+name: aName
+	self notifyParentAfterRenamingWith: [self nodeName name: aName]! !
+
+!XMLAttribute methodsFor: 'accessing' stamp: 'JAAyer 3/13/2010 12:05'!
+namespaceURI
+	^ self hasParent ifTrue: [self parent resolvePrefix: self prefix]! !
+
+!XMLAttribute methodsFor: 'private' stamp: 'JAAyer 3/17/2010 03:48'!
+nodeName
+	^ name ifNil: [name := XMLNodeName new]! !
+
+!XMLAttribute methodsFor: 'accessing' stamp: 'JAAyer 3/17/2010 03:48'!
+prefix
+	^ self nodeName prefix! !
+
+!XMLAttribute methodsFor: 'accessing' stamp: 'JAAyer 3/22/2010 20:50'!
+prefix: aPrefix
+	self notifyParentAfterRenamingWith: [self nodeName prefix: aPrefix]! !
+
+!XMLAttribute methodsFor: 'printing' stamp: 'JAAyer 3/8/2010 10:19'!
+printXMLOn: aWriter
+	aWriter attribute: self name value: self value
+	! !
+
+!XMLAttribute methodsFor: 'accessing' stamp: 'JAAyer 3/17/2010 03:48'!
+qualifiedName
+	^ self nodeName qualifiedName! !
+
+!XMLAttribute methodsFor: 'initialization' stamp: 'JAAyer 3/23/2010 13:40'!
+setName: aName value: aValue
+	self nodeName name: aName.
+	value := aValue.! !
+
+!XMLAttribute methodsFor: 'accessing' stamp: 'JAAyer 3/5/2010 08:17'!
+value
+	^ value! !
+
+!XMLAttribute methodsFor: 'accessing' stamp: 'JAAyer 3/5/2010 08:18'!
+value: aString
+	value := aString! !
+
+!XMLAttribute class methodsFor: 'instance creation' stamp: 'JAAyer 3/23/2010 13:37'!
+name: aName value: aValue
+	^ self new setName: aName value: aValue! !
+
+!XMLAttributeList methodsFor: 'adding' stamp: 'JAAyer 3/13/2010 12:48'!
+addName: aName value: aValue
+	^ self addLast: (XMLAttribute name: aName value: aValue)! !
+
+!XMLAttributeList methodsFor: 'private' stamp: 'JAAyer 3/22/2010 22:44'!
+errorNonAttributeNode
+	^ self domError: 'Cannot contain non-attribute nodes'.! !
+
+!XMLAttributeList methodsFor: 'testing' stamp: 'JAAyer 3/12/2010 01:04'!
+includesName: aString
+	^ self nodesByName includesKey: aString! !
+
+!XMLAttributeList methodsFor: 'accessing' stamp: 'JAAyer 3/10/2010 07:19'!
+names
+	^ self collect: [:each | each name]! !
+
+!XMLAttributeList methodsFor: 'enumerating' stamp: 'JAAyer 3/10/2010 07:20'!
+namesAndValuesDo: aBlock
+	self do: [:each | aBlock value: each name value: each value]! !
+
+!XMLAttributeList methodsFor: 'enumerating' stamp: 'JAAyer 3/10/2010 07:20'!
+namesDo: aBlock
+	self do: [:each | aBlock value: each name]! !
+
+!XMLAttributeList methodsFor: 'accessing' stamp: 'JAAyer 3/17/2010 03:58'!
+nodeNamed: aString
+	^ self nodeNamed: aString ifAbsent: [self defaultValue]! !
+
+!XMLAttributeList methodsFor: 'accessing' stamp: 'JAAyer 3/12/2010 01:04'!
+nodeNamed: aString ifAbsent: aBlock
+	^ self nodesByName at: aString ifAbsent: aBlock! !
+
+!XMLAttributeList methodsFor: 'private' stamp: 'JAAyer 3/22/2010 22:45'!
+nodeRenamed: aNode from: anOldName to: aNewName
+	self nodesByName
+		removeKey: anOldName;
+		at: aNewName put: aNode! !
+
+!XMLAttributeList methodsFor: 'accessing' stamp: 'JAAyer 3/12/2010 01:05'!
+nodesByName
+	^ nodesByName ifNil: [nodesByName := Dictionary new: 10]! !
+
+!XMLAttributeList methodsFor: 'accessing' stamp: 'JAAyer 3/17/2010 03:58'!
+removeNodeNamed: aString
+	^ self removeNodeNamed: aString ifAbsent: [self defaultValue]! !
+
+!XMLAttributeList methodsFor: 'accessing' stamp: 'JAAyer 3/10/2010 22:35'!
+removeNodeNamed: aString ifAbsent: aBlock
+	^ (self remove: (self nodeNamed: aString ifAbsent: [^ aBlock value])) value! !
+
+!XMLAttributeList methodsFor: 'accessing' stamp: 'JAAyer 3/17/2010 03:58'!
+valueAt: aName
+	^ self valueAt: aName ifAbsent: [self defaultValue]! !
+
+!XMLAttributeList methodsFor: 'accessing' stamp: 'JAAyer 3/12/2010 01:04'!
+valueAt: aName ifAbsent: aBlock
+	^ (self nodesByName
+		at: aName
+		ifAbsent: [^ aBlock value]) value! !
+
+!XMLAttributeList methodsFor: 'accessing' stamp: 'JAAyer 3/7/2010 07:26'!
+valueAt: aName ifAbsentPut: aValue
+	^ self
+		valueAt: aName
+		ifAbsent: [self valueAt: aName put: aValue]! !
+
+!XMLAttributeList methodsFor: 'accessing' stamp: 'JAAyer 3/11/2010 13:11'!
+valueAt: aName put: aValue
+	(self includesName: aName)
+		ifTrue: [(self nodeNamed: aName) value: aValue]
+		ifFalse: [self addName: aName value: aValue].
+	^ aValue.! !
+
+!XMLAttributeList methodsFor: 'private' stamp: 'JAAyer 3/22/2010 22:46'!
+with: aBlock add: aNode
+	aNode isAttribute ifFalse: [^ self errorNonAttributeNode].
+
+	(super with: aBlock add: aNode) ifNil: [^ nil].
+
+	self nodesByName
+		at: aNode name
+		ifPresent: [self removeNodeNamed: aNode name].
+	self nodesByName at: aNode name put: aNode.
+	^ aNode.! !
+
+!XMLAttributeList methodsFor: 'private' stamp: 'JAAyer 3/12/2010 01:04'!
+with: aBlock remove: aNode
+	(super with: aBlock remove: aNode) ifNil: [^ nil].
+	self nodesByName removeKey: aNode name.
+	^ aNode.! !
+
+!XMLCData methodsFor: 'printing' stamp: 'jvds 8/9/2010 10:47'!
+printXMLOn: writer
+	writer cdata: self string! !
+
+!XMLDOMParser methodsFor: 'accessing' stamp: 'JAAyer 3/9/2010 01:38'!
+document
+	^ document! !
+
+!XMLDOMParser methodsFor: 'accessing' stamp: 'JAAyer 3/8/2010 20:31'!
+document: aDocument
+	document := aDocument! !
+
+!XMLDOMParser methodsFor: 'content' stamp: 'JAAyer 3/16/2010 09:32'!
 documentAttributes: attributeList
-	self document version: (attributeList at: 'version' ifAbsent: [nil]).
-	self document encoding: (attributeList at: 'encoding' ifAbsent: [nil]).
-	self document requiredMarkup: (attributeList at: 'requiredMarkup' ifAbsent: [nil]).
+	self document
+		version: (attributeList at: 'version' ifAbsent: [nil]);
+		encoding: (attributeList at: 'encoding' ifAbsent: [nil]);
+		requiredMarkup: (attributeList at: 'requiredMarkup' ifAbsent: [nil])
 ! !
 
-!XMLDOMParser methodsFor: 'parsing' stamp: 'mir 6/5/2003 19:29'!
+!XMLDOMParser methodsFor: 'parsing' stamp: 'JAAyer 3/8/2010 20:29'!
 domDocument
-	[self startDocument; parseDocument]
-		ensure: [self driver stream close].
-	^document! !
+	[self parseDocument] ensure: [self driver stream close].
 
-!XMLDOMParser methodsFor: 'content' stamp: 'mir 1/8/2002 18:19'!
+	^ document.! !
+
+!XMLDOMParser methodsFor: 'lexical' stamp: 'JAAyer 8/9/2010 17:27'!
+endCData
+	isInCDataSection := false! !
+
+!XMLDOMParser methodsFor: 'content' stamp: 'JAAyer 3/16/2010 09:31'!
 endDocument
-	self pop.
+	self popNode.
 	super endDocument! !
 
-!XMLDOMParser methodsFor: 'content' stamp: 'mir 1/8/2002 18:11'!
-endElement: elementName
-	| currentElement |
-	currentElement := self pop.
-	currentElement name = elementName
-		ifFalse: [self driver errorExpected: 'End tag "', elementName , '" doesn''t match "' , currentElement name , '".']! !
+!XMLDOMParser methodsFor: 'content' stamp: 'JAAyer 3/24/2010 16:55'!
+endElement: aQualifiedName prefix: aPrefix uri: aUri localName: aLocalName
+	self popNode! !
 
-!XMLDOMParser methodsFor: 'content' stamp: 'mir 6/24/2003 14:53'!
-endElement: localName namespace: namespace namespaceURI: uri qualifiedName: qualifiedName
-	| currentElement |
-	currentElement := self pop.
-	(currentElement namespace isNil
-		or: [currentElement namespace = self defaultNamespace])
-		ifTrue: [
-			currentElement localName = localName
-				ifFalse: [self driver errorExpected: 'End tag "', localName , '" doesn''t match "' , currentElement localName  , '".']]
-		ifFalse: [
-			currentElement qualifiedName = qualifiedName
-				ifFalse: [self driver errorExpected: 'End tag "', qualifiedName , '" doesn''t match "' , currentElement qualifiedName  , '".']]! !
-
-!XMLDOMParser methodsFor: 'accessing' stamp: 'mir 1/8/2001 12:05'!
+!XMLDOMParser methodsFor: 'accessing' stamp: 'JAAyer 3/16/2010 09:26'!
 incremental
-	^incremental! !
+	^ incremental ifNil: [incremental := false]! !
 
 !XMLDOMParser methodsFor: 'accessing' stamp: 'mir 1/8/2001 12:05'!
 incremental: aBoolean
 	incremental := aBoolean! !
 
-!XMLDOMParser methodsFor: 'initialize' stamp: 'mir 1/8/2001 12:05'!
-initialize
-	super initialize.
-	stack := OrderedCollection new.
-	incremental := false! !
+!XMLDOMParser methodsFor: 'testing' stamp: 'JAAyer 8/9/2010 17:27'!
+isInCDataSection
+	^ isInCDataSection ifNil: [isInCDataSection := false]! !
 
-!XMLDOMParser methodsFor: 'parsing' stamp: 'mir 6/28/2001 18:45'!
-nextEntity
-	| currentTop |
-	currentTop := self top.
-	[self driver nextEntity isNil
-		or: [self top ~~ currentTop]] whileTrue.
-	^entity! !
+!XMLDOMParser methodsFor: 'private' stamp: 'JAAyer 3/22/2010 15:28'!
+nodeStack
+	^ nodeStack ifNil: [nodeStack := OrderedCollection new: 30]! !
 
-!XMLDOMParser methodsFor: 'parsing' stamp: 'mir 12/21/2000 14:02'!
-nextEntityStart
-	[self driver nextEntity.
-	self stack isEmpty] whileTrue.
-	^entity! !
+!XMLDOMParser methodsFor: 'parsing' stamp: 'JAAyer 3/9/2010 01:30'!
+parseDocument
+	super parseDocument.
+	^ self document.! !
 
-!XMLDOMParser methodsFor: 'private' stamp: 'mir 1/8/2001 12:04'!
-pop
-	| oldTop |
-	oldTop := self stack removeLast.
-	entity := oldTop.
-	^oldTop! !
+!XMLDOMParser methodsFor: 'private' stamp: 'JAAyer 3/16/2010 09:31'!
+popNode
+	^ self nodeStack removeLast! !
 
-!XMLDOMParser methodsFor: 'private' stamp: 'mir 1/8/2001 12:02'!
-push: anObject
-	self stack add: anObject.
-	entity := anObject
+!XMLDOMParser methodsFor: 'accessing' stamp: 'JAAyer 8/9/2010 17:25'!
+preservesCDataSections
+	^ preservesCDataSections ifNil: [preservesCDataSections := false]! !
+
+!XMLDOMParser methodsFor: 'accessing' stamp: 'JAAyer 8/9/2010 17:25'!
+preservesCDataSections: aBoolean
+	"Specify whether the receiver shoud preserve CDATA sections.
+	If true XMLCDATASection nodes will be created. Otherwise plain
+	XMLString nodes will be used."
+
+	preservesCDataSections := aBoolean! !
+
+!XMLDOMParser methodsFor: 'private' stamp: 'JAAyer 3/16/2010 09:30'!
+pushElement: anElement
+
+	(self incremental not and: [self nodeStack notEmpty])
+			ifTrue: [self topNode addElement: anElement].
+
+	self pushNode: anElement.! !
+
+!XMLDOMParser methodsFor: 'private' stamp: 'JAAyer 3/16/2010 09:31'!
+pushNode: aNode
+	^ self nodeStack addLast: aNode
 ! !
 
-!XMLDOMParser methodsFor: 'private' stamp: 'mir 8/14/2000 18:28'!
-stack
-	^stack! !
+!XMLDOMParser methodsFor: 'lexical' stamp: 'JAAyer 8/9/2010 17:27'!
+startCData
+	isInCDataSection := true! !
 
-!XMLDOMParser methodsFor: 'content' stamp: 'mir 11/30/2000 18:14'!
+!XMLDOMParser methodsFor: 'content' stamp: 'JAAyer 3/16/2010 09:30'!
 startDocument
 	self document: XMLDocument new.
-	self push: self document ! !
+	self pushNode: self document ! !
 
-!XMLDOMParser methodsFor: 'content' stamp: 'mir 6/24/2003 18:52'!
-startElement: localName namespaceURI: namespaceUri namespace: namespace attributeList: attributeList
-	| newElement |
-	"newElement := namespace = self defaultNamespace
-		ifTrue: [XMLElement named: localName namespace: nil uri: nil attributes: attributeList]
-		ifFalse: [XMLElement named: localName namespace: namespace uri: namespaceUri attributes: attributeList]."
-	newElement := XMLElement named: localName namespace: namespace uri: namespaceUri attributes: attributeList.
-	self incremental
-		ifFalse: [self stack isEmpty
-			ifFalse: [self top addElement: newElement]].
-	self push: newElement! !
+!XMLDOMParser methodsFor: 'content' stamp: 'JAAyer 3/24/2010 17:07'!
+startElement: aQualifiedName prefix: aPrefix uri: aUri localName: aLocalName attributes: aDictionary
+	self pushElement:
+		((XMLElement
+			qualifiedName: aQualifiedName
+			prefix: aPrefix
+			localName: aLocalName
+			attributes: aDictionary)
+				setScope: self currentScope)! !
 
-!XMLDOMParser methodsFor: 'private' stamp: 'mir 1/8/2001 11:46'!
-top
-	^self stack isEmpty
+!XMLDOMParser methodsFor: 'private' stamp: 'JAAyer 3/16/2010 09:29'!
+topNode
+	^ self nodeStack isEmpty
 		ifTrue: [nil]
-		ifFalse: [self stack last]! !
+		ifFalse: [self nodeStack last]! !
 
-!XMLDOMParser class methodsFor: 'examples' stamp: 'mir 7/12/2006 16:26'!
-addressBookXMLWithDTD
-	"XMLDOMParser addressBookXMLWithDTD"
-	^self parseDocumentFrom: XMLTokenizer addressBookXMLWithDTD readStream useNamespaces: true! !
-
-!XMLDOMParser class methodsFor: 'instance creation' stamp: 'mir 7/12/2006 16:25'!
-parseDocumentFrom: aStream
-	^self parseDocumentFrom: aStream useNamespaces: false! !
-
-!XMLDOMParser class methodsFor: 'instance creation' stamp: 'mir 7/12/2006 16:25'!
-parseDocumentFrom: aStream useNamespaces: aBoolean
-	^(super parseDocumentFrom: aStream useNamespaces: aBoolean) document! !
-
-!XMLDocument methodsFor: 'accessing' stamp: 'mir 11/30/2000 17:48'!
+!XMLDocument methodsFor: 'accessing' stamp: 'JAAyer 2/25/2010 01:48'!
 dtd
-	^dtd! !
+	^ dtd! !
 
 !XMLDocument methodsFor: 'accessing' stamp: 'mir 11/30/2000 17:48'!
 dtd: aDTD
 	dtd := aDTD! !
 
-!XMLDocument methodsFor: 'accessing' stamp: 'mir 5/16/2003 14:09'!
+!XMLDocument methodsFor: 'accessing' stamp: 'JAAyer 2/25/2010 01:48'!
 encoding	
-	^encoding ifNil: ['UTF-8']! !
+	^ encoding ifNil: ['UTF-8']! !
 
 !XMLDocument methodsFor: 'accessing' stamp: 'mir 1/17/2002 12:57'!
 encoding: aString	
 	encoding := aString! !
 
-!XMLDocument methodsFor: 'printing' stamp: 'mir 1/17/2002 16:44'!
-printCanonicalOn: aStream
+!XMLDocument methodsFor: 'testing' stamp: 'JAAyer 2/19/2010 23:51'!
+isDocument
+	^ true! !
 
+!XMLDocument methodsFor: 'printing' stamp: 'JAAyer 2/25/2010 14:37'!
+printCanonicalOn: aStream
 	| writer |
 	writer := XMLWriter on: aStream.
 	writer canonical: true.
@@ -904,9 +1593,9 @@ printXMLOn: writer
 	version ifNotNil: [writer xmlDeclaration: self version encoding: self encoding].
 	super printXMLOn: writer! !
 
-!XMLDocument methodsFor: 'accessing' stamp: 'mir 1/17/2002 12:57'!
+!XMLDocument methodsFor: 'accessing' stamp: 'JAAyer 2/25/2010 01:48'!
 requiredMarkup	
-	^requiredMarkup! !
+	^ requiredMarkup! !
 
 !XMLDocument methodsFor: 'accessing' stamp: 'mir 1/17/2002 12:57'!
 requiredMarkup: aString	
@@ -917,363 +1606,795 @@ root
 	"return my root element"
 	^ self topElement ! !
 
-!XMLDocument methodsFor: 'accessing' stamp: 'mir 1/17/2002 12:57'!
+!XMLDocument methodsFor: 'accessing' stamp: 'JAAyer 2/25/2010 01:48'!
 version	
-	^version! !
+	^ version! !
 
 !XMLDocument methodsFor: 'accessing' stamp: 'mir 1/17/2002 12:57'!
 version: aString	
 	version := aString! !
 
-!XMLElement methodsFor: 'initialize' stamp: 'mir 10/31/2007 17:55'!
-addContent: contentString
-	self addElement: contentString! !
+!XMLElement methodsFor: 'accessing' stamp: 'JAAyer 3/12/2010 11:50'!
+addContent: aString
+	"Adds a string or string node. If the last child node is already a string node,
+	the characters being added are concatenated to it."
 
-!XMLElement methodsFor: 'accessing' stamp: 'mir 1/18/2001 16:55'!
-attributeAt: attributeName
-	^self attributeAt: attributeName ifAbsent: [nil]! !
+	(self hasContents and: [self lastNode isText])
+		ifTrue: [self lastNode addContent: aString]
+		ifFalse: [self addNode: (XMLString string: aString)]! !
 
-!XMLElement methodsFor: 'accessing' stamp: 'mir 1/18/2001 16:55'!
-attributeAt: attributeName ifAbsent: aBlock
-	^self attributes at: attributeName ifAbsent: [^aBlock value]! !
+!XMLElement methodsFor: 'accessing' stamp: 'JAAyer 3/8/2010 04:54'!
+at: aString
+	^ self at: aString ifAbsent: ['']
+! !
 
-!XMLElement methodsFor: 'accessing' stamp: 'mir 1/17/2002 15:24'!
-attributeAt: attributeName put: attributeValue
-	self attributes at: attributeName asSymbol put: attributeValue! !
+!XMLElement methodsFor: 'accessing' stamp: 'JAAyer 3/8/2010 04:54'!
+at: aString ifAbsent: aBlock
+	^ self attributeAt: aString ifAbsent: aBlock! !
 
-!XMLElement methodsFor: 'accessing' stamp: 'mas 10/15/2003 09:18'!
+!XMLElement methodsFor: 'accessing' stamp: 'JAAyer 3/8/2010 04:54'!
+at: aString put: aValue
+	^ self attributeAt: aString put: aValue! !
+
+!XMLElement methodsFor: 'accessing' stamp: 'JAAyer 3/11/2010 23:19'!
+attributeAssociations
+	^ self attributeNodes collect: [:each | each name -> each value]! !
+
+!XMLElement methodsFor: 'accessing' stamp: 'JAAyer 3/8/2010 05:09'!
+attributeAt: aString
+	^ self attributeAt: aString ifAbsent: [nil]! !
+
+!XMLElement methodsFor: 'accessing' stamp: 'JAAyer 3/11/2010 23:19'!
+attributeAt: aString ifAbsent: aBlock
+	^ self attributeNodes valueAt: aString ifAbsent: aBlock! !
+
+!XMLElement methodsFor: 'accessing' stamp: 'JAAyer 3/11/2010 23:19'!
+attributeAt: aString ifAbsentPut: aBlock
+	^ self attributeNodes valueAt: aString ifAbsentPut: aBlock! !
+
+!XMLElement methodsFor: 'accessing' stamp: 'JAAyer 3/11/2010 23:19'!
+attributeAt: aString put: aValue
+	^ self attributeNodes valueAt: aString put: aValue! !
+
+!XMLElement methodsFor: 'accessing' stamp: 'JAAyer 3/11/2010 23:19'!
+attributeNames
+	^ self attributeNodes names! !
+
+!XMLElement methodsFor: 'enumerating' stamp: 'JAAyer 3/11/2010 23:19'!
+attributeNamesAndValuesDo: aTwoArgumentBlock
+	self attributeNodes namesAndValuesDo: aTwoArgumentBlock! !
+
+!XMLElement methodsFor: 'enumerating' stamp: 'JAAyer 3/11/2010 23:19'!
+attributeNamesDo: aBlock
+	self attributeNodes namesDo: aBlock! !
+
+!XMLElement methodsFor: 'accessing' stamp: 'JAAyer 3/11/2010 23:19'!
+attributeNodeAt: aName
+	^ self attributeNodes nodeNamed: aName! !
+
+!XMLElement methodsFor: 'accessing' stamp: 'JAAyer 3/22/2010 11:30'!
+attributeNodes
+	^ attributes ifNil: [self setAttributeNodes: XMLAttributeList new. attributes]! !
+
+!XMLElement methodsFor: 'accessing' stamp: 'JAAyer 3/7/2010 22:03'!
 attributes
-	^attributes ifNil: [attributes := Dictionary new]! !
+	^ XMLOrderPreservingDictionary withAll: self attributeAssociations! !
 
-!XMLElement methodsFor: 'accessing' stamp: 'mir 3/7/2000 16:24'!
+!XMLElement methodsFor: 'accessing' stamp: 'JAAyer 2/25/2010 01:48'!
 characterData
-	^self contentString! !
+	^ self contentString! !
 
-!XMLElement methodsFor: 'accessing' stamp: 'mir 10/31/2007 18:25'!
+!XMLElement methodsFor: 'accessing' stamp: 'JAAyer 3/12/2010 11:49'!
 contentString
-	| contentElements |
-	contentElements := self elementsAndContents.
-	^(contentElements size == 1
-		and: [contentElements first isText])
-		ifTrue: [contentElements first string]
+	| firstContentNode |
+
+	firstContentNode := self elementsAndContents first.
+	^ (firstContentNode notNil and:[firstContentNode isText])
+		ifTrue: [firstContentNode string]
 		ifFalse: ['']! !
 
-!XMLElement methodsFor: 'accessing' stamp: 'mir 6/18/2003 13:47'!
-contentStringAt: entityName
-	^(self elementAt: entityName ifAbsent: [^'']) contentString! !
+!XMLElement methodsFor: 'accessing' stamp: 'JAAyer 2/25/2010 14:37'!
+contentString: aString
+	self
+		removeNodes;
+		addContent: aString! !
 
-!XMLElement methodsFor: 'accessing' stamp: 'mir 10/31/2007 18:24'!
+!XMLElement methodsFor: 'accessing' stamp: 'JAAyer 3/8/2010 04:54'!
+contentStringAt: aString
+	^ (self elementAt: aString ifAbsent: [^ '']) contentString! !
+
+!XMLElement methodsFor: 'accessing' stamp: 'JAAyer 2/25/2010 14:37'!
 contents
-	^self elementsAndContents select: [:each | each isText]! !
+	^ self nodes select: [:each | each isText]! !
 
-!XMLElement methodsFor: 'enumerating' stamp: 'mir 10/31/2007 18:25'!
+!XMLElement methodsFor: 'enumerating' stamp: 'JAAyer 2/12/2010 19:09'!
 contentsDo: aBlock
-	self elementsAndContentsDo: [:each | each isText ifTrue: [aBlock value: each]]! !
+	self nodesDo: [:each | each isText ifTrue: [aBlock value: each]]! !
 
-!XMLElement methodsFor: 'accessing' stamp: 'mir 10/31/2007 18:25'!
-elements
-	^self elementsAndContents select: [:each | each isText not]! !
+!XMLElement methodsFor: 'namespaces' stamp: 'JAAyer 3/7/2010 03:12'!
+declareNamespace: aPrefix uri: aUri
+	(self scope isPrefix: aPrefix mappedTo: aUri)
+		ifTrue: [^ self].
 
-!XMLElement methodsFor: 'enumerating' stamp: 'mir 1/3/2008 14:18'!
+	self mapPrefix: aPrefix to: aUri.! !
+
+!XMLElement methodsFor: 'namespaces' stamp: 'JAAyer 3/12/2010 11:22'!
+declareNamespaces: aDictionaryOrArray
+	self
+		from: aDictionaryOrArray 
+		keysAndValuesDo: [:namespaceName :uri |
+			namespaceName splitQualifiedNameInto: [:xmlns :prefix |
+				(prefix = 'xmlns')
+					ifTrue: [self defaultNamespace: uri]
+					ifFalse: [self declareNamespace: prefix uri: uri]]]! !
+
+!XMLElement methodsFor: 'namespaces' stamp: 'JAAyer 3/12/2010 01:32'!
+declaredNamespaces
+	| namespaces |
+	namespaces := self scope prefixMappings copy.
+	self defaultNamespace notNil
+		ifTrue: [namespaces at: 'xmlns' put: self defaultNamespace].
+	^ namespaces.! !
+
+!XMLElement methodsFor: 'namespaces' stamp: 'JAAyer 3/7/2010 03:12'!
+defaultNamespace
+	^ self scope defaultNamespace! !
+
+!XMLElement methodsFor: 'namespaces' stamp: 'JAAyer 3/12/2010 11:25'!
+defaultNamespace: aNamespaceUri
+	| oldDefaultNamespace |
+
+	oldDefaultNamespace := self defaultNamespace.
+	self
+		updateEnclosedScopesWith: [:each | each defaultNamespace: aNamespaceUri]
+		where: [:each | each defaultNamespace = oldDefaultNamespace].! !
+
+!XMLElement methodsFor: 'accessing' stamp: 'JAAyer 2/15/2010 12:22'!
+elementsAndContents
+	^ self nodes select: [:each | each isTagOrText]! !
+
+!XMLElement methodsFor: 'enumerating' stamp: 'JAAyer 2/15/2010 12:23'!
 elementsAndContentsDo: aBlock
-	self elementsAndContents do: aBlock! !
+	self nodesDo: [:each | each isTagOrText ifTrue: [aBlock value: each]]! !
 
-!XMLElement methodsFor: 'enumerating' stamp: 'mir 10/31/2007 18:25'!
-elementsDo: aBlock
-	self elementsAndContentsDo: [:each | each isText ifFalse: [aBlock value: each]]! !
+!XMLElement methodsFor: 'namespaces' stamp: 'JAAyer 3/22/2010 00:32'!
+expandedName
+	^ self nodeName expandedWith: self namespaceURI! !
 
-!XMLElement methodsFor: 'searching' stamp: 'mir 6/25/2003 13:34'!
-firstTagNamed: aSymbol 
-	"Return the first encountered node with the specified tag.
-	If it is not the receiver, pass the message on"
+!XMLElement methodsFor: 'private' stamp: 'pb 6/10/2012 19:15'!
+from: aDictionaryOrArray keysAndValuesDo: aBlock
+	aDictionaryOrArray isEmptyOrNil ifTrue: [^ self].
 
-	(self localName == aSymbol
-		or: [self tag == aSymbol])
-		ifTrue: [^self].
-	^super firstTagNamed: aSymbol ! !
+	self flag: #pbfix.
+	"isDictionary has been removed and is: not defined"
+	"
+	(aDictionaryOrArray isDictionary
+	"
+	(aDictionaryOrArray class = Dictionary
+		ifTrue: [aDictionaryOrArray associations]
+		ifFalse: [aDictionaryOrArray])
+			associationsDo: [:association |
+				aBlock
+					value: association key
+					value: association value]! !
 
-!XMLElement methodsFor: 'searching' stamp: 'mir 6/25/2003 13:34'!
-firstTagNamed: aSymbol with: aBlock
-	"Return the first encountered node with the specified tag that allows
-	the block to evaluate to true. Pass the message on"
+!XMLElement methodsFor: 'testing' stamp: 'JAAyer 3/11/2010 23:19'!
+hasAttributes
+	^ self attributeNodes notEmpty! !
 
-	((self localName == aSymbol
-		or: [self tag == aSymbol])
- 		and: [aBlock value: self])
-		ifTrue: [^self].
-	^super firstTagNamed: aSymbol with: aBlock.! !
+!XMLElement methodsFor: 'testing' stamp: 'JAAyer 2/25/2010 14:37'!
+hasContents
+	^ self contents notEmpty! !
 
-!XMLElement methodsFor: 'testing' stamp: 'mir 10/31/2007 17:55'!
-isEmpty
-	^self elements isEmpty! !
+!XMLElement methodsFor: 'testing' stamp: 'JAAyer 3/17/2010 03:48'!
+hasPrefix
+	^ self nodeName hasPrefix! !
 
-!XMLElement methodsFor: 'testing' stamp: 'mir 1/17/2002 15:26'!
+!XMLElement methodsFor: 'searching' stamp: 'JAAyer 3/8/2010 04:54'!
+ifNamed: aString do: aOneArgumentBlock
+	"If the receiver tag equals aString, evaluate aOneArgumentBlock with the receiver"
+
+	(self isNamed: aString)
+		ifTrue: [aOneArgumentBlock valueWithPossibleArgument: self]
+! !
+
+!XMLElement methodsFor: 'testing' stamp: 'JAAyer 3/11/2010 23:19'!
+includesAttribute: aString
+	^ self attributeNodes includesName: aString! !
+
+!XMLElement methodsFor: 'private' stamp: 'JAAyer 3/5/2010 09:50'!
+inheritMappingsFrom: aScope
+	self recurse: [:each | each scope inheritMappingsFrom: aScope]! !
+
+!XMLElement methodsFor: 'testing' stamp: 'JAAyer 3/8/2010 04:58'!
+isNamed: aString
+	^ (self localName = aString)
+		or: [self qualifiedName = aString]! !
+
+!XMLElement methodsFor: 'testing' stamp: 'JAAyer 3/8/2010 04:54'!
+isNamedAny: aStringArray
+	^ aStringArray anySatisfy: [:each | self isNamed: each]! !
+
+!XMLElement methodsFor: 'testing' stamp: 'JAAyer 2/25/2010 01:48'!
 isTag
-	^true! !
+	^ true! !
 
-!XMLElement methodsFor: 'name space' stamp: 'sd 5/25/2003 18:24'!
+!XMLElement methodsFor: 'accessing' stamp: 'JAAyer 3/17/2010 03:48'!
 localName
-	^ name! !
+	^ self nodeName localName! !
 
-!XMLElement methodsFor: 'accessing' stamp: 'sd 5/25/2003 18:25'!
+!XMLElement methodsFor: 'private' stamp: 'JAAyer 3/12/2010 11:55'!
+mapPrefix: aPrefix to: aUri
+	| oldMapping |
+
+	oldMapping := self scope resolvePrefix: aPrefix ifUnmapped: [nil].
+	self
+		updateEnclosedScopesWith: [:each | each mapPrefix: aPrefix to: aUri]
+		where: [:each |
+			(each isPrefix: aPrefix mappedTo: oldMapping)
+				or: [(each isMappedPrefix: aPrefix) not]]! !
+
+!XMLElement methodsFor: 'accessing' stamp: 'JAAyer 3/17/2010 03:48'!
 name
-	^ self qualifiedName! !
+	^ self nodeName asString! !
 
-!XMLElement methodsFor: 'initialize' stamp: 'mir 1/17/2002 15:24'!
-name: aString
-	name := aString asSymbol! !
+!XMLElement methodsFor: 'accessing' stamp: 'JAAyer 3/22/2010 21:32'!
+name: aName
+	self notifyParentAfterRenamingWith: [self nodeName name: aName].
+	self validateName.! !
 
-!XMLElement methodsFor: 'accessing' stamp: 'gc 6/28/2007 21:32'!
-parent
-	^ parent! !
+!XMLElement methodsFor: 'namespaces' stamp: 'JAAyer 3/22/2010 20:50'!
+name: aQualifiedName namespaceURI: aUri
+	aQualifiedName splitQualifiedNameInto: [:prefixPart :localPart |
+		self declareNamespace: prefixPart uri: aUri].
+	self name: aQualifiedName.! !
 
-!XMLElement methodsFor: 'accessing' stamp: 'gc 6/28/2007 21:32'!
-parent: anXMLElement
-	parent := anXMLElement ! !
+!XMLElement methodsFor: 'namespaces' stamp: 'JAAyer 3/14/2010 12:52'!
+namespaceURI
+	^ self resolvePrefix: self prefix! !
 
-!XMLElement methodsFor: 'printing' stamp: 'mir 10/31/2007 18:19'!
+!XMLElement methodsFor: 'accessing' stamp: 'JAAyer 2/25/2010 14:37'!
+nextElement
+	^ self hasParent ifTrue: [self parent elementAfter: self]! !
+
+!XMLElement methodsFor: 'announcements' stamp: 'JAAyer 3/22/2010 20:08'!
+nodeAdded: aNode
+	super nodeAdded: aNode.
+	
+	(aNode isTag and: [self usesNamespaces])
+		ifTrue: [aNode inheritMappingsFrom: self scope].
+	aNode isAttribute
+		ifTrue: [self validateAttribute: aNode name]
+		! !
+
+!XMLElement methodsFor: 'private' stamp: 'JAAyer 3/22/2010 20:11'!
+nodeName
+	^ name ifNil: [name := XMLNodeName new]! !
+
+!XMLElement methodsFor: 'announcements' stamp: 'JAAyer 3/22/2010 22:45'!
+nodeRenamed: aNode from: anOldName to: aNewName
+	super nodeRenamed: aNode from: aNode to: aNewName.
+	aNode isAttribute
+		ifTrue: [
+			self validateAttribute: aNewName.
+			self attributeNodes nodeRenamed: aNode from: anOldName to: aNewName]! !
+
+!XMLElement methodsFor: 'namespaces' stamp: 'JAAyer 3/17/2010 03:48'!
+prefix
+	^ self nodeName prefix! !
+
+!XMLElement methodsFor: 'namespaces' stamp: 'JAAyer 3/22/2010 21:32'!
+prefix: aPrefix
+	self notifyParentAfterRenamingWith: [self nodeName prefix: aPrefix].
+	self validateName.! !
+
+!XMLElement methodsFor: 'namespaces' stamp: 'JAAyer 3/7/2010 08:18'!
+prefix: aPrefix uri: aUri
+	self declareNamespace: aPrefix uri: aUri.
+	self prefix: aPrefix.! !
+
+!XMLElement methodsFor: 'accessing' stamp: 'JAAyer 2/25/2010 14:37'!
+previousElement
+	^ self hasParent ifTrue: [self parent elementBefore: self]! !
+
+!XMLElement methodsFor: 'printing' stamp: 'JAAyer 3/12/2010 01:36'!
 printXMLOn: writer
-	writer startElement: self name attributeList: self attributes.
+	writer
+		startElement: self name
+		attributeList: self attributeNodes
+		namespaces: self declaredNamespaces.
 	(writer canonical not
-		and: [self isEmpty and: [self attributes isEmpty not]])
+		and: [self isEmpty and: [self attributeNodes notEmpty]])
 		ifTrue: [writer endEmptyTag: self name]
 		ifFalse: [
 			writer endTag.
-			self elementsAndContentsDo: [:content | content printXMLOn: writer].
+			super printXMLOn: writer.
 			writer endTag: self name]! !
 
-!XMLElement methodsFor: 'name space' stamp: 'mir 6/5/2003 15:20'!
+!XMLElement methodsFor: 'accessing' stamp: 'JAAyer 3/17/2010 03:48'!
 qualifiedName
-	^self namespace
-		ifNil: [self localName]
-		ifNotNil: [self namespace , ':' , self localName]! !
+	^ self nodeName qualifiedName! !
 
-!XMLElement methodsFor: 'initialize' stamp: 'mir 3/7/2000 16:43'!
-setAttributes: newAttributes
-	attributes := newAttributes! !
+!XMLElement methodsFor: 'searching' stamp: 'JAAyer 3/7/2010 04:00'!
+recurse: aBlock
+	"See superclass version."
 
-!XMLElement methodsFor: 'accessing' stamp: 'sd 5/25/2003 18:25'!
+	aBlock value: self.
+
+	super recurse: aBlock.! !
+
+!XMLElement methodsFor: 'searching' stamp: 'JAAyer 3/7/2010 04:01'!
+recurseUntilTrue: aBlock
+	"See superclass version."
+
+	(aBlock value: self)
+		ifTrue: [^ self].
+
+	^ super recurseUntilTrue: aBlock.! !
+
+!XMLElement methodsFor: 'accessing' stamp: 'JAAyer 3/11/2010 23:19'!
+removeAttribute: aString
+	^ self attributeNodes removeNodeNamed: aString! !
+
+!XMLElement methodsFor: 'namespaces' stamp: 'JAAyer 3/13/2010 12:26'!
+resolvePrefix: aPrefix
+	^ self scope resolvePrefix: aPrefix! !
+
+!XMLElement methodsFor: 'private' stamp: 'JAAyer 3/7/2010 21:17'!
+scope
+	^ scope ifNil: [self setScope: XMLNamespaceScope new. scope]! !
+
+!XMLElement methodsFor: 'initialization' stamp: 'JAAyer 3/22/2010 20:13'!
+setAttributeNodes: anAttributeList
+	(attributes := anAttributeList) parent: self.
+	attributes do: [:each | each parent: self]! !
+
+!XMLElement methodsFor: 'initialization' stamp: 'JAAyer 3/12/2010 11:23'!
+setAttributes: aDictionaryOrArray
+	self attributeNodes removeAll.
+	self
+		from: aDictionaryOrArray
+		keysAndValuesDo: [:attributeName :attributevalue |
+			self attributeNodes
+				addName: attributeName
+				value: attributevalue].! !
+
+!XMLElement methodsFor: 'initialization' stamp: 'JAAyer 3/19/2010 18:38'!
+setScope: aNamespaceScope
+	scope := aNamespaceScope.
+	self useNamespaces: aNamespaceScope notNil.! !
+
+!XMLElement methodsFor: 'accessing' stamp: 'JAAyer 3/10/2010 23:57'!
 tag
-	^ self name asSymbol! !
+	^ self qualifiedName! !
 
-!XMLElement methodsFor: 'searching' stamp: 'mir 6/25/2003 13:33'!
-tagsNamed: aSymbol contentsDo: aBlock
-	"Evaluate aBlock for all of the contents of the receiver
-	if the receiver tag equals aSymbol. Pass the message on"
+!XMLElement methodsFor: 'private' stamp: 'JAAyer 3/5/2010 08:06'!
+updateEnclosedScopesWith: aBlock where: aConditional
+	"Updates the receiver's scope and the scopes of all descendants with aBlock
+	where aConditional is true. It stops descending down a path of a subtree
+	as soon as aConditional is false, but continues down other paths."
 
-	(self localName == aSymbol
-		or: [self tag == aSymbol])
-		ifTrue: [self contentsDo: aBlock].
-	super tagsNamed: aSymbol contentsDo: aBlock! !
+	(aConditional value: self scope)
+		ifTrue: [aBlock value: self scope]
+		ifFalse: [^ self].
 
-!XMLElement methodsFor: 'searching' stamp: 'mir 6/25/2003 13:35'!
-tagsNamed: aSymbol do: aOneArgumentBlock
-	"If the receiver tag equals aSymbol, evaluate aOneArgumentBlock
-	with the receiver. Continue the search"
+	self elementsDo: [:each |
+		each updateEnclosedScopesWith: aBlock where: aConditional]! !
 
-	(self localName == aSymbol
-		or: [self tag == aSymbol])
-		ifTrue: [aOneArgumentBlock value: self].
-	super tagsNamed: aSymbol do: aOneArgumentBlock! !
+!XMLElement methodsFor: 'accessing' stamp: 'JAAyer 3/13/2010 13:50'!
+useNamespaces: aBoolean
+	usesNamespaces := aBoolean! !
 
-!XMLElement methodsFor: 'searching' stamp: 'mir 6/25/2003 13:35'!
-tagsNamed: aSymbol ifReceiverDo: aOneArgumentBlock
-	"If the receiver tag equals aSymbol, evaluate aOneArgumentBlock with the receiver"
+!XMLElement methodsFor: 'testing' stamp: 'JAAyer 3/13/2010 13:40'!
+usesNamespaces
+	^ usesNamespaces ifNil: [usesNamespaces := true]! !
 
-	(self localName == aSymbol
-		or: [self tag == aSymbol])
-		ifTrue: [aOneArgumentBlock value: self]
-! !
+!XMLElement methodsFor: 'namespaces' stamp: 'JAAyer 3/22/2010 11:06'!
+validateAttribute: anAttributeName
+	self usesNamespaces ifFalse: [^ self].
 
-!XMLElement methodsFor: 'searching' stamp: 'mir 6/25/2003 13:35'!
-tagsNamed: aSymbol ifReceiverDoAndRecurse: aOneArgumentBlock
-	"If the receiver tag equals aSymbol, evaluate aOneArgumentBlock
-	with the receiver. Then recurse through all the children"
+	self scope
+		validateAttribute: anAttributeName
+		in: self attributes.! !
 
-	(self localName == aSymbol
-		or: [self tag == aSymbol])
-		ifTrue: [aOneArgumentBlock value: self].
-	super tagsNamed: aSymbol ifReceiverDoAndRecurse: aOneArgumentBlock! !
+!XMLElement methodsFor: 'namespaces' stamp: 'JAAyer 3/22/2010 21:31'!
+validateName
+	(self usesNamespaces and: [self hasPrefix])
+		ifTrue: [self scope validatePrefix: self prefix]! !
 
-!XMLElement methodsFor: 'searching' stamp: 'mir 6/25/2003 13:35'!
-tagsNamed: aSymbol ifReceiverOrChildDo: aOneArgumentBlock
-	"If the receiver tag equals aSymbol, evaluate aOneArgumentBlock with the receiver.
-	For each of the receivers children do the same. Do not go beyond direct children"
+!XMLElement methodsFor: 'accessing' stamp: 'JAAyer 3/8/2010 04:54'!
+valueFor: aString
+	self deprecated: 'use #at: as a shortcut instead'.
 
-	(self localName == aSymbol
-		or: [self tag == aSymbol])
-		ifTrue: [aOneArgumentBlock value: self].
-	super tagsNamed: aSymbol ifReceiverDo: aOneArgumentBlock! !
+	^ self at: aString.! !
 
-!XMLElement methodsFor: 'accessing' stamp: 'mir 6/5/2003 12:02'!
-valueFor: aSymbol 
-	^self valueFor: aSymbol ifAbsent: ['']! !
+!XMLElement methodsFor: 'accessing' stamp: 'JAAyer 3/8/2010 04:54'!
+valueFor: aString ifAbsent: aBlock 
+	self deprecated: 'use #at:ifAbsent: as a shortcut instead'.
 
-!XMLElement methodsFor: 'accessing' stamp: 'mir 1/17/2002 15:28'!
-valueFor: aSymbol ifAbsent: aBlock 
-	^self attributes at: aSymbol ifAbsent: aBlock! !
+	^ self at: aString ifAbsent: aBlock! !
 
-!XMLElement class methodsFor: 'instance creation' stamp: 'mir 3/7/2000 16:33'!
-named: aString
-	^self new name: aString! !
+!XMLElement methodsFor: 'accessing' stamp: 'JAAyer 3/8/2010 05:09'!
+@ aString
+	"shorthand form"
+	^ self at: aString! !
 
-!XMLElement class methodsFor: 'instance creation' stamp: 'mir 8/14/2000 18:01'!
-named: aString attributes: attributeList
-	^self new
-		name: aString;
-		setAttributes: attributeList! !
+!XMLElement class methodsFor: 'instance creation' stamp: 'JAAyer 3/11/2010 23:10'!
+named: aLocalName
+	^ self new name: aLocalName! !
 
-!XMLElement class methodsFor: 'instance creation' stamp: 'mir 6/5/2003 15:21'!
-named: aString namespace: ns uri: uri attributes: attributeList
-	^self new
-		name: aString;
-		namespace: ns uri: uri;
-		setAttributes: attributeList! !
+!XMLElement class methodsFor: 'instance creation' stamp: 'JAAyer 3/11/2010 23:09'!
+named: aLocalName attributes: aDictionaryOrArray
+	^ (self named: aLocalName)
+		setAttributes: aDictionaryOrArray! !
 
-!XMLNamespaceScope methodsFor: 'private' stamp: 'mir 6/4/2003 15:51'!
-currentScope
-	^self scope last! !
+!XMLElement class methodsFor: 'instance creation' stamp: 'JAAyer 3/11/2010 23:12'!
+named: aQualifiedName namespaceURI: aUri
+	^ self new name: aQualifiedName namespaceURI: aUri! !
 
-!XMLNamespaceScope methodsFor: 'scope' stamp: 'mir 6/16/2003 16:37'!
-declareNamespace: ns uri: uri
-	"Declare the given name space prefix with the given URL"
+!XMLElement class methodsFor: 'instance creation' stamp: 'JAAyer 3/11/2010 10:07'!
+named: aQualifiedName namespaceURI: aUri attributes: aDictionaryOrArray
+	^ (self named: aQualifiedName namespaceURI: aUri)
+		setAttributes: aDictionaryOrArray! !
 
-	ns = 'xmlns'
-		ifTrue: [^self defaultNamespace: uri].
-	self establishLocalBindings.
-	currentBindings removeKey: ns ifAbsent: [].
-	currentBindings at: ns put: uri! !
+!XMLElement class methodsFor: 'instance creation' stamp: 'JAAyer 3/11/2010 23:08'!
+named: aQualifiedName namespaces: aNamespaceDictionaryOrArray
+	^ self new
+		declareNamespaces: aNamespaceDictionaryOrArray;
+		named: aQualifiedName! !
 
-!XMLNamespaceScope methodsFor: 'accessing' stamp: 'mir 6/24/2003 14:22'!
+!XMLElement class methodsFor: 'instance creation' stamp: 'JAAyer 3/11/2010 10:22'!
+named: aQualifiedName namespaces: aNamespaceDictionaryOrArray attributes: aDictionaryOrArray
+	^ (self
+		named: aQualifiedName
+		namespaces: aNamespaceDictionaryOrArray)
+			setAttributes: aDictionaryOrArray! !
+
+!XMLElement class methodsFor: 'private' stamp: 'JAAyer 3/24/2010 17:02'!
+qualifiedName: aQualifiedName prefix: aPrefix localName: aLocalName attributes: anAttributeDictionary
+	| element attributeNodes |
+
+	element := self new.
+	element nodeName
+		setQualifiedName: aQualifiedName
+		prefix: aPrefix
+		localName: aLocalName.
+	attributeNodes := XMLAttributeList new.
+	anAttributeDictionary keysAndValuesDo: [:key :value |
+		attributeNodes addLast: (XMLAttribute name: key value: value)].
+	element setAttributeNodes: attributeNodes.
+	^ element.! !
+
+!XMLElementCache methodsFor: 'accessing' stamp: 'JAAyer 3/22/2010 16:19'!
+cacheElement: anElement
+	self elements add: anElement.
+	self
+		cacheElement: anElement
+		underName: anElement localName.
+	anElement hasPrefix
+		ifTrue: [
+			self
+				cacheElement: anElement
+				underName: anElement qualifiedName]! !
+
+!XMLElementCache methodsFor: 'accessing' stamp: 'JAAyer 3/22/2010 16:18'!
+cacheElement: anElement underName: aName
+	(self elementsByName
+		at: aName
+		ifAbsentPut: [self newElementList]) add: anElement! !
+
+!XMLElementCache methodsFor: 'accessing' stamp: 'JAAyer 3/22/2010 16:18'!
+elements
+	^ elements ifNil: [elements := self newElementList]! !
+
+!XMLElementCache methodsFor: 'accessing' stamp: 'JAAyer 3/13/2010 12:58'!
+elementsByName 
+	^ elementsByName ifNil: [elementsByName := Dictionary new].! !
+
+!XMLElementCache methodsFor: 'accessing' stamp: 'JAAyer 3/22/2010 16:18'!
+elementsNamed: aName
+	^ self elementsByName at: aName ifAbsent: [self newElementList]! !
+
+!XMLElementCache methodsFor: 'accessing' stamp: 'JAAyer 3/22/2010 10:49'!
+firstElementNamed: aName
+	^ (self elementsByName at: aName ifAbsent: [^ nil]) first! !
+
+!XMLElementCache methodsFor: 'private' stamp: 'JAAyer 3/27/2010 22:28'!
+newElementList
+	^ XMLOrderedList new! !
+
+!XMLElementCache methodsFor: 'accessing' stamp: 'pb 6/10/2012 19:07'!
+rebuildCacheFrom: aList
+	self elements removeAll.
+	elementsByName := nil.
+
+	aList do: [:each | each isTag ifTrue: [self cacheElement: each]].! !
+
+!XMLElementCache methodsFor: 'accessing' stamp: 'JAAyer 3/22/2010 10:42'!
+uncacheElement: anElement
+	self elements remove: anElement.
+
+	self
+		uncacheElement: anElement
+		underName: anElement localName.
+	anElement hasPrefix
+		ifTrue: [
+			self
+				uncacheElement: anElement
+				underName: anElement qualifiedName].! !
+
+!XMLElementCache methodsFor: 'accessing' stamp: 'JAAyer 3/22/2010 10:41'!
+uncacheElement: anElement underName: aName
+	(self elementsByName at: aName) remove: anElement.
+
+	(self elementsByName at: aName)
+		ifEmpty: [self elementsByName removeKey: aName].! !
+
+!XMLNamespaceScope methodsFor: 'accessing' stamp: 'JAAyer 3/2/2010 20:54'!
 defaultNamespace
-	^self currentScope first! !
+	^ defaultNamespace! !
 
-!XMLNamespaceScope methodsFor: 'accessing' stamp: 'mir 6/24/2003 14:23'!
-defaultNamespace: ns
-	"Declare the default namespace."
-	self currentScope at: 1 put: ns! !
+!XMLNamespaceScope methodsFor: 'accessing' stamp: 'JAAyer 3/2/2010 20:45'!
+defaultNamespace: aNamespaceUri
+	defaultNamespace := aNamespaceUri! !
 
-!XMLNamespaceScope methodsFor: 'scope' stamp: 'mir 6/5/2003 19:28'!
-enterScope
-	self scope addLast: { self defaultNamespace. nil. currentBindings. }! !
+!XMLNamespaceScope methodsFor: 'errors' stamp: 'JAAyer 3/19/2010 18:31'!
+errorAttribute: anAttribute aliases: anAliasedAttribute with: aUri
+	self namespaceError:
+		('Attribute "{1}" aliases attribute "{2}"; both prefixes map to {3}'
+			format: (Array with: anAttribute with: anAliasedAttribute with: aUri))! !
 
-!XMLNamespaceScope methodsFor: 'private' stamp: 'mir 6/4/2003 16:08'!
-establishLocalBindings
-	(self currentScope at: 2)
-		ifNil: [
-			currentBindings := currentBindings copy.
-			self currentScope at: 2 put: currentBindings]! !
+!XMLNamespaceScope methodsFor: 'errors' stamp: 'JAAyer 3/11/2010 05:01'!
+errorUnmappedPrefix: aPrefix
+	self namespaceError: 'Unmapped namespace prefix "', aPrefix, '"'! !
 
-!XMLNamespaceScope methodsFor: 'private' stamp: 'mir 6/24/2003 14:25'!
-initScope
-	scope := OrderedCollection new: 20.
-	currentBindings := Dictionary new.
-	scope addLast: {'http://www.w3.org/TR/REC-xml-names'. currentBindings. nil. }.
-! !
+!XMLNamespaceScope methodsFor: 'initializing' stamp: 'NorbertHartl 8/5/2010 11:09'!
+inheritMappingsFrom: anEnclosingScope
+	self defaultNamespace
+		ifNil: [self defaultNamespace: anEnclosingScope defaultNamespace].
 
-!XMLNamespaceScope methodsFor: 'scope' stamp: 'mir 6/4/2003 16:05'!
-leaveScope
-	| leftScope |
-	leftScope := self scope removeLast.
-	currentBindings := (self currentScope at: 2) ifNil: [leftScope at: 3]! !
+	anEnclosingScope prefixMappingsDo: [:prefix :uri |
+		(self isMappedPrefix: prefix)
+			ifFalse: [self mapPrefix: prefix to: uri]].! !
 
-!XMLNamespaceScope methodsFor: 'private' stamp: 'mir 6/5/2003 19:32'!
-namespaceAliases: namespace
-	"Locate all namespaces that are aliases of the given URI."
+!XMLNamespaceScope methodsFor: 'testing' stamp: 'JAAyer 3/11/2010 00:01'!
+isMappedPrefix: aPrefix
+	^ self prefixMappings includesKey: aPrefix! !
 
-	| aliases uri |
-	aliases := Set new.
-	uri := self namespaceURIOf: namespace ifAbsent: [self parseError: 'Attribute refers to undefined namespace ' , namespace asString ].
-	currentBindings keysAndValuesDo: [:ns :u |
-		(u = uri
-			and: [ns ~= namespace])
-			ifTrue: [aliases add: ns]].
-	^ aliases! !
+!XMLNamespaceScope methodsFor: 'testing' stamp: 'JAAyer 3/5/2010 09:50'!
+isPrefix: aPrefix mappedTo: aUri
+	^ ((self isMappedPrefix: aPrefix)
+		and: [(self resolvePrefix: aPrefix) = aUri])! !
 
-!XMLNamespaceScope methodsFor: 'accessing' stamp: 'sd 5/28/2003 09:33'!
-namespaceURIOf: ns
+!XMLNamespaceScope methodsFor: 'accessing' stamp: 'JAAyer 3/11/2010 00:25'!
+mapPrefix: aPrefix to: aUri
+	(aPrefix isEmptyOrNil or: [aPrefix = 'xmlns'])
+		ifTrue: [self defaultNamespace: aUri]
+		ifFalse: [self prefixMappings at: aPrefix put: (aUri ifNil: [''])]! !
+
+!XMLNamespaceScope methodsFor: 'accessing' stamp: 'JAAyer 3/6/2010 02:54'!
+mappedPrefixes
+	^ self prefixMappings keys! !
+
+!XMLNamespaceScope methodsFor: 'errors' stamp: 'JAAyer 3/11/2010 05:00'!
+namespaceError: anErrorMessage
+	^ XMLNamespaceException signal: anErrorMessage! !
+
+!XMLNamespaceScope methodsFor: 'accessing' stamp: 'JAAyer 3/7/2010 01:16'!
+prefixMappings
+	^ prefixMappings ifNil: [prefixMappings := XMLOrderPreservingDictionary new]! !
+
+!XMLNamespaceScope methodsFor: 'enumerating' stamp: 'JAAyer 3/9/2010 01:17'!
+prefixMappingsDo: aTwoArgumentBlock
+	self prefixMappings keysAndValuesDo: [:prefix :uri |
+		aTwoArgumentBlock value: prefix value: uri]! !
+
+!XMLNamespaceScope methodsFor: 'accessing' stamp: 'JAAyer 3/12/2010 01:45'!
+prefixesAliasing: aPrefix
+	"Locate all prefixes that map to the same URI the given prefix does."
+	| uri |
+
+	uri := self
+		resolvePrefix: aPrefix
+		ifUnmapped: [self errorUnmappedPrefix: aPrefix].
+
+	^ self mappedPrefixes select: [:each |
+		(each ~= aPrefix)
+			and: [self isPrefix: each mappedTo: uri]].! !
+
+!XMLNamespaceScope methodsFor: 'accessing' stamp: 'JAAyer 3/5/2010 09:50'!
+resolvePrefix: aPrefix
 	"Retrieve the URI of the given namespace prefix, if it is defined. A nil namespace
 	returns the global namespace"
 
-	^ self namespaceURIOf: ns ifAbsent: [ nil ]! !
+	^ self resolvePrefix: aPrefix ifUnmapped: [nil]! !
 
-!XMLNamespaceScope methodsFor: 'accessing' stamp: 'mir 6/24/2003 13:33'!
-namespaceURIOf: ns ifAbsent: aBlock
+!XMLNamespaceScope methodsFor: 'accessing' stamp: 'JAAyer 3/5/2010 09:50'!
+resolvePrefix: aPrefix ifUnmapped: aBlock
 	"Retrieve the URI of the given namespace prefix, if it is defined. 
 	A nil namespace returns the default namespace. 
 	If no namespace can be found the value of the block is returned"
 
-	^ns
-		ifNil: [self defaultNamespace]
-		ifNotNil: [currentBindings at: ns ifAbsent: aBlock]! !
+	^ (aPrefix isEmptyOrNil or: [aPrefix = 'xmlns'])
+		ifTrue: [self defaultNamespace]
+		ifFalse: [self prefixMappings at: aPrefix ifAbsent: aBlock]! !
 
-!XMLNamespaceScope methodsFor: 'accessing' stamp: 'mir 6/5/2003 19:32'!
-namespaces
-	^currentBindings! !
+!XMLNamespaceScope methodsFor: 'validation' stamp: 'JAAyer 3/19/2010 19:03'!
+validateAttribute: anAttributeName in: aDictionary
+	| namespaceUri aliasingAttributeName |
+	
+	anAttributeName splitQualifiedNameInto: [:prefix :localName |
+		prefix ifNil: [^ self].
+		self validatePrefix: prefix.
+		namespaceUri := self resolvePrefix: prefix.
 
-!XMLNamespaceScope methodsFor: 'private' stamp: 'mir 6/24/2003 14:26'!
-scope
-	scope ifNil: [self initScope].
-	^scope! !
+		(self prefixesAliasing: prefix) do: [:aliasingPrefix |
+			aliasingAttributeName := aliasingPrefix, ':', localName.
+			(aDictionary includesKey: aliasingAttributeName)
+				ifTrue: [
+					self
+						errorAttribute: aliasingAttributeName
+						aliases: anAttributeName
+						with: namespaceUri]]].! !
 
-!XMLNamespaceScope methodsFor: 'validation' stamp: 'mir 6/5/2003 17:16'!
+!XMLNamespaceScope methodsFor: 'validation' stamp: 'JAAyer 3/13/2010 13:43'!
 validateAttributes: attributeList
 	"check all attribute namespaces are defined and not duplicated by aliasing"
-	| namespace localName |
+	| prefix localName qualifiedAlias |
+
 	attributeList keysDo: [:attrName |
-		self splitName: attrName into: [:ns :ln |
-			namespace := ns.
-			localName := ln].
-		namespace ifNotNil: [
-			(self namespaceAliases: namespace) do: [:alias |
-				(attributeList includesKey: alias , ':' , localName)
-					ifTrue: [self parseError: 'Attributes ' , attrName , ' and ' , alias , ':' , localName , ' are aliased to namespace ' , (self namespaceURIOf: namespace) ]]]]! !
+		self
+			validateAttribute: attrName
+			in: attributeList]! !
 
-!XMLNode methodsFor: 'accessing' stamp: 'mir 1/8/2002 18:44'!
-addContent: contentString
-	SAXParseException signal: 'Illegal string data.'! !
+!XMLNamespaceScope methodsFor: 'validation' stamp: 'JAAyer 3/13/2010 13:42'!
+validatePrefix: aPrefix
+	(self isMappedPrefix: aPrefix)
+		ifFalse: [self errorUnmappedPrefix: aPrefix].! !
 
-!XMLNode methodsFor: 'enumerating' stamp: 'mir 1/17/2002 14:49'!
-contentsDo: aBlock! !
+!XMLNamespaceScope class methodsFor: 'instance creation' stamp: 'JAAyer 3/5/2010 09:50'!
+enclosingScope: aScope
+	^ self new inheritMappingsFrom: aScope! !
 
-!XMLNode methodsFor: 'enumerating' stamp: 'mir 10/31/2007 18:02'!
-elementsAndContentsDo: aBlock
-	self elementsDo: aBlock! !
+!XMLNestedNamespaceScopes methodsFor: 'accessing' stamp: 'JAAyer 3/3/2010 22:33'!
+currentLevel
+	^ self scopes size! !
 
-!XMLNode methodsFor: 'enumerating' stamp: 'mir 3/6/2002 10:56'!
-elementsDo: aBlock! !
+!XMLNestedNamespaceScopes methodsFor: 'accessing' stamp: 'JAAyer 3/3/2010 22:34'!
+currentScope
+	^ self scopes
+		at: self currentLevel
+		ifAbsent: [self emptyScope]! !
 
-!XMLNode methodsFor: 'searching' stamp: 'mir 3/6/2002 10:52'!
-firstTagNamed: aSymbol 
-	"Return the first encountered node with the specified tag. Pass the message on"
+!XMLNestedNamespaceScopes methodsFor: 'scope' stamp: 'JAAyer 3/5/2010 09:50'!
+declareNamespace: aPrefix uri: aUri
+	"Declare the given name space prefix with the given URL"
 
-	| answer |
+	self currentScope mapPrefix: aPrefix to: aUri! !
 
-	self elementsDo: [:node | (answer := node firstTagNamed: aSymbol) ifNotNil: [^answer]].
-	^nil! !
+!XMLNestedNamespaceScopes methodsFor: 'accessing' stamp: 'JAAyer 3/3/2010 22:37'!
+defaultNamespace
+	^ self currentScope defaultNamespace! !
 
-!XMLNode methodsFor: 'searching' stamp: 'mir 3/6/2002 10:53'!
-firstTagNamed: aSymbol with: aBlock
-	"Return the first encountered node with the specified tag that
-	allows the block to evaluate to true. Pass the message on"
+!XMLNestedNamespaceScopes methodsFor: 'private' stamp: 'JAAyer 3/13/2010 13:44'!
+emptyScope
+	^ XMLNamespaceScope new! !
 
-	| answer |
+!XMLNestedNamespaceScopes methodsFor: 'accessing' stamp: 'JAAyer 3/2/2010 22:14'!
+enclosingScope
+	^ self scopes
+		at: self scopes size - 1
+		ifAbsent: [self emptyScope]! !
 
-	self elementsDo: [:node |
-		(answer := node firstTagNamed: aSymbol with: aBlock) ifNotNil: [^answer]].
-	^nil! !
+!XMLNestedNamespaceScopes methodsFor: 'scope' stamp: 'JAAyer 3/13/2010 13:42'!
+enterScope
+	self pushScope: (XMLNamespaceScope enclosingScope: self currentScope)! !
 
-!XMLNode methodsFor: 'testing' stamp: 'mir 1/17/2002 15:28'!
+!XMLNestedNamespaceScopes methodsFor: 'testing' stamp: 'JAAyer 3/5/2010 09:50'!
+isMappedPrefix: aPrefix
+	^ self currentScope isMappedPrefix: aPrefix! !
+
+!XMLNestedNamespaceScopes methodsFor: 'testing' stamp: 'JAAyer 3/5/2010 09:50'!
+isPrefix: aPrefix mappedTo: aUri
+	^ self currentScope isPrefix: aPrefix mappedTo: aUri! !
+
+!XMLNestedNamespaceScopes methodsFor: 'scope' stamp: 'JAAyer 3/4/2010 00:12'!
+leaveScope
+	self popScope! !
+
+!XMLNestedNamespaceScopes methodsFor: 'accessing' stamp: 'JAAyer 3/4/2010 00:12'!
+popScope
+	self scopes removeLast! !
+
+!XMLNestedNamespaceScopes methodsFor: 'accessing' stamp: 'JAAyer 3/13/2010 13:43'!
+pushScope: aScope
+	self scopes add: aScope! !
+
+!XMLNestedNamespaceScopes methodsFor: 'accessing' stamp: 'JAAyer 3/5/2010 06:00'!
+resolvePrefix: aPrefix
+	^ self currentScope resolvePrefix: aPrefix! !
+
+!XMLNestedNamespaceScopes methodsFor: 'accessing' stamp: 'JAAyer 3/5/2010 09:50'!
+resolvePrefix: aPrefix ifUnmapped: aBlock
+	^ self currentScope resolvePrefix: aPrefix ifUnmapped: aBlock! !
+
+!XMLNestedNamespaceScopes methodsFor: 'accessing' stamp: 'JAAyer 3/2/2010 21:35'!
+scopes
+	^ scopes ifNil: [scopes := OrderedCollection new: 20]! !
+
+!XMLNestedNamespaceScopes methodsFor: 'validation' stamp: 'JAAyer 3/4/2010 00:31'!
+validateAttributes: attributeList
+	self currentScope validateAttributes: attributeList! !
+
+!XMLNestedNamespaceScopes methodsFor: 'validation' stamp: 'JAAyer 3/11/2010 03:41'!
+validatePrefix: aPrefix
+	self currentScope validatePrefix: aPrefix! !
+
+!XMLNode methodsFor: 'errors' stamp: 'JAAyer 3/11/2010 05:19'!
+domError: aMessage
+	^ XMLDOMException signal: aMessage! !
+
+!XMLNode methodsFor: 'testing' stamp: 'JAAyer 2/25/2010 14:37'!
+hasParent
+	^ self parent notNil! !
+
+!XMLNode methodsFor: 'testing' stamp: 'JAAyer 3/7/2010 04:38'!
+isAttribute
+	^ false! !
+
+!XMLNode methodsFor: 'testing' stamp: 'JAAyer 2/19/2010 23:50'!
+isDocument
+	^ false! !
+
+!XMLNode methodsFor: 'testing' stamp: 'JAAyer 2/12/2010 20:23'!
+isElement
+	^ self isTag! !
+
+!XMLNode methodsFor: 'testing' stamp: 'JAAyer 2/21/2010 19:50'!
+isEmpty
+	^ true! !
+
+!XMLNode methodsFor: 'testing' stamp: 'JAAyer 2/19/2010 15:57'!
+isPI
+	^ self isProcessingInstruction! !
+
+!XMLNode methodsFor: 'testing' stamp: 'JAAyer 2/25/2010 01:48'!
 isProcessingInstruction
-	^false! !
+	^ false! !
 
-!XMLNode methodsFor: 'testing' stamp: 'mir 1/17/2002 15:26'!
+!XMLNode methodsFor: 'testing' stamp: 'JAAyer 2/25/2010 01:48'!
 isTag
-	^false! !
+	^ false! !
 
-!XMLNode methodsFor: 'testing' stamp: 'mir 1/17/2002 15:26'!
+!XMLNode methodsFor: 'testing' stamp: 'JAAyer 2/21/2010 19:50'!
+isTagOrText
+	^ self isTag or: [self isText]! !
+
+!XMLNode methodsFor: 'testing' stamp: 'JAAyer 2/25/2010 01:48'!
 isText
-	^false! !
+	^ false! !
+
+!XMLNode methodsFor: 'accessing' stamp: 'JAAyer 2/25/2010 14:37'!
+nextNode
+	^ self hasParent ifTrue: [self parent nodeAfter: self]! !
+
+!XMLNode methodsFor: 'testing' stamp: 'JAAyer 3/7/2010 20:16'!
+notEmpty
+	^ self isEmpty not! !
+
+!XMLNode methodsFor: 'private' stamp: 'JAAyer 3/23/2010 12:38'!
+notifyParentAfterRenamingWith: aBlock
+	| oldName newName |
+
+	oldName := self name.
+	aBlock value.
+	newName := self name.
+	self hasParent
+		ifTrue: [self parent nodeRenamed: self from: oldName to: newName]! !
+
+!XMLNode methodsFor: 'accessing' stamp: 'JAAyer 2/25/2010 14:37'!
+previousNode
+	^ self hasParent ifTrue: [self parent nodeBefore: self]! !
 
 !XMLNode methodsFor: 'printing' stamp: 'mir 1/17/2002 15:45'!
 printOn: stream
@@ -1283,339 +2404,1149 @@ printOn: stream
 printXMLOn: writer
 	self subclassResponsibility! !
 
-!XMLNode methodsFor: 'searching' stamp: 'mir 3/6/2002 10:53'!
-tagsNamed: aSymbol childrenDo: aOneArgumentBlock
+!XMLNodeList methodsFor: 'adding' stamp: 'JAAyer 3/10/2010 07:10'!
+add: newNode after: oldNode
+	^ self with: [super add: newNode after: oldNode] add: newNode! !
+
+!XMLNodeList methodsFor: 'adding' stamp: 'JAAyer 3/10/2010 07:10'!
+add: newNode afterIndex: oldNode
+	^ self with: [super add: newNode afterIndex: oldNode] add: newNode! !
+
+!XMLNodeList methodsFor: 'adding' stamp: 'JAAyer 3/10/2010 07:10'!
+add: newNode before: oldNode
+	^ self with: [super add: newNode before: oldNode] add: newNode! !
+
+!XMLNodeList methodsFor: 'adding' stamp: 'JAAyer 3/10/2010 07:10'!
+add: newNode beforeIndex: oldNode
+	^ self with: [super add: newNode beforeIndex: oldNode] add: newNode! !
+
+!XMLNodeList methodsFor: 'adding' stamp: 'JAAyer 3/10/2010 07:10'!
+addFirst: aNode
+	^ self with: [super addFirst: aNode] add: aNode! !
+
+!XMLNodeList methodsFor: 'adding' stamp: 'JAAyer 3/10/2010 07:11'!
+addLast: aNode
+	^ self with: [super addLast: aNode] add: aNode! !
+
+!XMLNodeList methodsFor: 'adding' stamp: 'JAAyer 3/10/2010 07:14'!
+at: anIndex ifAbsentPut: aValue
+	^ self
+		at: anIndex
+		ifAbsent: [self at: anIndex put: aValue]! !
+
+!XMLNodeList methodsFor: 'adding' stamp: 'JAAyer 3/12/2010 06:49'!
+at: anIndex put: aNode
+	(self at: anIndex)
+		ifNotNil: [self with: [super at: anIndex put: nil] remove: (self at: anIndex)].
+	^ self with: [super at: anIndex put: aNode] add: aNode.! !
+
+!XMLNodeList methodsFor: 'errors' stamp: 'JAAyer 3/22/2010 22:44'!
+errorNodeWithParent
+	^ self domError: 'Cannot add node that is already the child of another node'! !
+
+!XMLNodeList methodsFor: 'accessing' stamp: 'JAAyer 3/22/2010 17:16'!
+parent
+	^ parent! !
+
+!XMLNodeList methodsFor: 'accessing' stamp: 'JAAyer 3/22/2010 17:16'!
+parent: aParent
+	parent := aParent! !
+
+!XMLNodeList methodsFor: 'removing' stamp: 'JAAyer 3/10/2010 07:25'!
+remove: aNode ifAbsent: aBlock
+	^ self with: [super remove: aNode ifAbsent: [^ aBlock value]] remove: aNode! !
+
+!XMLNodeList methodsFor: 'removing' stamp: 'JAAyer 3/10/2010 08:53'!
+removeAll
+	self ifEmpty: [^ self].
+	self copy do: [:each | self with: [self removeFirst] remove: each]! !
+
+!XMLNodeList methodsFor: 'removing' stamp: 'JAAyer 3/10/2010 07:33'!
+removeAt: anIndex
+	^ self with: [super removeAt: anIndex] remove: (self at: anIndex)! !
+
+!XMLNodeList methodsFor: 'removing' stamp: 'JAAyer 3/10/2010 07:33'!
+removeFirst
+	^ self removeAt: 1! !
+
+!XMLNodeList methodsFor: 'removing' stamp: 'JAAyer 3/10/2010 07:33'!
+removeLast
+	^ self removeAt: self size! !
+
+!XMLNodeList methodsFor: 'private' stamp: 'JAAyer 3/22/2010 21:27'!
+with: aBlock add: aNode
+	aNode hasParent ifTrue: [^ self errorNodeWithParent].
+	self
+		with: [aBlock value]
+		onError: [^ nil].
+	self parent ifNotNil: [self parent nodeAdded: aNode].
+
+	^ aNode.! !
+
+!XMLNodeList methodsFor: 'private' stamp: 'JAAyer 3/22/2010 12:57'!
+with: aBlock onError: errorBlock
+	^ aBlock
+		on: Error
+		do: [:error |
+			errorBlock valueWithPossibleArgument: error.
+			error signal]! !
+
+!XMLNodeList methodsFor: 'private' stamp: 'JAAyer 3/22/2010 17:18'!
+with: aBlock remove: aNode
+
+	self
+		with: [
+			aBlock value.
+			self parent ifNotNil: [self parent nodeRemoved: aNode]]
+		onError: [^ nil].
+	^ aNode.! !
+
+!XMLNodeList class methodsFor: 'instance creation' stamp: 'JAAyer 3/22/2010 19:38'!
+parent: aParentNode
+	^ self new parent: aParentNode! !
+
+!XMLNodeName methodsFor: 'converting' stamp: 'JAAyer 3/17/2010 03:46'!
+asString
+	^ self qualifiedName! !
+
+!XMLNodeName methodsFor: 'accessing' stamp: 'JAAyer 3/22/2010 00:32'!
+expandedWith: aUri
+	^ aUri
+		ifNil: [self localName]
+		ifNotNil: ['{', aUri, '}', self localName]! !
+
+!XMLNodeName methodsFor: 'testing' stamp: 'JAAyer 3/5/2010 07:31'!
+hasPrefix
+	^ prefix notNil! !
+
+!XMLNodeName methodsFor: 'accessing' stamp: 'JAAyer 3/8/2010 05:10'!
+localName
+	^ localName ifNil: ['']! !
+
+!XMLNodeName methodsFor: 'accessing' stamp: 'JAAyer 3/22/2010 20:09'!
+name: aQualifiedName
+	aQualifiedName
+		splitQualifiedNameInto: [:prefixPart :localPart |
+			self setPrefix: prefixPart localName: localPart]! !
+
+!XMLNodeName methodsFor: 'accessing' stamp: 'JAAyer 3/5/2010 07:49'!
+prefix
+	^ prefix! !
+
+!XMLNodeName methodsFor: 'accessing' stamp: 'JAAyer 3/22/2010 20:09'!
+prefix: aPrefix
+	self setPrefix: aPrefix localName: self localName! !
+
+!XMLNodeName methodsFor: 'printing' stamp: 'JAAyer 3/13/2010 12:01'!
+printOn: aStream
+	aStream nextPutAll: self qualifiedName! !
+
+!XMLNodeName methodsFor: 'accessing' stamp: 'JAAyer 3/17/2010 03:46'!
+qualifiedName
+	^ qualifiedName ifNil: ['']! !
+
+!XMLNodeName methodsFor: 'private' stamp: 'JAAyer 3/24/2010 17:02'!
+setPrefix: aPrefix localName: aLocalName
+	aPrefix isEmptyOrNil
+		ifTrue: [
+			self
+				setQualifiedName: aLocalName
+				prefix: nil
+				localName: aLocalName]
+		ifFalse: [
+			self
+				setQualifiedName: aPrefix, ':', aLocalName
+				prefix: aPrefix
+				localName: aLocalName]! !
+
+!XMLNodeName methodsFor: 'private' stamp: 'JAAyer 3/24/2010 17:02'!
+setQualifiedName: aQualifiedName prefix: aPrefix localName: aLocalName
+	qualifiedName := aQualifiedName.
+	prefix := aPrefix.
+	localName := aLocalName.! !
+
+!XMLNodeWithChildren methodsFor: 'accessing' stamp: 'JAAyer 3/10/2010 08:50'!
+addNode: aNode
+	^ self nodes addLast: aNode! !
+
+!XMLNodeWithChildren methodsFor: 'accessing' stamp: 'JAAyer 3/10/2010 07:37'!
+addNode: aNode after: afterNode
+	^ self nodes add: aNode after: afterNode! !
+
+!XMLNodeWithChildren methodsFor: 'accessing' stamp: 'JAAyer 3/10/2010 07:37'!
+addNode: aNode before: beforeNode
+	^ self nodes add: aNode before: beforeNode! !
+
+!XMLNodeWithChildren methodsFor: 'accessing' stamp: 'JAAyer 3/10/2010 07:38'!
+addNodeFirst: aNode
+	^ self nodes addFirst: aNode! !
+
+!XMLNodeWithChildren methodsFor: 'accessing' stamp: 'JAAyer 3/6/2010 06:36'!
+addNodes: aNodeCollection
+	aNodeCollection do: [:each | self addNode: each].
+	^ aNodeCollection.! !
+
+!XMLNodeWithChildren methodsFor: 'accessing' stamp: 'JAAyer 3/12/2010 10:34'!
+firstNode
+	^ self nodes first! !
+
+!XMLNodeWithChildren methodsFor: 'testing' stamp: 'JAAyer 3/6/2010 06:37'!
+includesNode: aNode
+	^ self nodes includes: aNode! !
+
+!XMLNodeWithChildren methodsFor: 'testing' stamp: 'JAAyer 3/6/2010 06:37'!
+isEmpty
+	^ self nodes isEmpty! !
+
+!XMLNodeWithChildren methodsFor: 'accessing' stamp: 'JAAyer 3/12/2010 10:35'!
+lastNode
+	^ self nodes last! !
+
+!XMLNodeWithChildren methodsFor: 'announcements' stamp: 'JAAyer 3/22/2010 21:28'!
+nodeAdded: aNode
+	aNode parent: self! !
+
+!XMLNodeWithChildren methodsFor: 'accessing' stamp: 'JAAyer 3/12/2010 12:37'!
+nodeAfter: aNode
+	^ self nodes after: aNode! !
+
+!XMLNodeWithChildren methodsFor: 'accessing' stamp: 'JAAyer 3/12/2010 12:37'!
+nodeBefore: aNode
+	^ self nodes before: aNode! !
+
+!XMLNodeWithChildren methodsFor: 'announcements' stamp: 'JAAyer 3/22/2010 20:02'!
+nodeRemoved: aNode
+	aNode parent: nil! !
+
+!XMLNodeWithChildren methodsFor: 'accessing' stamp: 'JAAyer 3/22/2010 19:53'!
+nodes
+	^ nodes ifNil: [nodes := XMLNodeList parent: self]! !
+
+!XMLNodeWithChildren methodsFor: 'enumerating' stamp: 'JAAyer 3/6/2010 06:37'!
+nodesDo: aBlock
+	self nodes do: aBlock! !
+
+!XMLNodeWithChildren methodsFor: 'printing' stamp: 'JAAyer 3/6/2010 06:37'!
+printXMLOn: writer
+	self nodesDo: [:each | each printXMLOn: writer].! !
+
+!XMLNodeWithChildren methodsFor: 'accessing' stamp: 'JAAyer 3/10/2010 08:01'!
+removeNode: aNode
+	^ self nodes remove: aNode! !
+
+!XMLNodeWithChildren methodsFor: 'accessing' stamp: 'JAAyer 3/10/2010 08:01'!
+removeNodes
+	self nodes removeAll! !
+
+!XMLNodeWithChildren methodsFor: 'accessing' stamp: 'JAAyer 3/6/2010 06:36'!
+removeNodes: aNodeCollection
+	aNodeCollection do: [:each | self removeNode: each].
+	^ aNodeCollection.! !
+
+!XMLNodeWithChildren methodsFor: 'accessing' stamp: 'JAAyer 3/12/2010 12:35'!
+replaceNode: aNode with: aReplacementNode
+	^ self nodes
+		at: [self nodes indexOf: aNode]
+		put: aReplacementNode! !
+
+!XMLNodeWithChildren methodsFor: 'accessing' stamp: 'JAAyer 3/12/2010 01:12'!
+topNode
+	^ self firstNode! !
+
+!XMLNodeWithElements methodsFor: 'accessing' stamp: 'JAAyer 2/25/2010 14:37'!
+addElement: anElement
+	self addNode: anElement! !
+
+!XMLNodeWithElements methodsFor: 'accessing' stamp: 'JAAyer 3/12/2010 11:45'!
+elementAfter: anElement
+	^ self elements after: anElement! !
+
+!XMLNodeWithElements methodsFor: 'accessing' stamp: 'JAAyer 3/22/2010 10:42'!
+elementAt: aString
+	^ self elementCache firstElementNamed: aString! !
+
+!XMLNodeWithElements methodsFor: 'accessing' stamp: 'JAAyer 3/22/2010 10:48'!
+elementAt: aString ifAbsent: aBlock
+	^ (self elementCache firstElementNamed:  aString) ifNil: aBlock! !
+
+!XMLNodeWithElements methodsFor: 'accessing' stamp: 'JAAyer 3/8/2010 04:54'!
+elementAtAny: aStringArray
+	^ self elementAtAny: aStringArray ifAbsent: [nil]! !
+
+!XMLNodeWithElements methodsFor: 'accessing' stamp: 'JAAyer 3/8/2010 04:54'!
+elementAtAny: aStringArray ifAbsent: aBlock
+	| answer |
+
+	aStringArray do: [:each | (answer := self elementAt: each) ifNotNil: [^ answer]].
+	^ aBlock value.! !
+
+!XMLNodeWithElements methodsFor: 'accessing' stamp: 'JAAyer 3/12/2010 11:45'!
+elementBefore: anElement
+	^ self elements before: anElement! !
+
+!XMLNodeWithElements methodsFor: 'accessing' stamp: 'JAAyer 3/13/2010 13:01'!
+elementCache
+	^ elementCache ifNil: [elementCache := XMLElementCache new]! !
+
+!XMLNodeWithElements methodsFor: 'accessing' stamp: 'JAAyer 3/8/2010 04:54'!
+elementUnqualifiedAt: aString
+	self deprecated: 'use #elementAt: with an unqualified name instead'.
+
+	^ self elementAt: aString.! !
+
+!XMLNodeWithElements methodsFor: 'accessing' stamp: 'JAAyer 3/8/2010 04:54'!
+elementUnqualifiedAt: aString ifAbsent: aBlock
+	self deprecated: 'use #elementAt:ifAbsent: with an unqualified name instead'.
+
+	^ self elementAt: aString ifAbsent: aBlock.! !
+
+!XMLNodeWithElements methodsFor: 'accessing' stamp: 'JAAyer 3/13/2010 13:03'!
+elements
+	^ self elementCache elements! !
+
+!XMLNodeWithElements methodsFor: 'accessing' stamp: 'JAAyer 3/22/2010 10:45'!
+elementsAt: aString
+	^ self elementCache elementsNamed: aString! !
+
+!XMLNodeWithElements methodsFor: 'enumerating' stamp: 'JAAyer 3/8/2010 04:54'!
+elementsAt: aString do: aBlock
+	(self elementsAt: aString) do: aBlock! !
+
+!XMLNodeWithElements methodsFor: 'accessing' stamp: 'JAAyer 3/22/2010 10:45'!
+elementsAt: aString ifAbsent: aBlock
+	^ (self elementCache elementsNamed: aString) ifEmpty: aBlock.! !
+
+!XMLNodeWithElements methodsFor: 'enumerating' stamp: 'JAAyer 2/12/2010 20:57'!
+elementsDo: aBlock
+	self elements do: aBlock! !
+
+!XMLNodeWithElements methodsFor: 'accessing' stamp: 'JAAyer 3/12/2010 10:34'!
+firstElement
+	^ self elements first! !
+
+!XMLNodeWithElements methodsFor: 'searching' stamp: 'JAAyer 3/8/2010 04:54'!
+firstTagNamed: aString 
+	"Return the first encountered node with the specified tag. Pass the message on"
+
+	^ self recurseUntilTrue: [:each | each isNamed: aString]! !
+
+!XMLNodeWithElements methodsFor: 'searching' stamp: 'JAAyer 3/8/2010 04:54'!
+firstTagNamed: aString with: aBlock
+	"Return the first encountered node with the specified tag that
+	allows the block to evaluate to true. Pass the message on"
+
+	^ self recurseUntilTrue: [:each |
+		(each isNamed: aString) and: [aBlock valueWithPossibleArgument: each]]! !
+
+!XMLNodeWithElements methodsFor: 'searching' stamp: 'JAAyer 3/8/2010 04:54'!
+firstTagNamedAny: aStringArray
+	"Return the first encountered node with any of the specified tag names. Pass the message on"
+
+	^ self recurseUntilTrue: [:each | each isNamedAny: aStringArray]! !
+
+!XMLNodeWithElements methodsFor: 'searching' stamp: 'JAAyer 3/8/2010 04:54'!
+firstTagNamedAny: aStringArray with: aBlock
+	"Return the first encountered node with any of the specified tag names that
+	allows the block to evaluate to true. Pass the message on"
+
+	^ self recurseUntilTrue: [:each |
+		(each isNamedAny: aStringArray) and: [aBlock valueWithPossibleArgument: each]]! !
+
+!XMLNodeWithElements methodsFor: 'testing' stamp: 'JAAyer 2/25/2010 01:48'!
+hasElements
+	^ self elements notEmpty! !
+
+!XMLNodeWithElements methodsFor: 'testing' stamp: 'JAAyer 3/8/2010 04:54'!
+includesElement: aString
+	^ (self elementAt: aString) notNil! !
+
+!XMLNodeWithElements methodsFor: 'parsing' stamp: 'JAAyer 3/23/2010 15:49'!
+innerXML: aString
+	| parsedDocument newNodes |
+
+	parsedDocument := XMLDOMParser
+		parseDocumentFrom: aString
+		useNamespaces: self usesNamespaces.
+	newNodes := parsedDocument nodes copy.
+	parsedDocument removeNodes.
+	self
+		removeNodes;
+		addNodes: newNodes.! !
+
+!XMLNodeWithElements methodsFor: 'accessing' stamp: 'JAAyer 3/12/2010 10:34'!
+lastElement
+	^ self elements last! !
+
+!XMLNodeWithElements methodsFor: 'announcements' stamp: 'JAAyer 3/22/2010 20:04'!
+nodeAdded: aNode
+	super nodeAdded: aNode.
+
+	aNode isTag
+		ifTrue: [self elementCache cacheElement: aNode].! !
+
+!XMLNodeWithElements methodsFor: 'announcements' stamp: 'JAAyer 3/22/2010 20:05'!
+nodeRemoved: aNode
+	super nodeRemoved: aNode.
+
+	aNode isTag
+		ifTrue: [self elementCache uncacheElement: aNode].! !
+
+!XMLNodeWithElements methodsFor: 'announcements' stamp: 'JAAyer 3/22/2010 20:55'!
+nodeRenamed: aNode from: anOldName to: aNewName
+	aNode isTag
+		ifTrue: [self elementCache rebuildCacheFrom: self nodes].! !
+
+!XMLNodeWithElements methodsFor: 'searching' stamp: 'JAAyer 2/27/2010 19:28'!
+recurse: aBlock
+	"Descend depth-first visiting each element with aBlock."
+
+	self elementsDo: [:each | each recurse: aBlock]! !
+
+!XMLNodeWithElements methodsFor: 'searching' stamp: 'JAAyer 2/27/2010 19:29'!
+recurseUntilTrue: aBlock
+	"Descend depth-first visiting each element with aBlock until one such evaluation
+	of aBlock with an element is true, then return that element. If no evaluation is
+	true, then return nil."
+
+	| result |
+
+	self elementsDo: [:each | (result := each recurseUntilTrue: aBlock) ifNotNil: [^ result]].
+	^ nil.! !
+
+!XMLNodeWithElements methodsFor: 'searching' stamp: 'JAAyer 3/8/2010 04:54'!
+tagsNamed: aString childrenDo: aOneArgumentBlock
 	"Evaluate aOneArgumentBlock for all children who match"
 
-	self elementsDo: [:each | 
-		each tagsNamed: aSymbol ifReceiverDo: aOneArgumentBlock]! !
+	self deprecated: 'use #elementsAt:do: instead'.
 
-!XMLNode methodsFor: 'searching' stamp: 'mir 3/6/2002 10:53'!
-tagsNamed: aSymbol childrenDoAndRecurse: aOneArgumentBlock
+	self elementsAt: aString do: aOneArgumentBlock.! !
+
+!XMLNodeWithElements methodsFor: 'searching' stamp: 'JAAyer 3/8/2010 04:54'!
+tagsNamed: aString childrenDoAndRecurse: aOneArgumentBlock
 	"Evaluate aOneArgumentBlock for all children who match and recurse"
 
-	self elementsDo: [:each | 
-		each tagsNamed: aSymbol ifReceiverDoAndRecurse: aOneArgumentBlock]! !
+	self elementsDo: [:each | each tagsNamed: aString do: aOneArgumentBlock]! !
 
-!XMLNode methodsFor: 'searching' stamp: 'mir 3/6/2002 10:53'!
-tagsNamed: aSymbol contentsDo: aBlock
+!XMLNodeWithElements methodsFor: 'searching' stamp: 'JAAyer 3/8/2010 04:54'!
+tagsNamed: aString contentsDo: aBlock
 	"Evaluate aBlock for all of the contents of the receiver.
 	The receiver has no tag, so pass the message on"
 
-	self elementsDo: [:each | each tagsNamed: aSymbol contentsDo: aBlock]! !
+	self tagsNamed: aString do: [:each | each contentsDo: aBlock]! !
 
-!XMLNode methodsFor: 'searching' stamp: 'mir 3/6/2002 10:53'!
-tagsNamed: aSymbol do: aOneArgumentBlock
-	"Search for nodes with tag aSymbol. When encountered evaluate aOneArgumentBlock"
+!XMLNodeWithElements methodsFor: 'searching' stamp: 'JAAyer 3/8/2010 04:54'!
+tagsNamed: aString do: aOneArgumentBlock
+	"Search for nodes with tag aString. When encountered evaluate aOneArgumentBlock"
 
-	self elementsDo: [:each | each tagsNamed: aSymbol do: aOneArgumentBlock]! !
+	self recurse: [:each | each ifNamed: aString do: aOneArgumentBlock]! !
 
-!XMLNode methodsFor: 'searching' stamp: 'SqR 7/2/2000 15:58'!
-tagsNamed: aSymbol ifReceiverDo: aOneArgumentBlock
-	"Handled only by XMLTagNode subclass"
+!XMLNodeWithElements methodsFor: 'searching' stamp: 'JAAyer 3/8/2010 04:54'!
+tagsNamed: aString ifReceiverDoAndRecurse: aOneArgumentBlock
+	self deprecated: 'use #tagsNamed:do: instead'.
 
-! !
+	self tagsNamed: aString do: aOneArgumentBlock.! !
 
-!XMLNode methodsFor: 'searching' stamp: 'mir 3/6/2002 10:53'!
-tagsNamed: aSymbol ifReceiverDoAndRecurse: aOneArgumentBlock
-	"Recurse all children"
-
-	self elementsDo: [:each | each tagsNamed: aSymbol ifReceiverDoAndRecurse: aOneArgumentBlock]! !
-
-!XMLNode methodsFor: 'searching' stamp: 'mir 3/6/2002 10:53'!
-tagsNamed: aSymbol ifReceiverOrChildDo: aOneArgumentBlock
-	"Recurse all children"
-
-	self elementsDo: [:each | each tagsNamed: aSymbol ifReceiverDo: aOneArgumentBlock]! !
-
-!XMLNodeWithElements methodsFor: 'accessing' stamp: 'mir 11/14/2007 17:25'!
-addElement: element
-	self elementsAndContents add: element! !
-
-!XMLNodeWithElements methodsFor: 'accessing' stamp: 'mir 10/25/2000 11:22'!
-addEntity: entityName value: entityValue
-	self entities add: entityName->entityValue! !
-
-!XMLNodeWithElements methodsFor: 'accessing' stamp: 'mir 3/6/2002 10:46'!
-elementAt: entityName
-	^self elementAt: entityName ifAbsent: [nil]! !
-
-!XMLNodeWithElements methodsFor: 'accessing' stamp: 'mir 11/14/2007 17:23'!
-elementAt: entityName ifAbsent: aBlock
-	elementsAndContents
-		ifNil: [^aBlock value].
-	^self elements detect: [:each | each isProcessingInstruction not and: [each name = entityName or: [each localName = entityName]]] ifNone: [^aBlock value]! !
-
-!XMLNodeWithElements methodsFor: 'accessing' stamp: 'mir 6/16/2003 17:36'!
-elementUnqualifiedAt: entityName
-	^self elementUnqualifiedAt: entityName ifAbsent: [nil]! !
-
-!XMLNodeWithElements methodsFor: 'accessing' stamp: 'mir 11/14/2007 17:23'!
-elementUnqualifiedAt: entityName ifAbsent: aBlock
-	elementsAndContents
-		ifNil: [^aBlock value].
-	^self elements detect: [:each | each localName = entityName] ifNone: [^aBlock value]! !
-
-!XMLNodeWithElements methodsFor: 'accessing' stamp: 'mir 11/14/2007 17:13'!
-elements
-	^self elementsAndContents! !
-
-!XMLNodeWithElements methodsFor: 'accessing' stamp: 'mir 11/14/2007 17:13'!
-elementsAndContents
-	elementsAndContents ifNil: [elementsAndContents := OrderedCollection new].
-	^elementsAndContents! !
-
-!XMLNodeWithElements methodsFor: 'enumerating' stamp: 'mir 11/14/2007 17:21'!
-elementsDo: aBlock
-	self elements do: [:each | aBlock value: each]! !
-
-!XMLNodeWithElements methodsFor: 'name space' stamp: 'mir 6/5/2003 15:20'!
-namespace
-	^ namespace! !
-
-!XMLNodeWithElements methodsFor: 'name space' stamp: 'mir 6/16/2003 16:21'!
-namespace: ns uri: u
-	namespace := ns.
-	uri := u! !
-
-!XMLNodeWithElements methodsFor: 'name space' stamp: 'mir 6/5/2003 15:20'!
-namespaceURI
-	^ uri! !
-
-!XMLNodeWithElements methodsFor: 'printing' stamp: 'mir 3/6/2002 10:49'!
-printXMLOn: writer
-	self elementsDo: [:element | element printXMLOn: writer]! !
-
-!XMLNodeWithElements methodsFor: 'accessing' stamp: 'mir 3/6/2002 10:50'!
+!XMLNodeWithElements methodsFor: 'accessing' stamp: 'JAAyer 3/12/2010 01:12'!
 topElement
-	^self elements first! !
+	^ self firstElement! !
 
-!XMLPI methodsFor: 'accessing' stamp: 'mir 1/17/2002 13:02'!
+!XMLOpenTags methodsFor: 'accessing' stamp: 'JAAyer 3/23/2010 16:39'!
+closeTag: aTagName
+	(self enclosingTag = aTagName)
+		ifTrue: [^ self tags removeLast].
+
+	(self hasOpenTag: aTagName)
+		ifTrue: [
+			self error:
+				('<{1}> tag closed before enclosed tags {2}'
+					format: (Array with: aTagName with: (self enclosedTagsAsString: aTagName)))]
+		ifFalse: [
+			self error:
+				('Closing </{1}> tag without corresponding opening <{1}> tag'
+					format: (Array with: aTagName))]! !
+
+!XMLOpenTags methodsFor: 'printing' stamp: 'NorbertHartl 8/5/2010 11:10'!
+enclosedTagsAsString: aTagName
+	| enclosedTags |
+
+	enclosedTags := String new writeStream.
+	self
+		printOn: enclosedTags
+		startingAt: (self tags lastIndexOf: aTagName) + 1.
+	^ enclosedTags contents.! !
+
+!XMLOpenTags methodsFor: 'accessing' stamp: 'JAAyer 3/16/2010 15:59'!
+enclosingTag
+	^ self tags
+		at: self totalOpen
+		ifAbsent: ['']! !
+
+!XMLOpenTags methodsFor: 'testing' stamp: 'JAAyer 3/16/2010 08:24'!
+hasOpenTag: aTagName
+	^ self tags includes: aTagName! !
+
+!XMLOpenTags methodsFor: 'testing' stamp: 'JAAyer 3/16/2010 08:24'!
+hasOpenTags
+	^ self tags notEmpty! !
+
+!XMLOpenTags methodsFor: 'accessing' stamp: 'JAAyer 3/16/2010 16:16'!
+maxTagsToPrint
+	^ 5! !
+
+!XMLOpenTags methodsFor: 'accessing' stamp: 'JAAyer 3/16/2010 08:23'!
+openTag: aTagName
+	^ self tags addLast: aTagName! !
+
+!XMLOpenTags methodsFor: 'printing' stamp: 'JAAyer 3/16/2010 16:07'!
+printOn: aStream
+	self printOn: aStream startingAt: 1! !
+
+!XMLOpenTags methodsFor: 'printing' stamp: 'JAAyer 3/16/2010 16:15'!
+printOn: aStream startingAt: aPosition
+	| endPosition |
+
+	endPosition :=  self totalOpen min: (aPosition + self maxTagsToPrint - 1).
+	(self tags copyFrom: aPosition to: endPosition)
+		do: [:each |
+			aStream
+				nextPut: $<;
+				nextPutAll: each;
+				nextPut: $>]
+		separatedBy: [aStream nextPutAll: ', '].
+	(endPosition < self totalOpen)
+		ifTrue: [aStream nextPutAll: '...'].! !
+
+!XMLOpenTags methodsFor: 'accessing' stamp: 'JAAyer 3/16/2010 08:24'!
+tags
+	^ tags ifNil: [tags := OrderedCollection new: 30]! !
+
+!XMLOpenTags methodsFor: 'accessing' stamp: 'JAAyer 3/16/2010 15:59'!
+totalOpen
+	^ self tags size
+	! !
+
+!XMLOrderPreservingDictionary methodsFor: 'accessing' stamp: 'JAAyer 3/8/2010 04:54'!
+add: anAssociation
+	self at: anAssociation key put: anAssociation value.
+	^ anAssociation.! !
+
+!XMLOrderPreservingDictionary methodsFor: 'accessing' stamp: 'JAAyer 3/8/2010 04:54'!
+addAll: anAssociationCollection
+	anAssociationCollection do: [:association | self add: association].
+	^ anAssociationCollection.! !
+
+!XMLOrderPreservingDictionary methodsFor: 'private' stamp: 'JAAyer 3/8/2010 04:54'!
+addKeyToSequence: aString
+	super at: aString ifAbsent: [orderedKeys addLast: aString]! !
+
+!XMLOrderPreservingDictionary methodsFor: 'converting' stamp: 'JAAyer 3/6/2010 23:02'!
+asOrderedCollection
+	^ self associations asOrderedCollection! !
+
+!XMLOrderPreservingDictionary methodsFor: 'accessing' stamp: 'JAAyer 3/8/2010 04:54'!
+associationAt: aKey
+	^ self associationAt: aKey ifAbsent: [self defaultValue]! !
+
+!XMLOrderPreservingDictionary methodsFor: 'accessing' stamp: 'JAAyer 3/6/2010 23:02'!
+associations
+	^ self keys collect: [:key | self associationAt: key]! !
+
+!XMLOrderPreservingDictionary methodsFor: 'enumerating' stamp: 'JAAyer 3/8/2010 04:55'!
+associationsDo: aBlock
+	^ self associations do: [:each | aBlock value: each]! !
+
+!XMLOrderPreservingDictionary methodsFor: 'accessing' stamp: 'JAAyer 3/8/2010 22:01'!
+at: aKey
+	^ self at: aKey ifAbsent: [self defaultValue]! !
+
+!XMLOrderPreservingDictionary methodsFor: 'accessing' stamp: 'JAAyer 3/8/2010 04:58'!
+at: aKey ifAbsentPut: aBlock
+	self addKeyToSequence: aKey.
+	^ super at: aKey ifAbsentPut: aBlock.! !
+
+!XMLOrderPreservingDictionary methodsFor: 'accessing' stamp: 'JAAyer 3/8/2010 04:57'!
+at: aKey put: aBlock
+	self addKeyToSequence: aKey.
+	^ super at: aKey put: aBlock.! !
+
+!XMLOrderPreservingDictionary methodsFor: 'accessing' stamp: 'JAAyer 3/8/2010 04:54'!
+defaultValue
+	^ nil! !
+
+!XMLOrderPreservingDictionary methodsFor: 'as yet unclassified' stamp: 'pb 6/10/2012 18:51'!
+initialize
+	"added method for tests"
+	self flag: #pbfix.
+	self initialize: 100! !
+
+!XMLOrderPreservingDictionary methodsFor: 'initialization' stamp: 'pb 6/10/2012 18:53'!
+initialize: aSize
+	"
+	super initialize: aSize.
+	"
+	super initialize.
+	orderedKeys := OrderedCollection new: aSize.! !
+
+!XMLOrderPreservingDictionary methodsFor: 'accessing' stamp: 'JAAyer 3/6/2010 23:07'!
+keys
+	^ orderedKeys copy! !
+
+!XMLOrderPreservingDictionary methodsFor: 'enumerating' stamp: 'JAAyer 3/6/2010 23:03'!
+keysAndValuesDo: aBlock
+	self keysDo: [:each | aBlock value: each value: (self at: each)]! !
+
+!XMLOrderPreservingDictionary methodsFor: 'enumerating' stamp: 'JAAyer 3/6/2010 23:15'!
+keysDo: aBlock
+	orderedKeys do: aBlock! !
+
+!XMLOrderPreservingDictionary methodsFor: 'printing' stamp: 'JAAyer 3/7/2010 21:39'!
+printElementsOn: aStream
+	self ifEmpty: [^ self].
+
+	aStream nextPut: $(.
+	self associations doWithIndex: [:associaiton :i |
+		aStream
+			print: associaiton key;
+			nextPutAll: '->';
+			print: associaiton value.
+		(i < self size)
+			ifTrue: [aStream space]].
+	aStream nextPut: $).! !
+
+!XMLOrderPreservingDictionary methodsFor: 'printing' stamp: 'JAAyer 3/12/2010 08:17'!
+printNameOn: aStream
+	aStream
+		nextPutAll: 'an';
+		space;
+		nextPutAll: self class name! !
+
+!XMLOrderPreservingDictionary methodsFor: 'accessing' stamp: 'JAAyer 3/6/2010 23:07'!
+removeAll
+	orderedKeys removeAll.
+	super removeAll.! !
+
+!XMLOrderPreservingDictionary methodsFor: 'accessing' stamp: 'JAAyer 3/8/2010 04:54'!
+removeKey: aKey
+	^ self removeKey: aKey ifAbsent: [self defaultValue]! !
+
+!XMLOrderPreservingDictionary methodsFor: 'accessing' stamp: 'JAAyer 3/8/2010 04:57'!
+removeKey: aKey ifAbsent: aBlock
+	self removeKeyFromSequence: aKey.
+	^ super removeKey: aKey ifAbsent: aBlock.! !
+
+!XMLOrderPreservingDictionary methodsFor: 'private' stamp: 'JAAyer 3/7/2010 20:37'!
+removeKeyFromSequence: aKey
+	(self includesKey: aKey)
+		ifTrue: [orderedKeys remove: aKey]! !
+
+!XMLOrderPreservingDictionary methodsFor: 'initialization' stamp: 'JAAyer 3/6/2010 23:17'!
+setAssociationsFrom: aDictionary
+	self addAll: aDictionary associations! !
+
+!XMLOrderPreservingDictionary class methodsFor: 'instance creation' stamp: 'JAAyer 3/6/2010 23:17'!
+newFrom: aDictionary
+	^ self new setAssociationsFrom: aDictionary! !
+
+!XMLOrderedList methodsFor: 'accessing' stamp: 'pb 6/10/2012 18:56'!
+after: anObject
+	^ self after: anObject ifNone: [self defaultValue]! !
+
+!XMLOrderedList methodsFor: 'accessing' stamp: 'JAAyer 3/12/2010 07:20'!
+at: anIndex
+	^ self at: anIndex ifAbsent: [self defaultValue]! !
+
+!XMLOrderedList methodsFor: 'accessing' stamp: 'JAAyer 3/12/2010 07:22'!
+at: anIndex ifAbsent: aBlock
+	^ (anIndex between: 1 and: self size)
+		ifTrue: [super at: anIndex]
+		ifFalse: [aBlock value]! !
+
+!XMLOrderedList methodsFor: 'accessing' stamp: 'pb 6/10/2012 18:56'!
+before: anObject
+	^ self before: anObject ifNone: [self defaultValue]! !
+
+!XMLOrderedList methodsFor: 'copying' stamp: 'JAAyer 3/12/2010 07:30'!
+copy
+	^ self species withAll: self! !
+
+!XMLOrderedList methodsFor: 'copying' stamp: 'JAAyer 3/12/2010 07:30'!
+copyEmpty
+	^ self species new: self size! !
+
+!XMLOrderedList methodsFor: 'copying' stamp: 'JAAyer 3/19/2010 21:29'!
+copyFrom: start to: end
+	^ super copyFrom: (start max: 1) to: (self size min: end)! !
+
+!XMLOrderedList methodsFor: 'defaults' stamp: 'JAAyer 3/12/2010 06:48'!
+defaultValue
+	^ nil! !
+
+!XMLOrderedList methodsFor: 'errors' stamp: 'JAAyer 3/12/2010 11:36'!
+domError: anErrorMessage
+	XMLDOMException signal: anErrorMessage.
+	^ nil.
+	! !
+
+!XMLOrderedList methodsFor: 'printing' stamp: 'JAAyer 3/12/2010 08:18'!
+printOn: aStream
+	self printXMLOn: (XMLWriter on: aStream)! !
+
+!XMLOrderedList methodsFor: 'printing' stamp: 'JAAyer 3/12/2010 08:18'!
+printXMLOn: writer
+	self do: [:each | each printXMLOn: writer].! !
+
+!XMLOrderedList methodsFor: 'copying' stamp: 'JAAyer 3/12/2010 11:02'!
+species
+	^ XMLOrderedList! !
+
+!XMLPI methodsFor: 'accessing' stamp: 'JAAyer 2/23/2010 22:40'!
 data
-	^data! !
+	^ data ifNil: ['']! !
 
 !XMLPI methodsFor: 'accessing' stamp: 'mir 1/17/2002 13:02'!
 data: aString
 	data := aString! !
 
-!XMLPI methodsFor: 'testing' stamp: 'mir 1/17/2002 15:28'!
+!XMLPI methodsFor: 'testing' stamp: 'JAAyer 2/25/2010 01:48'!
 isProcessingInstruction
-	^true! !
+	^ true! !
 
 !XMLPI methodsFor: 'printing' stamp: 'mir 1/17/2002 15:53'!
 printXMLOn: writer
 	writer pi: self target data: self data! !
 
-!XMLPI methodsFor: 'accessing' stamp: 'mir 1/17/2002 13:02'!
+!XMLPI methodsFor: 'accessing' stamp: 'JAAyer 2/23/2010 22:40'!
 target
-	^target! !
+	^ target ifNil: ['']! !
 
 !XMLPI methodsFor: 'accessing' stamp: 'mir 1/17/2002 13:02'!
 target: aString
 	target := aString! !
 
-!XMLPI class methodsFor: 'instance creation' stamp: 'mir 1/17/2002 13:03'!
+!XMLPI class methodsFor: 'instance creation' stamp: 'JAAyer 2/25/2010 01:48'!
 target: targetName data: aString
-	^self new
+	^ self new
 		target: targetName;
 		data: aString! !
 
-!XMLParser methodsFor: 'callbacks' stamp: 'SqR 7/2/2000 16:51'!
-attribute: aSymbol value: aString
-	"This method is called for each attribute/value pair in a start tag"
+!XMLStreamReader methodsFor: 'testing' stamp: 'JAAyer 3/16/2010 16:44'!
+atEnd
+	^ self peek isNil! !
 
-	^self subclassResponsibility! !
+!XMLStreamReader methodsFor: 'accessing' stamp: 'NorbertHartl 8/5/2010 16:39'!
+basicNext
+	"Returns next character in the stream after performing line-endings normalization.
+	Normalization does not occur across nested streams."
+	| nextChar |
+	
+	stream atEnd ifTrue: [ ^ nil ].
+	((nextChar := stream next) == CarriageReturn)
+		ifTrue: [
+			nextChar := LineFeed.
+			(stream peek == LineFeed)
+				ifTrue: [stream next]].
+	^ nextChar.! !
 
-!XMLParser methodsFor: 'callbacks' stamp: 'SqR 7/2/2000 16:52'!
-beginStartTag: aSymbol asPI: aBoolean
-	"This method is called for at the beginning of a start tag.
-	The asPI parameter defines whether or not the tag is a 'processing
-	instruction' rather than a 'normal' tag."
+!XMLStreamReader methodsFor: 'streaming' stamp: 'JAAyer 3/22/2010 22:00'!
+checkNestedStream
+	nestedStreams ifNotNil: [
+		(peekChar isNil and: [stream atEnd])
+			ifTrue: [
+				self popNestingLevel.
+				self checkNestedStream]]! !
 
-	^self subclassResponsibility! !
+!XMLStreamReader methodsFor: 'initialization' stamp: 'JAAyer 3/19/2010 13:35'!
+initialize
+	stream := nil.
+	nestedStreams := nil.
+	peekChar := nil.
+	buffer := WriteStream on: (String new: 128).! !
 
-!XMLParser methodsFor: 'callbacks' stamp: 'SqR 7/2/2000 16:52'!
-endStartTag: aSymbol
-	"This method is called at the end of the start tag after all of the
-	attributes have been processed"
+!XMLStreamReader methodsFor: 'private' stamp: 'JAAyer 3/16/2010 08:29'!
+nestedStreams
+	^ nestedStreams ifNil: [nestedStreams := OrderedCollection new]! !
 
-	^self subclassResponsibility! !
+!XMLStreamReader methodsFor: 'accessing' stamp: 'JAAyer 3/16/2010 15:00'!
+next
+	"Return the next character from the current input stream. If the current
+	stream is at end, pop to the next nesting level if there is one.
 
-!XMLParser methodsFor: 'callbacks' stamp: 'SqR 7/2/2000 16:52'!
-endTag: aSymbol
-	"This method is called when the parser encounters either an
-	end tag or the end of a unary tag"
+	Due to the potential nesting of original document, included documents
+	and replacment texts the streams are held in a stack representing the
+	nested streams. The current stream is the top one."
+	| nextChar |
 
-	^self subclassResponsibility! !
+	peekChar
+		ifNil: [
+			nestedStreams ifNotNil: [self checkNestedStream].
+			^ self basicNext]
+		ifNotNil: [
+			nextChar := peekChar.
+			peekChar := nil.
+			^ nextChar].! !
 
-!XMLParser methodsFor: 'handling tokens' stamp: 'mir 1/17/2002 09:27'!
-handleCData: aString
-	self text: aString! !
+!XMLStreamReader methodsFor: 'testing' stamp: 'JAAyer 3/28/2010 13:20'!
+nextMatchAll: aString
+	| i oldStream oldPosition oldPeekChar nextChar pushBackString |
 
-!XMLParser methodsFor: 'handling tokens' stamp: 'mir 1/17/2002 09:26'!
-handleEndTag: aString
-	self endTag: aString! !
+	(oldPeekChar := self peek) == (aString at: 1)
+		ifFalse: [^ false].
+	oldPosition := (oldStream := stream) position.
+	i := 1.
+	[(i <= aString size)
+		and: [(aString at: i) == (nextChar := self next)]]
+		whileTrue: [i := i + 1].
+	(i > aString size)
+		ifTrue: [^ true].
 
-!XMLParser methodsFor: 'handling tokens' stamp: 'mir 1/17/2002 09:27'!
-handlePCData: aString
-	self text: aString! !
+	stream == oldStream
+		ifTrue: [
+			peekChar := oldPeekChar.
+			stream position: oldPosition]
+		ifFalse:[
+			pushBackString := aString copyFrom: 1 to: i - 1.
+			self pushBack:
+				(nextChar
+					ifNotNil: [pushBackString copyWith: nextChar]
+					ifNil: [pushBackString])].
+	^ false.! !
 
-!XMLParser methodsFor: 'handling tokens' stamp: 'mir 1/17/2002 09:26'!
-handleStartTag: tagName attributes: attributes
-	self beginStartTag: tagName asPI: false.
-	attributes keysAndValuesDo: [:key :value |
-		self attribute: key value: value].
-	self endStartTag: tagName! !
+!XMLStreamReader methodsFor: 'tokenizing' stamp: 'JAAyer 3/19/2010 14:27'!
+nextWhitespace
+	| nextChar |
 
-!XMLParser methodsFor: 'callbacks' stamp: 'SqR 7/2/2000 16:52'!
-text: aString
-	"This method is called for the blocks of text between tags.
-	It preserves whitespace, but has all of the enclosed entities expanded"
+	buffer reset.
+	[(nextChar := self peek) notNil
+		and: [SeparatorTable includes: nextChar]]
+		whileTrue: [buffer nextPut: self next].
+	^ buffer stringContents.! !
 
-	^self subclassResponsibility! !
+!XMLStreamReader methodsFor: 'accessing' stamp: 'JAAyer 3/11/2010 07:45'!
+peek
+	"Return the next character from the current input stream.
 
-!XMLStringNode methodsFor: 'as yet unclassified' stamp: 'pb 1/27/2010 13:06'!
-asString
-	^self string! !
+	Due to the potential nesting of original document, included
+	documents and replacment texts the streams are held in a stack
+	representing the nested streams. The current stream is the top one."
 
-!XMLStringNode methodsFor: 'accessing'!
+	^ peekChar
+		ifNil: [
+			nestedStreams ifNotNil: [self checkNestedStream].
+			peekChar := self basicNext]! !
+
+!XMLStreamReader methodsFor: 'streaming' stamp: 'JAAyer 3/20/2010 15:18'!
+popNestingLevel
+	nestedStreams ifNotNil: [
+		self stream close.
+		self stream: self nestedStreams removeLast.
+		self nestedStreams ifEmpty: [nestedStreams := nil]]! !
+
+!XMLStreamReader methodsFor: 'streaming' stamp: 'JAAyer 3/27/2010 22:35'!
+pushBack: aString
+	"Fixed to push the string before the peek char (if any)."
+	| pushBackString |
+
+	pushBackString := peekChar
+		ifNil: [aString]
+		ifNotNil: [aString copyWith: peekChar].
+	peekChar := nil.
+	self pushStream: (ReadStream on: pushBackString).! !
+
+!XMLStreamReader methodsFor: 'streaming' stamp: 'JAAyer 3/27/2010 22:37'!
+pushStream: aStream
+	"Continue parsing from the new nested stream."
+	self unpeek.
+	self nestedStreams addLast: self stream.
+	self stream: aStream.! !
+
+!XMLStreamReader methodsFor: 'private' stamp: 'JAAyer 3/16/2010 09:14'!
+readNumberBase: base
+	"Read a hex number from stream until encountering $; "
+
+	| value digit |
+
+	base = 10
+		ifFalse: [ | numberString | 
+			numberString := self upTo: $;.
+			stream skip: -1.
+			^ Integer readFrom: numberString asUppercase readStream base: base].
+
+	value := 0.
+	digit := DigitTable at: self peek asciiValue.
+	digit < 0
+		ifTrue: [^ nil].
+	self next.
+	value := digit.
+	[digit := DigitTable at: self peek asciiValue.
+	digit < 0
+		ifTrue: [^value]
+		ifFalse: [
+			self next.
+			value := value * base + digit]
+		] repeat.
+	^ value! !
+
+!XMLStreamReader methodsFor: 'streaming' stamp: 'JAAyer 3/16/2010 16:44'!
+skipSeparators
+	| nextChar |
+
+	[(nextChar := self peek) notNil
+		and: [SeparatorTable includes: nextChar]]
+		whileTrue: [self next].! !
+
+!XMLStreamReader methodsFor: 'streaming' stamp: 'JAAyer 3/16/2010 08:57'!
+skipUpTo: delimiter
+	| nextChar |
+
+	[self atEnd or: [(nextChar := self next) == delimiter]] whileFalse.
+	^ nextChar == delimiter.! !
+
+!XMLStreamReader methodsFor: 'accessing' stamp: 'JAAyer 3/11/2010 08:01'!
+stream
+	^ stream! !
+
+!XMLStreamReader methodsFor: 'accessing' stamp: 'JAAyer 3/11/2010 09:34'!
+stream: aNewStream
+	"Continue parsing from the new nested stream."
+	stream := aNewStream! !
+
+!XMLStreamReader methodsFor: 'streaming' stamp: 'JAAyer 3/11/2010 07:46'!
+streamEncoding: encodingString
+
+	| converterClass |
+	Smalltalk at: #TextConverter ifPresent: [:tc | 
+		(stream respondsTo: #converter:) ifTrue: [
+			converterClass := tc defaultConverterClassForEncoding: encodingString asLowercase.
+			converterClass ifNotNil: [stream converter: converterClass new]]].! !
+
+!XMLStreamReader methodsFor: 'streaming' stamp: 'JAAyer 3/16/2010 16:38'!
+topStream
+	^ nestedStreams
+		ifNil: [self stream]
+		ifNotNil: [self nestedStreams first]! !
+
+!XMLStreamReader methodsFor: 'streaming' stamp: 'JAAyer 3/11/2010 07:46'!
+unpeek
+	"Fixed to use nested stream since multi-byte streams
+	do not properly override pushBack: to deal with multi-byte
+	characters."
+	
+	peekChar ifNotNil: [self pushBack: '']! !
+
+!XMLStreamReader methodsFor: 'streaming' stamp: 'JAAyer 3/19/2010 14:27'!
+upTo: aDelimiter
+	| nextChar |
+
+	buffer reset.
+	[self atEnd or: [(nextChar := self next) == aDelimiter]]
+		whileFalse: [buffer nextPut: nextChar].
+
+	^ nextChar == aDelimiter
+		ifTrue: [buffer stringContents]
+		ifFalse: [nil].! !
+
+!XMLStreamReader methodsFor: 'streaming' stamp: 'JAAyer 3/19/2010 14:27'!
+upToAll: aDelimitingString
+	"Answer a subcollection from the current access position to the occurrence
+	(if any, but not inclusive) of delimitingString. If delimitingString is not
+	in the stream, answer the entire rest of the stream."
+
+	buffer reset.
+	[self atEnd or: [self nextMatchAll: aDelimitingString]]
+		whileFalse: [buffer nextPut: self next].
+	^ buffer stringContents.! !
+
+!XMLStreamReader class methodsFor: 'initialization' stamp: 'pb 6/10/2012 17:55'!
+initialize
+	"XMLStreamReader initialize"
+
+	SeparatorTable  := CharacterSet new.
+	#(9 10 12 13 32) do: [:each | SeparatorTable add: each asCharacter].
+
+	DigitTable := Array new: 256.
+	DigitTable atAllPut: -1.
+	($0 to: $9) do: [:each | DigitTable at: each asciiValue put: each digitValue].
+	($a to: $f) do: [:each | DigitTable at: each asciiValue put: each digitValue].
+	($A to: $F) do: [:each | DigitTable at: each asciiValue put: each digitValue].
+
+	CarriageReturn := Character crCharacter.
+	LineFeed := Character lfCharacter.! !
+
+!XMLStreamReader class methodsFor: 'instance creation' stamp: 'JAAyer 3/11/2010 09:34'!
+on: anInitialStream
+	^ self new stream: anInitialStream! !
+
+!XMLStreamWriter methodsFor: 'growing' stamp: 'JAAyer 3/23/2010 17:57'!
+grow
+	streams := streams, self newStreams! !
+
+!XMLStreamWriter methodsFor: 'initialization' stamp: 'JAAyer 3/23/2010 17:57'!
+initialize
+	streams := self newStreams.
+	nextStream := 1.! !
+
+!XMLStreamWriter methodsFor: 'growing' stamp: 'JAAyer 3/23/2010 18:12'!
+newStreams
+	^ (1 to: 10) collect: [:i | WriteStream on: (String new: 128)]! !
+
+!XMLStreamWriter methodsFor: 'writing' stamp: 'JAAyer 3/23/2010 18:04'!
+writeWith: aBlock
+	| writeStream res|
+
+	(nextStream = streams size)
+		ifTrue: [self grow].
+	(writeStream := streams at: nextStream) reset.
+	nextStream := nextStream + 1.
+	^ [aBlock value: writeStream] ensure: [nextStream := nextStream - 1].! !
+
+!XMLString methodsFor: 'accessing' stamp: 'JAAyer 2/23/2010 02:55'!
+addContent: aString
+	self string: self string, (self toString: aString)! !
+
+!XMLString methodsFor: 'accessing' stamp: 'JAAyer 2/25/2010 01:48'!
 characterData
-	^self string! !
+	^ self string! !
 
-!XMLStringNode methodsFor: 'testing' stamp: 'mir 1/17/2002 15:27'!
+!XMLString methodsFor: 'testing' stamp: 'JAAyer 2/25/2010 01:48'!
 isText
-	^true! !
+	^ true! !
 
-!XMLStringNode methodsFor: 'printing' stamp: 'mir 1/17/2002 15:53'!
+!XMLString methodsFor: 'printing' stamp: 'mir 1/17/2002 15:53'!
 printXMLOn: writer
 	writer pcData: self string! !
 
-!XMLStringNode methodsFor: 'accessing' stamp: 'mir 10/25/2000 11:28'!
+!XMLString methodsFor: 'accessing' stamp: 'JAAyer 2/25/2010 01:48'!
 string
-	^string ifNil: ['']! !
+	^ string ifNil: ['']! !
 
-!XMLStringNode methodsFor: 'accessing' stamp: 'mir 10/25/2000 11:28'!
+!XMLString methodsFor: 'accessing' stamp: 'JAAyer 2/23/2010 02:55'!
 string: aString
-	string := aString! !
+	string := self toString: aString! !
 
-!XMLStringNode class methodsFor: 'instance creation' stamp: 'mir 10/25/2000 11:30'!
+!XMLString methodsFor: 'private' stamp: 'JAAyer 3/24/2010 18:54'!
+toString: aString
+	^ (aString isKindOf: String)
+		ifTrue: [aString]
+		ifFalse: [aString string]! !
+
+!XMLString class methodsFor: 'instance creation' stamp: 'JAAyer 2/25/2010 01:48'!
 string: aString
-	^self new string: aString! !
+	^ self new string: aString! !
 
-!XMLTokenizer methodsFor: 'streaming' stamp: 'mir 3/14/2003 22:58'!
-atEnd
-	nestedStreams == nil
-		ifTrue: [^peekChar == nil and: [stream atEnd]].
-	^stream atEnd
-		ifTrue: [
-			self popNestingLevel.
-			self atEnd]
-		ifFalse: [false]! !
-
-!XMLTokenizer methodsFor: 'tokenizing' stamp: 'mir 1/17/2002 18:12'!
+!XMLTokenizer methodsFor: 'tokenizing' stamp: 'JAAyer 3/14/2010 12:03'!
 checkAndExpandReference: parsingContext
 	| referenceString nextChar |
-	nextChar := self peek.
-	self validating
-		ifFalse: [^nil].
+	nextChar := streamReader peek.
+	self isValidating
+		ifFalse: [^ nil].
+
 	nextChar == $&
 		ifTrue: [
-			self next.
-			self peek == $#
-				ifTrue: [^self pushStream: (ReadStream on: self nextCharReference asString)].
+			streamReader next.
+			streamReader peek == $#
+				ifTrue: [^ streamReader pushStream: (ReadStream on: self nextCharReference asString)].
 			referenceString := self nextLiteral.
-			self next == $;
-				ifFalse: [self errorExpected: ';'].
+			self expectNext: $;.
 			self handleEntity: referenceString in: parsingContext ]
 		ifFalse: [
 			((nextChar == $%
 				and: [self parsingMarkup])
 				and: [parsingContext == #entityValue])
 				ifTrue: [
-					self skipSeparators.
+					streamReader skipSeparators.
 					referenceString := self nextLiteral.
 					self handleEntity: referenceString in: parsingContext]].
 
-	self atEnd ifTrue: [self errorExpected: 'Character expected.'].
-	^nextChar! !
+	self expectMore.
+	^ nextChar.! !
 
-!XMLTokenizer methodsFor: 'streaming' stamp: 'mir 3/14/2003 22:59'!
-checkNestedStream
-	nestedStreams == nil
-		ifFalse: [(peekChar == nil and: [self stream atEnd])
-			ifTrue: [
-				self popNestingLevel.
-				self checkNestedStream]]
-! !
-
-!XMLTokenizer methodsFor: 'tokenizing' stamp: 'mir 11/16/2000 21:41'!
-conditionalInclude: conditionalKeyword
-	conditionalKeyword = 'INCLUDE'
-		ifTrue: [^true].
-	conditionalKeyword = 'IGNORE'
-		ifTrue: [^false].
-	^self conditionalInclude: (self parameterEntity: conditionalKeyword) value! !
-
-!XMLTokenizer methodsFor: 'tokenizing dtd' stamp: 'mir 6/29/2001 00:08'!
-endDocTypeDecl
-	"Skip ]>"
-	self next; next.
-	^nil! !
+!XMLTokenizer methodsFor: 'tokenizing' stamp: 'JAAyer 3/11/2010 09:46'!
+conditionalInclude: aKeyword
+	aKeyword = 'INCLUDE'
+		ifTrue: [^ true].
+	aKeyword = 'IGNORE'
+		ifTrue: [^ false].
+	^ self conditionalInclude: (self parameterEntity: aKeyword) value! !
 
 !XMLTokenizer methodsFor: 'private' stamp: 'mir 11/13/2000 18:19'!
 endParsingMarkup
 	parsingMarkup := false! !
 
-!XMLTokenizer methodsFor: 'entities' stamp: 'mir 1/14/2002 15:06'!
+!XMLTokenizer methodsFor: 'entities' stamp: 'JAAyer 3/16/2010 16:39'!
 entities
-	entities ifNil: [entities := self initEntities].
-	^entities! !
+	^ entities ifNil: [entities := self initEntities]! !
 
-!XMLTokenizer methodsFor: 'entities' stamp: 'mir 1/17/2002 13:53'!
-entity: refName
-	^self validating
-		ifTrue: [self entities
-			at: refName
-			ifAbsentPut: [self parseError: 'XML undefined entity ' , refName printString]]
-		ifFalse: [DTDEntityDeclaration name: refName value: '']
-! !
+!XMLTokenizer methodsFor: 'entities' stamp: 'JAAyer 3/16/2010 12:45'!
+entity: aReference
+	self isValidating
+		ifFalse: [^ DTDEntityDeclaration name: aReference value: ''].
 
-!XMLTokenizer methodsFor: 'entities' stamp: 'mir 11/16/2000 21:43'!
-entity: refName put: aReference
-	"Only the first declaration of an entity is valid so if there is already one don't register the new value."
-	self entities at: refName ifAbsentPut: [aReference]! !
+	^ self entities
+		at: aReference
+		ifAbsentPut: [self parseError: 'Undefined entity ', aReference printString]! !
 
-!XMLTokenizer methodsFor: 'errors' stamp: 'mir 5/14/2003 18:27'!
+!XMLTokenizer methodsFor: 'entities' stamp: 'JAAyer 3/11/2010 09:47'!
+entity: aReference put: aValue
+	"Only the first declaration of an entity is valid so if there is already
+	one don't register the new value."
+	self entities at: aReference ifAbsentPut: [aValue]! !
+
+!XMLTokenizer methodsFor: 'errors' stamp: 'JAAyer 3/14/2010 12:02'!
 errorExpected: expectedString
-	| actualString |
-	actualString := ''.
-	self atEnd
+	self parseError: 'Expected ', expectedString! !
+
+!XMLTokenizer methodsFor: 'errors' stamp: 'JAAyer 3/16/2010 12:49'!
+errorExpected: anExpectedCharacterOrString butGot: aReceivedCharacterOrString
+	| expectedString receivedString |
+
+	expectedString := anExpectedCharacterOrString asString.	
+	(receivedString := (aReceivedCharacterOrString ifNil: ['']) asString)
+			ifEmpty: [receivedString := 'nothing'].
+
+	self errorExpected: expectedString, ' but got ', receivedString.! !
+
+!XMLTokenizer methodsFor: 'tokenizing' stamp: 'JAAyer 3/16/2010 12:49'!
+expectLiteral: anExpectedLiteral
+	| nextLiteral |
+
+	((nextLiteral := self nextLiteral) = anExpectedLiteral)
+		ifFalse: [self errorExpected: anExpectedLiteral butGot: nextLiteral].
+	^ nextLiteral.! !
+
+!XMLTokenizer methodsFor: 'tokenizing' stamp: 'JAAyer 3/16/2010 16:40'!
+expectMore
+	streamReader peek ifNil: [self errorExpected: 'more characters']! !
+
+!XMLTokenizer methodsFor: 'tokenizing' stamp: 'JAAyer 3/16/2010 12:49'!
+expectNext: aCharacter
+	| nextChar |
+
+	(nextChar := streamReader next) == aCharacter
 		ifFalse: [
-			[actualString := self next: 20]
-				on: Error
-				do: [:ex | ]].
-	self parseError: 'XML expected ' , expectedString printString , ': ' , actualString! !
+			self
+				errorExpected: aCharacter
+				butGot: nextChar].
+	^ nextChar.! !
 
-!XMLTokenizer methodsFor: 'entities' stamp: 'mir 1/14/2002 17:59'!
+!XMLTokenizer methodsFor: 'tokenizing' stamp: 'JAAyer 3/16/2010 12:46'!
+expectQuote
+	| nextChar expected |
+
+	(((nextChar := streamReader next) == $")
+		or: [nextChar == $'])
+			ifFalse: [
+				self
+					errorExpected: 'quote character delimiter'
+					butGot: nextChar].
+	^ nextChar.! !
+
+!XMLTokenizer methodsFor: 'entities' stamp: 'JAAyer 3/19/2010 14:19'!
 externalEntities
-	externalEntities ifNil: [externalEntities := Dictionary new].
-	^externalEntities! !
+	^ externalEntities ifNil: [externalEntities := Dictionary new]! !
 
-!XMLTokenizer methodsFor: 'entities' stamp: 'mir 1/14/2002 17:59'!
-externalEntity: refName
-	^self entities
-		at: refName
-		ifAbsentPut: ['']! !
-
-!XMLTokenizer methodsFor: 'private' stamp: 'mir 3/14/2003 23:09'!
-fastStreamStringContents: writeStream
-	| newSize |
-	newSize := writeStream position.
-	^(String new: newSize)
-		replaceFrom: 1
-		to: newSize
-		with: writeStream originalContents
-		startingAt: 1! !
+!XMLTokenizer methodsFor: 'entities' stamp: 'JAAyer 3/11/2010 09:48'!
+externalEntity: aReference
+	^ self entities at: aReference ifAbsentPut: ['']! !
 
 !XMLTokenizer methodsFor: 'handling tokens' stamp: 'mir 11/13/2000 16:04'!
 handleCData: aString
@@ -1633,7 +3564,7 @@ handleEndDocument
 handleEndTag: aString
 	self log: 'End tag: ' , aString! !
 
-!XMLTokenizer methodsFor: 'entities' stamp: 'mir 1/17/2002 18:12'!
+!XMLTokenizer methodsFor: 'entities' stamp: 'JAAyer 3/11/2010 08:28'!
 handleEntity: referenceString in: parsingContext 
 
 	| entity entityValue |
@@ -1641,7 +3572,7 @@ handleEntity: referenceString in: parsingContext
 	entityValue := entity valueForContext: parsingContext.
 	(self class isCharEscape: entityValue)
 		ifTrue: [entityValue := entity reference].
-	self pushStream: (ReadStream on: entityValue asString)! !
+	streamReader pushStream: (ReadStream on: entityValue asString)! !
 
 !XMLTokenizer methodsFor: 'handling tokens' stamp: 'mir 8/14/2000 11:38'!
 handlePCData: aString
@@ -1661,18 +3592,18 @@ handleStartTag: tagName attributes: attributes
 	attributes keysAndValuesDo: [:key :value |
 		self log: key , '->' , value]! !
 
+!XMLTokenizer methodsFor: 'handling tokens' stamp: 'JAAyer 3/5/2010 04:11'!
+handleStartTag: tagName attributes: attributes namespaces: namespaces
+	self handleStartTag: tagName attributes: attributes! !
+
 !XMLTokenizer methodsFor: 'handling tokens' stamp: 'cwp 6/17/2003 21:08'!
 handleWhitespace: aString
 	self log: 'Whitespace: ' , aString! !
 
-!XMLTokenizer methodsFor: 'handling tokens' stamp: 'mir 6/5/2003 14:53'!
-handleXMLDecl: attributes namespaces: namespaces
+!XMLTokenizer methodsFor: 'handling tokens' stamp: 'JAAyer 3/2/2010 22:54'!
+handleXMLDecl: attributes
 	attributes keysAndValuesDo: [:key :value |
 		self log: key , '->' , value]! !
-
-!XMLTokenizer methodsFor: 'streaming' stamp: 'mir 6/28/2001 16:45'!
-hasNestedStreams
-	^nestedStreams notNil! !
 
 !XMLTokenizer methodsFor: 'entities' stamp: 'mir 11/23/2007 15:45'!
 initEntities
@@ -1686,880 +3617,478 @@ initEntities
 		at: 'lt' put: (DTDEntityDeclaration name: 'lt' value: '<').
 	^ents! !
 
-!XMLTokenizer methodsFor: 'initialize' stamp: 'mir 3/14/2003 19:27'!
+!XMLTokenizer methodsFor: 'initialize' stamp: 'JAAyer 3/23/2010 18:11'!
 initialize
+	streamReader := XMLStreamReader new.
+	streamWriter := XMLStreamWriter new.
 	parsingMarkup := false.
-	validating := false.
-	attributeBuffer := WriteStream on: (String new: 128).
-	nameBuffer := WriteStream on: (String new: 128)! !
+	isValidating := false.! !
+
+!XMLTokenizer methodsFor: 'testing' stamp: 'JAAyer 3/11/2010 06:44'!
+isValidating
+	^ isValidating! !
+
+!XMLTokenizer methodsFor: 'accessing' stamp: 'JAAyer 3/11/2010 06:45'!
+isValidating: aBoolean
+	isValidating := aBoolean! !
 
 !XMLTokenizer methodsFor: 'private' stamp: 'mir 12/7/2000 16:46'!
 log: aString
 	"Transcript show: aString; cr"! !
 
-!XMLTokenizer methodsFor: 'errors' stamp: 'mir 1/9/2002 15:26'!
-malformedError: errorString
-	SAXMalformedException signal: errorString! !
-
-!XMLTokenizer methodsFor: 'streaming' stamp: 'mir 11/23/2007 18:16'!
-match: subCollection into: resultStream
-	"Set the access position of the receiver to be past the next occurrence of the subCollection. Answer whether subCollection is found.  No wildcards, and case does matter."
-
-	| pattern startMatch |
-	pattern _ ReadStream on: subCollection.
-	startMatch _ nil.
-	[pattern atEnd] whileFalse: 
-		[self atEnd ifTrue: [^ false].
-		(self next) = (pattern next) 
-			ifTrue: [pattern position = 1 ifTrue: [startMatch _ self position]]
-			ifFalse: [pattern position: 0.
-					startMatch ifNotNil: [
-						self position: startMatch.
-						startMatch _ nil]]].
-	^ true
-
-! !
-
-!XMLTokenizer methodsFor: 'private' stamp: 'mir 6/28/2001 16:54'!
-nestedStreams
-	nestedStreams ifNil: [nestedStreams := OrderedCollection new].
-	^nestedStreams! !
-
-!XMLTokenizer methodsFor: 'streaming' stamp: 'mir 3/14/2003 23:04'!
-next
-	"Return the next character from the current input stream. If the current stream is at end pop to next nesting level if there is one.
-	Due to the potential nesting of original document, included documents and replacment texts the streams are held in a stack representing the nested streams. The current stream is the top one."
-	| nextChar |
-	peekChar
-		ifNil: [
-			nestedStreams ifNotNil: [self checkNestedStream].
-			^nextChar := stream next]
-		ifNotNil: [
-			nextChar := peekChar.
-			peekChar := nil.
-			^nextChar].
-	! !
-
-!XMLTokenizer methodsFor: 'tokenizing' stamp: 'mir 6/5/2003 16:32'!
+!XMLTokenizer methodsFor: 'tokenizing' stamp: 'JAAyer 3/12/2010 14:20'!
 nextAttributeInto: attributes namespaces: namespaces
 
 	| attrName attrValue |
 	attrName := self nextName.
-	self skipSeparators.
-	self next == $=
-		ifFalse: [self errorExpected: '='].
-	self skipSeparators.
+	streamReader skipSeparators.
+	self expectNext: $=.
+	streamReader skipSeparators.
 	attrValue := self nextAttributeValue.
 
 	(self usesNamespaces
-		and: [(attrName findString: 'xmlns') = 1])
+		and: [attrName beginsWith: 'xmlns'])
 		ifTrue: [attrName size > 6
 			ifTrue: [namespaces at: (attrName copyFrom: 7 to: attrName size) put: attrValue]
 			ifFalse: [namespaces at: attrName put: attrValue]]
-		ifFalse: [attributes at: attrName put: attrValue]! !
+		ifFalse: [attributes at: attrName put: attrValue].! !
 
-!XMLTokenizer methodsFor: 'tokenizing' stamp: 'mir 11/23/2007 17:51'!
+!XMLTokenizer methodsFor: 'tokenizing' stamp: 'JAAyer 3/23/2010 18:09'!
 nextAttributeValue
-	| delimiterChar attributeValueStream nextChar nextPeek referenceString entity entityValue |
-	delimiterChar := self next.
-	(delimiterChar == $"
-		or: [delimiterChar == $'])
-		ifFalse: [self errorExpected: 'Attribute value delimiter expected.'].
-	attributeValueStream := attributeBuffer reset.
-	[
-	nextPeek := nextChar := self next.
-	nextChar ifNil: [self errorExpected: 'Character expected.'].
-	nextChar == $&
-		ifTrue: [
-			self peek == $#
-				ifTrue: [
-					nextPeek := nil.
-					nextChar := self nextCharReference]
-				ifFalse: [
-					referenceString := self nextLiteral.
-					self next == $;
-						ifFalse: [self errorExpected: ';'].
-					entity := self entity: referenceString.
-					entityValue := entity valueForContext: #content.
-					(self class isCharEscape: entityValue)
-						ifTrue: [
-							nextPeek := nil.
-							nextChar := entityValue first]
-						ifFalse: [
-							entityValue := entityValue asString.
-							entityValue isEmpty
-								ifTrue: [nextPeek := nextChar := nil]
-								ifFalse: [
-									self pushStream: (ReadStream on: entityValue asString).
-									nextPeek := nextChar := self next]]]].
-	nextPeek == delimiterChar]
-		whileFalse: [
-			nextChar ifNotNil: [attributeValueStream nextPut: nextChar]].
-	^self fastStreamStringContents: attributeValueStream
-"	^attributeValueStream contents"! !
+	| delimiterChar |
 
-!XMLTokenizer methodsFor: 'tokenizing' stamp: 'mir 1/17/2002 17:00'!
+	delimiterChar := self expectQuote.
+	^ streamWriter writeWith: [:writeStream |
+		self nextPCDataDelimitedBy: delimiterChar putOn: writeStream.
+		self expectNext: delimiterChar.
+		writeStream stringContents]! !
+
+!XMLTokenizer methodsFor: 'tokenizing' stamp: 'JAAyer 3/16/2010 09:12'!
 nextCDataContent
 	| cdata |
-	"Skip $[ "
-	self next.
-	cdata := self nextUpToAll: ']]>'.
+
+	cdata := streamReader upToAll: ']]>'.
 	self handleCData: cdata
 ! !
 
-!XMLTokenizer methodsFor: 'tokenizing' stamp: 'mir 12/6/2000 14:29'!
+!XMLTokenizer methodsFor: 'tokenizing' stamp: 'JAAyer 3/15/2010 04:36'!
 nextCDataOrConditional
 
 	| nextChar conditionalKeyword |
 	"Skip ["
-	self next.
-	self skipSeparators.
-	nextChar := self peek.
+	streamReader next.
+	streamReader skipSeparators.
+	nextChar := streamReader peek.
 	nextChar == $%
 		ifTrue: [
 			self checkAndExpandReference: (self parsingMarkup ifTrue: [#dtd] ifFalse: [#content]).
 			conditionalKeyword := self nextLiteral.
-			self skipSeparators.
-			^self next == $[
-				ifTrue: [
-						self skipSeparators.
-						self nextIncludeSection: (self conditionalInclude: conditionalKeyword)]
-				ifFalse: [self errorExpected: '[' ]].
+			streamReader skipSeparators.
+			self expectNext: $[.
+			streamReader skipSeparators.
+			^ self nextIncludeSection: (self conditionalInclude: conditionalKeyword)].
 
-	nextChar == $C
-		ifTrue: [
-			^self nextLiteral = 'CDATA'
-				ifTrue: [self peek == $[
-							ifTrue: [self nextCDataContent]
-							ifFalse: [self errorExpected: '[' ]]
-				ifFalse: [self errorExpected: 'CData']].
-	self errorExpected: 'CData or declaration'
-! !
+	self
+		expectLiteral: 'CDATA';
+		expectNext: $[;
+		nextCDataContent.! !
 
-!XMLTokenizer methodsFor: 'tokenizing' stamp: 'pb 6/4/2012 16:31'!
+!XMLTokenizer methodsFor: 'tokenizing' stamp: 'pb 6/10/2012 18:04'!
 nextCharReference
 	| base charValue |
-	self next == $# ifFalse: [ self errorExpected: 'character reference' ].
-	base := self peek == $x
+	streamReader next == $#
+		ifFalse: [self errorExpected: 'character reference'].
+	streamReader peek == $x
 		ifTrue: [
-			self next.
-			16 ]
-		ifFalse: [ 10 ].
-	charValue := [ self readNumberBase: base ]
-		on: Error
-		do: [ :ex |
-			self errorExpected: 'Number.' ].
-	self next == $; ifFalse: [ self errorExpected: '";"' ].
-	"^Unicode value: charValue"
+			streamReader next.
+			base := 16]
+		ifFalse: [base := 10].
+
+	(charValue := streamReader readNumberBase: base)
+		ifNil: [self errorExpected: 'number'].
+	self expectNext: $;.
 	self flag: #pbfix.
+	"Cuis does not support"
+	"
+	^ Unicode value: charValue.
+	"
 	charValue < 255
 		ifTrue: [ ^ Character value: charValue ]
 		ifFalse: [ ^ $@ ].! !
 
-!XMLTokenizer methodsFor: 'tokenizing' stamp: 'mir 11/28/2000 17:54'!
+!XMLTokenizer methodsFor: 'tokenizing' stamp: 'JAAyer 3/16/2010 14:37'!
 nextComment
-	| string |
 	"Skip first -"
-	self next.
-	self next == $-
-		ifFalse: [self errorExpected: 'second comment $-'].
-	string := self nextUpToAll: '-->'.
-	self handleComment: string! !
+	streamReader next.
+	self expectNext: $-.
+	self handleComment: (streamReader upToAll: '-->')! !
 
-!XMLTokenizer methodsFor: 'tokenizing dtd' stamp: 'mir 1/8/2002 13:54'!
+!XMLTokenizer methodsFor: 'tokenizing dtd' stamp: 'JAAyer 3/15/2010 04:32'!
 nextDocType
-	| declType |
-	declType := self nextLiteral.
-	declType = 'DOCTYPE'
-		ifTrue: [
-			self startParsingMarkup.
-			^self nextDocTypeDecl].
-	self errorExpected: 'markup declaration, not ' , declType printString! !
+	self expectLiteral: 'DOCTYPE'.
+	self startParsingMarkup.
+	^ self nextDocTypeDecl.! !
 
-!XMLTokenizer methodsFor: 'tokenizing dtd' stamp: 'mir 1/17/2002 17:29'!
+!XMLTokenizer methodsFor: 'tokenizing dtd' stamp: 'JAAyer 3/19/2010 18:33'!
 nextDocTypeDecl
 	| nextChar |
-	self skipSeparators.
+	streamReader skipSeparators.
 	self nextLiteral.
-	self skipSeparators.
-	self peek == $[
-		ifFalse: [[nextChar := self peek.
-				nextChar == $> or: [nextChar == $[ ]] whileFalse: [self next]].
-	self peek == $[
+	streamReader skipSeparators.
+	streamReader peek == $[
+		ifFalse: [[nextChar := streamReader peek.
+				nextChar == $> or: [nextChar == $[ ]] whileFalse: [streamReader next]].
+	streamReader peek == $[
 		ifTrue: [
-			self next.
-			[self skipSeparators.
-			self peek == $]] whileFalse: [
+			streamReader next.
+			[streamReader skipSeparators.
+			streamReader peek == $]] whileFalse: [
 				self checkAndExpandReference: #dtd.
-				self nextNode].
-			self next == $] 
-				ifFalse: [self errorExpected: ']' ]].
-	self skipSeparators.
-	self next == $>
-		ifFalse: [self errorExpected: '>' ].
+				self nextMarkupToken].
+			self expectNext: $]].
+	streamReader skipSeparators.
+	self expectNext: $>.
 
 	self endParsingMarkup! !
 
-!XMLTokenizer methodsFor: 'tokenizing' stamp: 'mir 11/23/2007 17:48'!
+!XMLTokenizer methodsFor: 'tokenizing' stamp: 'JAAyer 3/16/2010 09:08'!
 nextEndTag
 	| tagName |
 	"Skip /"
-	self next.
+	streamReader next.
 	tagName := self nextName.
-	self skipSeparators.
-	(self nextTrimmedBlanksUpTo: $>)
-		ifNotEmpty: [self parseError: 'XML invalid end tag ' , tagName].
+	streamReader skipSeparators.
+	self expectNext: $>.
 	self handleEndTag: tagName! !
 
-!XMLTokenizer methodsFor: 'tokenizing' stamp: 'gvc 6/6/2007 13:17'!
-nextEntity
-	"return the next XMLnode, or nil if there are no more.
-	Fixed to retain leading whitespace when PCDATA is detected."
-
-	|whitespace|
-	"branch, depending on what the first character is"
-	whitespace := self nextWhitespace.
-	self atEnd ifTrue: [self handleEndDocument. ^ nil].
-	self checkAndExpandReference: (self parsingMarkup ifTrue: [#dtd] ifFalse: [#content]).
-	^self peek = $<
-		ifTrue: [self nextNode]
-		ifFalse: [whitespace isEmpty
-					ifFalse: [self pushBack: whitespace].
-				self nextPCData]! !
-
-!XMLTokenizer methodsFor: 'tokenizing dtd' stamp: 'mir 1/17/2002 14:24'!
+!XMLTokenizer methodsFor: 'tokenizing dtd' stamp: 'JAAyer 3/11/2010 08:25'!
 nextEntityDeclaration
 	| entityName entityDef referenceClass reference |
-	self skipSeparators.
-	referenceClass := self peek == $%
+	streamReader skipSeparators.
+	referenceClass := streamReader peek == $%
 		ifTrue: [
-			self next.
-			self skipSeparators.
+			streamReader next.
+			streamReader skipSeparators.
 			DTDParameterEntityDeclaration]
 		ifFalse: [DTDEntityDeclaration].
 	entityName := self nextLiteral.
-	self skipSeparators.
-	entityDef := (self peek == $" or: [self peek == $'])
+	streamReader skipSeparators.
+	entityDef := (streamReader peek == $" or: [streamReader peek == $'])
 		ifTrue: [self nextEntityValue]
 		ifFalse: [self nextExternalId].
-	self skipUpTo: $>.
+	streamReader skipUpTo: $>.
 	reference := referenceClass name: entityName value: entityDef.
 	reference registerIn: self.
 	^reference! !
 
-!XMLTokenizer methodsFor: 'tokenizing' stamp: 'mir 1/17/2002 18:14'!
+!XMLTokenizer methodsFor: 'tokenizing' stamp: 'JAAyer 3/19/2010 14:26'!
 nextEntityValue
 	| delimiterChar entityValueStream nextChar nextPeek referenceString entity entityValue |
-	delimiterChar := self next.
-	(delimiterChar == $"
-		or: [delimiterChar == $'])
-		ifFalse: [self errorExpected: 'Entity value delimiter expected.'].
-
-	entityValueStream := WriteStream on: (String new).
+	delimiterChar := self expectQuote.
+	entityValueStream := WriteStream on: (String new: 32).
 	[
-	nextPeek := nextChar := self peek.
-	nextChar ifNil: [self errorExpected: 'Character expected.'].
+	self expectMore.
+	nextPeek := nextChar := streamReader peek.
 	nextChar == $&
 		ifTrue: [
-			self next.
-			self peek == $#
+			streamReader next.
+			streamReader peek == $#
 				ifTrue: [
 					nextPeek := nil.
 					nextChar := self nextCharReference]
 				ifFalse: [
 					referenceString := self nextLiteral.
-					self next == $;
-						ifFalse: [self errorExpected: ';'].
+					self expectNext: $;.
 					entity := self entity: referenceString.
 					entityValue := entity valueForContext: #entityValue.
-					self pushStream: (ReadStream on: entityValue asString).
-					nextPeek := nextChar := self next]]
+					streamReader pushStream: (ReadStream on: entityValue asString).
+					nextPeek := nextChar := streamReader next]]
 		ifFalse: [
 			nextChar == $%
 				ifTrue: [
-					self skipSeparators.
+					streamReader skipSeparators.
 					referenceString := self nextLiteral.
 					nextChar := self handleEntity: referenceString in: #entityValue.
-					nextPeek := nextChar := self next]
-				ifFalse: [self next]].
+					nextPeek := nextChar := streamReader next]
+				ifFalse: [streamReader next]].
 	nextPeek == delimiterChar]
 		whileFalse: [
 			nextChar ifNotNil: [entityValueStream nextPut: nextChar]].
-	^entityValueStream contents! !
+	^ entityValueStream stringContents.! !
 
-!XMLTokenizer methodsFor: 'tokenizing dtd' stamp: 'rkris 7/28/2004 12:35'!
+!XMLTokenizer methodsFor: 'tokenizing dtd' stamp: 'JAAyer 3/19/2010 14:26'!
 nextExternalId
 	| extDefType systemId dir |
 	extDefType := self nextLiteral.
 	extDefType = 'PUBLIC'
 		ifTrue: [
-			self skipSeparators.
+			streamReader skipSeparators.
 			self nextPubidLiteral.
-			self skipSeparators.
-			self peek == $>
+			streamReader skipSeparators.
+			streamReader peek == $>
 				ifFalse: [
 					systemId := self nextSystemLiteral]].
 
 	extDefType = 'SYSTEM'
 		ifTrue: [
-			self skipSeparators.
+			streamReader skipSeparators.
 			systemId := self nextSystemLiteral].
 
 	systemId
 		ifNil: [^nil].
 
 	"The rest of this method only applies if we're reading aFileStream"
-	(self topStream isKindOf: FileStream)
+	(streamReader topStream isKindOf: FileStream)
 		ifFalse: [^''].
-	dir := self topStream directory.
+	dir := streamReader topStream directory.
 	^(dir fileExists: systemId)
-		ifTrue: [(dir readOnlyFileNamed: systemId) contentsOfEntireFile]
+		ifTrue: [(dir readOnlyFileNamed: systemId) stringContentsOfEntireFile]
 		ifFalse: ['']! !
 
-!XMLTokenizer methodsFor: 'tokenizing' stamp: 'mir 6/28/2001 16:38'!
+!XMLTokenizer methodsFor: 'tokenizing' stamp: 'JAAyer 3/16/2010 09:11'!
 nextIncludeSection: parseSection
 	| section |
 	"Read the file up to the next include section delimiter and parse it if parseSection is true"
 
-	
-	section := self nextUpToAll: ']]>'.
+	section := streamReader upToAll: ']]>'.
 	parseSection
-		ifTrue: [
-			self pushStream: (ReadStream on: section)]! !
+		ifTrue: [streamReader pushStream: (ReadStream on: section)]! !
 
-!XMLTokenizer methodsFor: 'tokenizing' stamp: 'mir 10/31/2007 16:19'!
+!XMLTokenizer methodsFor: 'tokenizing' stamp: 'JAAyer 3/24/2010 16:24'!
 nextLiteral
-	| resultStream nextChar resultString |
-	resultStream := (String new: 10) writeStream.
-	((nextChar := self peek) isLetter
-		or: [nextChar == $_])
-		ifFalse: [self errorExpected: 'Name literal.'].
-	[nextChar := self peek.
-	(LiteralChars includes: nextChar)
-		ifTrue: [
-			nextChar == $&
-				ifTrue: [
-					nextChar := self next.
-					resultStream nextPut: (self peek == $#
-						ifTrue: [self nextCharReference]
-						ifFalse: [^resultStream contents])]
-				ifFalse: [
-					resultStream nextPut: self next]]
-		ifFalse: [resultString := resultStream contents.
-			resultString isEmpty
-				ifTrue: [self errorExpected: 'Name literal']
-				ifFalse: [^resultString]]] repeat! !
+	| nextChar |
 
-!XMLTokenizer methodsFor: 'tokenizing dtd' stamp: 'mir 1/17/2002 13:49'!
+	((nextChar := streamReader peek) isLetter
+		or: [nextChar == $_])
+		ifFalse: [self errorExpected: 'name literal.'].
+
+	^ streamWriter writeWith: [:writeStream |
+		[LiteralChars includes: nextChar]
+			whileTrue: [
+				nextChar == $&
+					ifTrue: [
+						nextChar := streamReader next.
+						writeStream nextPut: (streamReader peek == $#
+							ifTrue: [self nextCharReference]
+							ifFalse: [^ writeStream stringContents])]
+					ifFalse: [writeStream nextPut: streamReader next].
+				nextChar := streamReader peek].
+		writeStream position > 0
+			ifFalse: [self errorExpected: 'name literal'].
+		writeStream stringContents]! !
+
+!XMLTokenizer methodsFor: 'tokenizing dtd' stamp: 'JAAyer 3/11/2010 09:57'!
 nextMarkupDeclaration
 	| declType |
 	declType := self nextLiteral.
-	self validating
-		ifFalse: [^self skipMarkupDeclaration].
+	self isValidating
+		ifFalse: [^ self skipMarkupDeclaration].
 	declType = 'ENTITY'
 		ifTrue: [self nextEntityDeclaration]
 		ifFalse: [self skipMarkupDeclaration]! !
 
-!XMLTokenizer methodsFor: 'tokenizing' stamp: 'mir 10/31/2007 16:20'!
-nextName
-	| nextChar |
-	nameBuffer reset.
-	self peek == $.
-		ifTrue: [self malformedError: 'Character expected.'].
-	[(nextChar := self peek)
-		ifNil: [self errorExpected: 'Character expected.'].
-	NameDelimiters includes: nextChar] whileFalse: [
-			nameBuffer nextPut: self next].
-	^self fastStreamStringContents: nameBuffer! !
-
-!XMLTokenizer methodsFor: 'tokenizing' stamp: 'mir 11/28/2000 17:52'!
-nextNode
+!XMLTokenizer methodsFor: 'tokenizing' stamp: 'JAAyer 3/19/2010 18:34'!
+nextMarkupToken
 	| nextChar |
 	"Skip < "
-	self next.
-	nextChar := self peek.
+	streamReader next.
+	nextChar := streamReader peek.
 	nextChar == $!! ifTrue: [
 		"Skip !!"
-		self next.
-		nextChar := self peek.
-		nextChar == $- ifTrue: [^self nextComment].
-		nextChar == $[ ifTrue: [^self nextCDataOrConditional].
-		^self parsingMarkup
+		streamReader next.
+		nextChar := streamReader peek.
+		nextChar == $- ifTrue: [^ self nextComment].
+		nextChar == $[ ifTrue: [^ self nextCDataOrConditional].
+		^ self parsingMarkup
 			ifTrue: [self nextMarkupDeclaration]
 			ifFalse: [self nextDocType]].
-	nextChar == $? ifTrue: [^self nextPI].
-	^self nextTag! !
+	nextChar == $? ifTrue: [^ self nextPI].
+	self nextTag.! !
 
-!XMLTokenizer methodsFor: 'tokenizing' stamp: 'mir 11/23/2007 17:52'!
+!XMLTokenizer methodsFor: 'tokenizing' stamp: 'JAAyer 3/24/2010 16:25'!
+nextName
+	| nextChar |
+
+	^ streamWriter writeWith: [:writeStream |
+		[(nextChar := streamReader peek) isNil
+			or: [NameDelimiters includes: nextChar]]
+				whileFalse: [writeStream nextPut: streamReader next].
+		writeStream position > 0
+			ifFalse: [self errorExpected: 'name'].
+		writeStream stringContents]! !
+
+!XMLTokenizer methodsFor: 'tokenizing' stamp: 'JAAyer 3/23/2010 18:04'!
 nextPCData
-	| resultStream nextChar referenceString entity entityValue nextPeek |
-	resultStream := (String new: 10) writeStream.
-	self validating
-		ifFalse: [
-			[self peek == $<]
-				whileFalse: [resultStream nextPut: self next].
-			^self handlePCData: resultStream contents].
 
-	[
-	nextPeek := nextChar := self peek.
-	nextChar ifNil: [self errorExpected: 'Character expected.'].
-	nextChar == $&
-		ifTrue: [
-			self next.
-			self peek == $#
-				ifTrue: [
-					nextPeek := nil.
-					nextChar := self nextCharReference]
-				ifFalse: [
-					referenceString := self nextLiteral.
-					self next == $;
-						ifFalse: [self errorExpected: ';'].
-					entity := self entity: referenceString.
-					entityValue := entity valueForContext: #content.
-					(self class isCharEscape: entityValue)
-						ifTrue: [
-							nextPeek := nil.
-							nextChar := entityValue first]
-						ifFalse: [
-							entityValue := entityValue asString.
-							entityValue isEmpty
-								ifTrue: [nextPeek := nextChar := nil]
-								ifFalse: [
-									self pushStream: (ReadStream on: entityValue asString).
-									nextPeek := nextChar := self peek]]]]
-		ifFalse: [nextPeek == $< ifFalse: [self next]].
-	nextPeek == $<]
+	streamWriter writeWith: [:writeStream |
+		self isValidating
+			ifTrue: [self nextPCDataDelimitedBy: $< putOn: writeStream]
+			ifFalse: [
+				[streamReader peek == $<]
+					whileFalse: [writeStream nextPut: streamReader next]].
+
+		self handlePCData: writeStream stringContents]! !
+
+!XMLTokenizer methodsFor: 'tokenizing' stamp: 'JAAyer 3/16/2010 16:45'!
+nextPCDataDelimitedBy: aDelimiter putOn: aStream
+	| nextChar referenceString entity entityValue |
+
+	[(nextChar := streamReader peek) isNil or: [nextChar == aDelimiter]]
 		whileFalse: [
-			nextChar ifNotNil: [resultStream nextPut: nextChar]].
-	self handlePCData: resultStream contents! !
+			nextChar == $&
+				ifTrue: [
+					streamReader next.
+					streamReader peek == $#
+						ifTrue: [aStream nextPut: self nextCharReference]
+						ifFalse: [
+							referenceString := self nextLiteral.
+							self expectNext: $;.
+							entity := self entity: referenceString.
+							entityValue := entity valueForContext: #content.
+							(self class isCharEscape: entityValue)
+								ifTrue: [aStream nextPut: entityValue first]
+								ifFalse: [
+									entityValue := entityValue asString.
+									entityValue isEmpty
+										ifFalse: [
+											streamReader pushStream:
+												(ReadStream on: entityValue asString)]]]]
+				ifFalse: [aStream nextPut: streamReader next]].! !
 
-!XMLTokenizer methodsFor: 'tokenizing' stamp: 'mir 1/17/2002 13:00'!
+!XMLTokenizer methodsFor: 'tokenizing' stamp: 'JAAyer 3/16/2010 09:11'!
 nextPI
 	| piTarget piData |
 	"Skip ?"
-	self next.
+	streamReader next.
 	piTarget := self nextLiteral.
 	piTarget asUppercase = 'XML'
-		ifTrue: [^self nextXMLDecl].
-	self skipSeparators.
-	piData := self nextUpToAll: '?>'.
-	self handlePI: piTarget data: piData! !
+		ifTrue: [^ self nextXMLDecl].
+	streamReader skipSeparators.
+	piData := streamReader upToAll: '?>'.
+	self handlePI: piTarget data: piData.! !
 
-!XMLTokenizer methodsFor: 'tokenizing' stamp: 'mir 1/17/2002 14:25'!
+!XMLTokenizer methodsFor: 'tokenizing' stamp: 'JAAyer 3/11/2010 09:56'!
 nextPubidLiteral
-	^self nextAttributeValue! !
+	^ self nextAttributeValue! !
 
-!XMLTokenizer methodsFor: 'tokenizing' stamp: 'mir 1/17/2002 14:25'!
+!XMLTokenizer methodsFor: 'tokenizing' stamp: 'JAAyer 3/11/2010 09:56'!
 nextSystemLiteral
-	^self nextAttributeValue! !
+	^ self nextAttributeValue! !
 
-!XMLTokenizer methodsFor: 'tokenizing' stamp: 'mir 6/5/2003 22:37'!
+!XMLTokenizer methodsFor: 'tokenizing' stamp: 'JAAyer 3/14/2010 12:37'!
 nextTag
 	| tagName attributes nextChar namespaces |
-	(self peek = $/)
-		ifTrue: [^self nextEndTag].
+	(streamReader peek = $/)
+		ifTrue: [^ self nextEndTag].
 	tagName := self nextName.
-	self skipSeparators.
-	attributes := Dictionary new: 33.
-	namespaces := Dictionary new: 5.
-	[(nextChar := self peek) == $> or: [nextChar == $/]] whileFalse: [
+	streamReader skipSeparators.
+	attributes := XMLOrderPreservingDictionary new: 10.
+	namespaces := XMLOrderPreservingDictionary new.
+	[(nextChar := streamReader peek) == $> or: [nextChar == $/]] whileFalse: [
 		self checkAndExpandReference: #content.
 		self nextAttributeInto: attributes namespaces: namespaces.
-		self skipSeparators.].
+		streamReader skipSeparators.].
 	self handleStartTag: tagName attributes: attributes namespaces: namespaces.
-	self next == $/
+	streamReader next == $/
 		ifTrue: [
 			self handleEndTag: tagName.
-			self next].
-	! !
+			self expectNext: $>].! !
 
-!XMLTokenizer methodsFor: 'streaming' stamp: 'bf 4/27/2006 17:55'!
-nextTrimmedBlanksUpTo: delimiter
-	| resultStream nextChar |
-	resultStream := WriteStream on: (String new: 10).
-	nextChar := nil.
-	[(nextChar := self next) == delimiter]
-		whileFalse: [
-			nextChar == $  ifFalse: [
-				resultStream nextPut: nextChar]].
-	nextChar == delimiter
-		ifFalse: [self parseError: 'XML no delimiting ' , delimiter printString , ' found'].
-	^resultStream contents
-! !
+!XMLTokenizer methodsFor: 'tokenizing' stamp: 'JAAyer 3/19/2010 18:33'!
+nextToken
+	"return the next XMLnode, or nil if there are no more.
+	Fixed to retain leading whitespace when PCDATA is detected."
 
-!XMLTokenizer methodsFor: 'streaming' stamp: 'mir 5/14/2003 18:44'!
-nextUpTo: delimiter
-	| resultStream nextChar |
-	resultStream := WriteStream on: (String new: 10).
-	[self atEnd or: [(nextChar := self next) == delimiter]]
-		whileFalse: [resultStream nextPut: nextChar].
-	nextChar == delimiter
-		ifFalse: [self parseError: 'XML no delimiting ' , delimiter printString , ' found'].
-	^resultStream contents
-! !
+	| whitespace |
+	"branch, depending on what the first character is"
+	whitespace := self nextWhitespace.
+	streamReader atEnd
+		ifTrue: [^ self handleEndDocument].
 
-!XMLTokenizer methodsFor: 'streaming' stamp: 'mir 11/23/2007 19:42'!
-nextUpToAll: delimitingString
-	| string |
-	self unpeek.
-	string := self upToAll: delimitingString.
-	string
-		ifNil: [self parseError: 'XML no delimiting ' , delimitingString printString , ' found'].
-	^string! !
+	self checkAndExpandReference: (self parsingMarkup ifTrue: [#dtd] ifFalse: [#content]).
+	^ (streamReader peek = $<)
+		ifTrue: [self nextMarkupToken]
+		ifFalse: [
+			whitespace ifNotEmpty: [streamReader pushBack: whitespace].
+			self nextPCData].! !
 
-!XMLTokenizer methodsFor: 'tokenizing' stamp: 'mir 10/31/2007 17:49'!
+!XMLTokenizer methodsFor: 'tokenizing' stamp: 'JAAyer 3/11/2010 09:01'!
 nextWhitespace
-	| nextChar resultStream resultString|
-	resultStream := (String new: 10) writeStream.
-	[((nextChar := self peek) ~~ nil)
-		and: [SeparatorTable includes: nextChar]]
-		whileTrue: [resultStream nextPut: nextChar. self next].
-	(nestedStreams == nil or: [self atEnd not])
-		ifFalse: [self checkNestedStream.
-				self nextWhitespace].
-	resultString := resultStream contents.
-	resultString isEmpty ifFalse: [self handleWhitespace: resultString].
-	^resultString! !
+	| whitespace |
 
-!XMLTokenizer methodsFor: 'tokenizing' stamp: 'thf 9/2/2005 15:04'!
+	(whitespace := streamReader nextWhitespace)
+		ifNotEmpty: [self handleWhitespace: whitespace].
+	^ whitespace.! !
+
+!XMLTokenizer methodsFor: 'tokenizing' stamp: 'JAAyer 3/14/2010 14:55'!
 nextXMLDecl
-	| attributes nextChar namespaces |
-	self skipSeparators.
+	| attributes namespaces |
+	streamReader skipSeparators.
 	attributes := Dictionary new.
 	namespaces := Dictionary new.
-	[(nextChar := self peek) == $?] whileFalse: [
-		self nextAttributeInto: attributes namespaces: namespaces.
-		self skipSeparators.].
-	self next.
-	self next == $>
-		ifFalse: [self errorExpected: '> expected.'].
-	(attributes includesKey: 'encoding') ifTrue: [self streamEncoding: (attributes at: 'encoding')].
-	self handleXMLDecl: attributes namespaces: namespaces
-	! !
+	[streamReader peek == $?]
+		whileFalse: [
+			self nextAttributeInto: attributes namespaces: namespaces.
+			streamReader skipSeparators].
+	streamReader next.
+	self expectNext: $>.
+	(attributes includesKey: 'encoding')
+		ifTrue: [streamReader streamEncoding: (attributes at: 'encoding')].
+	self handleXMLDecl: attributes.! !
 
-!XMLTokenizer methodsFor: 'entities' stamp: 'mir 11/16/2000 21:20'!
+!XMLTokenizer methodsFor: 'entities' stamp: 'JAAyer 3/14/2010 12:36'!
 parameterEntities
-	parameterEntities ifNil: [parameterEntities := Dictionary new].
-	^parameterEntities! !
+	^ parameterEntities ifNil: [parameterEntities := Dictionary new]! !
 
-!XMLTokenizer methodsFor: 'entities' stamp: 'mir 11/16/2000 21:40'!
+!XMLTokenizer methodsFor: 'entities' stamp: 'JAAyer 3/19/2010 14:17'!
 parameterEntity: refName
-	^self parameterEntities
+	^ self parameterEntities
 		at: refName
-		ifAbsent: [self parseError: 'XML undefined parameter entity ' , refName printString]! !
+		ifAbsent: [self parseError: 'undefined parameter entity ', refName printString]! !
 
-!XMLTokenizer methodsFor: 'entities' stamp: 'mir 11/16/2000 21:42'!
+!XMLTokenizer methodsFor: 'entities' stamp: 'JAAyer 3/11/2010 09:55'!
 parameterEntity: refName put: aReference
-	"Only the first declaration of an entity is valid so if there is already one don't register the new value."
+	"Only the first declaration of an entity is valid so if there is already
+	one don't register the new value."
 	self parameterEntities at: refName ifAbsentPut: [aReference]! !
 
 !XMLTokenizer methodsFor: 'errors' stamp: 'mir 1/8/2002 15:37'!
 parseError: errorString
 	SAXParseException signal: errorString! !
 
-!XMLTokenizer methodsFor: 'accessing' stamp: 'mir 6/28/2001 16:51'!
-parseStream: aStream
-	self stream: aStream! !
-
-!XMLTokenizer methodsFor: 'private' stamp: 'mir 11/13/2000 18:19'!
+!XMLTokenizer methodsFor: 'private' stamp: 'JAAyer 3/11/2010 09:54'!
 parsingMarkup
-	^parsingMarkup! !
+	^ parsingMarkup! !
 
-!XMLTokenizer methodsFor: 'streaming' stamp: 'mir 3/14/2003 23:05'!
-peek
-	"Return the next character from the current input stream. If the current stream poop to next nesting level if there is one.
-	Due to the potential nesting of original document, included documents and replacment texts the streams are held in a stack representing the nested streams. The current stream is the top one."
-	peekChar
-		ifNil: [
-			nestedStreams ifNotNil: [self checkNestedStream].
-			^peekChar := stream next]
-		ifNotNil: [^peekChar]! !
-
-!XMLTokenizer methodsFor: 'streaming' stamp: 'mir 6/29/2001 00:36'!
-popNestingLevel
-	self hasNestedStreams
-		ifTrue: [
-			self stream close.
-			self stream: self nestedStreams removeLast.
-			self nestedStreams size > 0
-				ifFalse: [nestedStreams := nil]]! !
-
-!XMLTokenizer methodsFor: 'streaming' stamp: 'gvc 6/6/2007 13:13'!
-pushBack: aString
-	"Fixed to push the string before the peek char (if any)."
-	
-	| pushBackString |
-	pushBackString := peekChar
-		ifNil: [aString]
-		ifNotNil: [aString, peekChar asString].
-	peekChar := nil.
-	self pushStream: (ReadStream on: pushBackString)! !
-
-!XMLTokenizer methodsFor: 'streaming' stamp: 'mir 1/16/2002 10:54'!
-pushStream: newStream
-	"Continue parsing from the new nested stream."
-	self unpeek.
-	self nestedStreams addLast: self stream.
-	self stream: newStream! !
-
-!XMLTokenizer methodsFor: 'private' stamp: 'mu 11/14/2005 14:12'!
-readNumberBase: base
-	"Read a hex number from stream until encountering $; "
-
-	| value digit |
-
-	base = 10 ifFalse: [	| numberString | 
-		numberString := self nextUpTo: $;.
-		self stream skip: -1.
-		^Integer readFrom: numberString asUppercase readStream base: base. 
-	].
-
-	value := 0.
-	digit := DigitTable at: self peek asciiValue.
-	digit < 0
-		ifTrue: [self error: 'At least one digit expected here'].
-	self next.
-	value := digit.
-	[digit := DigitTable at: self peek asciiValue.
-	digit < 0
-		ifTrue: [^value]
-		ifFalse: [
-			self next.
-			value := value * base + digit]
-		] repeat.
-	^ value! !
-
-!XMLTokenizer methodsFor: 'tokenizing dtd' stamp: 'mir 1/4/2002 11:05'!
+!XMLTokenizer methodsFor: 'tokenizing dtd' stamp: 'JAAyer 3/11/2010 08:30'!
 skipMarkupDeclaration
-	self skipUpTo: $>! !
-
-!XMLTokenizer methodsFor: 'streaming' stamp: 'mir 10/31/2007 16:33'!
-skipSeparators
-	| nextChar |
-	[((nextChar := self peek) ~~ nil)
-		and: [SeparatorTable includes: nextChar]]
-		whileTrue: [self next].
-	(nestedStreams == nil or: [self atEnd not])
-		ifFalse: [
-			self checkNestedStream.
-			self skipSeparators]! !
-
-!XMLTokenizer methodsFor: 'streaming' stamp: 'mir 1/16/2002 10:42'!
-skipUpTo: delimiter
-	| nextChar |
-	self unpeek.
-	[self atEnd or: [(nextChar := self next) == delimiter]]
-		whileFalse: [].
-	nextChar == delimiter
-		ifFalse: [self parseError: 'XML no delimiting ' , delimiter printString , ' found']
-! !
+	streamReader skipUpTo: $>! !
 
 !XMLTokenizer methodsFor: 'private' stamp: 'mir 11/13/2000 18:19'!
 startParsingMarkup
 	parsingMarkup := true! !
 
-!XMLTokenizer methodsFor: 'private' stamp: 'mir 6/28/2001 16:50'!
+!XMLTokenizer methodsFor: 'private' stamp: 'JAAyer 3/11/2010 08:04'!
 stream
-	^stream! !
+	^ streamReader stream! !
 
-!XMLTokenizer methodsFor: 'private' stamp: 'mir 6/28/2001 16:50'!
-stream: newStream
-	"Continue parsing from the new nested stream."
-	stream := newStream! !
+!XMLTokenizer methodsFor: 'private' stamp: 'JAAyer 3/11/2010 08:03'!
+stream: aStream
+	streamReader stream: aStream! !
 
-!XMLTokenizer methodsFor: 'streaming' stamp: 'mir 11/23/2007 19:40'!
-stream: aStream upToAll: aCollection
-	"Answer a subcollection from the current access position to the occurrence (not inclusive) of aCollection. If aCollection is not in the stream, answer nil."
+!XMLTokenizer methodsFor: 'accessing' stamp: 'JAAyer 3/11/2010 09:03'!
+streamReader
+	^ streamReader! !
 
-	| startPos endMatch result |
-	startPos := aStream position.
-	(aStream  match: aCollection) 
-		ifTrue: [endMatch := aStream position.
-			aStream position: startPos.
-			result := aStream next: endMatch - startPos - aCollection size.
-			aStream position: endMatch.
-			^ result]
-		ifFalse: [
-			aStream position: startPos.
-			^nil]! !
-
-!XMLTokenizer methodsFor: 'streaming' stamp: 'mir 7/12/2006 17:46'!
-streamEncoding: encodingString
-
-	| converterClass |
-	Smalltalk at: #TextConverter ifPresent: [:tc | 
-		(stream respondsTo: #converter:) ifTrue: [
-			converterClass := tc defaultConverterClassForEncoding: encodingString asLowercase.
-			converterClass ifNotNil: [stream converter: converterClass new]]]! !
-
-!XMLTokenizer methodsFor: 'streaming' stamp: 'mir 1/17/2002 14:31'!
-topStream
-	^self hasNestedStreams
-		ifTrue: [self nestedStreams first]
-		ifFalse: [self stream]! !
-
-!XMLTokenizer methodsFor: 'streaming' stamp: 'gvc 6/6/2007 13:19'!
-unpeek
-	"Fixed to use nested stream since multi-byte streams
-	do not properly override pushBack: to deal with multi-byte
-	characters."
-	
-	peekChar ifNotNil: [self pushBack: '']! !
-
-!XMLTokenizer methodsFor: 'streaming' stamp: 'mir 11/23/2007 20:00'!
-upToAll: delimitingString
-	"Answer a subcollection from the current access position to the occurrence (if any, but not inclusive) of delimitingString. If delimitingString is not in the stream, answer the entire rest of the stream."
-
-	| result |
-
-	self hasNestedStreams
-		ifFalse: [
-			result := self stream: self stream upToAll: delimitingString.
-			result
-				ifNil: [self parseError: 'XML no delimiting ' , delimitingString printString , ' found'].
-			^result].
-
-	result := self stream: self stream upToAll: delimitingString.
-	result
-		ifNotNil: [^result].
-	result := String streamContents: [:resultStream |
-		resultStream nextPutAll: self stream upToEnd.
-		self atEnd
-			ifTrue: [self parseError: 'XML no delimiting ' , delimitingString printString , ' found'].
-		self stream position timesRepeat: [
-			self atEnd
-				ifFalse: [
-					resultStream nextPut: self next]]].
-	self pushBack: result.
-	^self upToAll: delimitingString! !
-
-!XMLTokenizer methodsFor: 'testing' stamp: 'mir 6/5/2003 16:33'!
+!XMLTokenizer methodsFor: 'testing' stamp: 'JAAyer 3/11/2010 09:54'!
 usesNamespaces
-	^false! !
+	^ false! !
 
-!XMLTokenizer methodsFor: 'testing' stamp: 'mir 1/14/2002 17:51'!
-validating
-	^validating! !
-
-!XMLTokenizer methodsFor: 'accessing' stamp: 'mir 1/14/2002 17:51'!
-validating: aBoolean
-	validating := aBoolean! !
-
-!XMLTokenizer class methodsFor: 'examples' stamp: 'mir 8/14/2000 11:41'!
-addressBookXML
-	^'<addressbook>
-  <person employee-number="A0000" family-name="Gates" first-name="Bob">
-    <contact-info><!!--Confidential--></contact-info>
-    <address city="Los Angeles" number="1239" state="CA" street="Pine Rd."/>
-    <job-info employee-type="Full-Time" is-manager="no" job-description="Manager"/>
-    <manager employee-number="A0000"/>
-  </person>
-  <person employee-number="A7000" family-name="Brown"
-    first-name="Robert" middle-initial="L.">
-    <contact-info>
-      <email address="robb@iro.ibm.com"/>
-      <home-phone number="03-3987873"/>
-    </contact-info>
-    <address city="New York" number="344" state="NY" street="118 St."/>
-    <job-info employee-type="Full-Time" is-manager="yes" job-description="Group Leader"/>
-    <manager employee-number="A0000"/>
-  </person>
-  <person employee-number="A7890" family-name="DePaiva"
-    first-name="Kassie" middle-initial="W.">
-    <contact-info><!!-- Kassie''s agent phone: 03-987654 --></contact-info>
-    <address city="Los Angeles" number="1234" state="CA" street="Pine Rd."/>
-    <job-info employee-type="Full-Time" is-manager="no" job-description="Actor"/>
-    <manager employee-number="A0000"/>
-    <misc-info>One of the most talented actresses on Daytime. Kassie
-      plays the devious and beautiful Blair Cramer on ABC&apos;s
-      &quot;One Life To Live.&quot;</misc-info>
-  </person>
-  <person employee-number="A7987" family-name="Smith" first-name="Joe">
-    <contact-info>
-      <email address="joes@iro.ibm.com"/>
-      <mobile-phone number="888-7657765"/>
-      <home-phone number="03-8767898"/>
-      <home-phone number="03-8767871"/>
-    </contact-info>
-    <address city="New York" number="12789" state="NY" street="W. 15th Ave."/>
-    <job-info employee-type="Part-Time" is-manager="no" job-description="Hacker"/>
-    <manager employee-number="A7000"/>
-  </person>
-</addressbook>
-'! !
-
-!XMLTokenizer class methodsFor: 'examples' stamp: 'mir 7/12/2006 16:49'!
-addressBookXMLWithDTD
-	^'<?xml version="1.0" encoding="UTF-8"?>
-<!!DOCTYPE addressbook SYSTEM "addressbook.dtd">
-<?xml-stylesheet type="text/xsl" href="demo.xsl"?>
-<addressbook>
-  <person employee-number="A0000" family-name="Gates" first-name="Bob">
-    <contact-info><!!--Confidential--></contact-info>
-    <address city="Los Angeles" number="1239" state="CA" street="Pine Rd."/>
-    <job-info employee-type="Full-Time" is-manager="no" job-description="Manager"/>
-    <manager employee-number="A0000"/>
-  </person>
-  <person employee-number="A7000" family-name="Brown"
-    first-name="Robert" middle-initial="L.">
-    <contact-info>
-      <email address="robb@iro.ibm.com"/>
-      <home-phone number="03-3987873"/>
-    </contact-info>
-    <address city="New York" number="344" state="NY" street="118 St."/>
-    <job-info employee-type="Full-Time" is-manager="yes" job-description="Group Leader"/>
-    <manager employee-number="A0000"/>
-  </person>
-  <person employee-number="A7890" family-name="DePaiva"
-    first-name="Kassie" middle-initial="W.">
-    <contact-info><!!-- Kassie''s agent phone: 03-987654 --></contact-info>
-    <address city="Los Angeles" number="1234" state="CA" street="Pine Rd."/>
-    <job-info employee-type="Full-Time" is-manager="no" job-description="Actor"/>
-    <manager employee-number="A0000"/>
-    <misc-info>One of the most talented actresses on Daytime. Kassie
-      plays the devious and beautiful Blair Cramer on ABC&apos;s
-      &quot;One Life To Live.&quot;</misc-info>
-  </person>
-  <person employee-number="A7987" family-name="Smith" first-name="Joe">
-    <contact-info>
-      <email address="joes@iro.ibm.com"/>
-      <mobile-phone number="888-7657765"/>
-      <home-phone number="03-8767898"/>
-      <home-phone number="03-8767871"/>
-    </contact-info>
-    <address city="New York" number="12789" state="NY" street="W. 15th Ave."/>
-    <job-info employee-type="Part-Time" is-manager="no" job-description="Hacker"/>
-    <manager employee-number="A7000"/>
-  </person>
-</addressbook>
-'! !
-
-!XMLTokenizer class methodsFor: 'examples' stamp: 'mir 8/14/2000 11:41'!
-exampleAddressBook
-	| tokenizer |
-	"XMLTokenizer exampleAddressBook"
-
-	tokenizer := XMLTokenizer on: self addressBookXML readStream.
-	[tokenizer next notNil]
-		whileTrue: []! !
-
-!XMLTokenizer class methodsFor: 'examples' stamp: 'mir 8/14/2000 16:23'!
-exampleAddressBookWithDTD
-	| tokenizer |
-	"XMLTokenizer exampleAddressBookWithDTD"
-
-	tokenizer := XMLTokenizer on: self addressBookXMLWithDTD readStream.
-	[tokenizer next notNil]
-		whileTrue: []! !
-
-!XMLTokenizer class methodsFor: 'class initialization' stamp: 'mir 10/31/2007 17:22'!
+!XMLTokenizer class methodsFor: 'class initialization' stamp: 'JAAyer 3/11/2010 08:38'!
 initialize
 	"XMLTokenizer initialize"
 
 	CharEscapes := CharacterSet newFrom: #( $& $" $' $> $< ).
-
-	SeparatorTable  := CharacterSet new.
-	#(9 10 12 13 32) do: [:each | SeparatorTable add: each asCharacter].
 
 	LiteralChars := CharacterSet newFrom: #( $: $- $: $= $.).
 	0 to: 255 do: [:i | 
@@ -2570,23 +4099,16 @@ initialize
 
 	NameDelimiters := CharacterSet new.
 	#(9 10 12 13 32 61 "$= asInteger 61" 62 "$> asInteger" 47 "$/ asInteger")
-		do: [:each | NameDelimiters add: each asCharacter].
+		do: [:each | NameDelimiters add: each asCharacter].! !
 
-	DigitTable := Array new: 256.
-	DigitTable atAllPut: -1.
-	($0 to: $9) do: [:each | DigitTable at: each asciiValue put: each digitValue].
-	($a to: $f) do: [:each | DigitTable at: each asciiValue put: each digitValue].
-	($A to: $F) do: [:each | DigitTable at: each asciiValue put: each digitValue].
-! !
-
-!XMLTokenizer class methodsFor: 'accessing' stamp: 'mir 11/23/2007 15:50'!
+!XMLTokenizer class methodsFor: 'accessing' stamp: 'JAAyer 3/11/2010 07:53'!
 isCharEscape: entityValue
 	^entityValue size = 1
 		and: [CharEscapes includes: entityValue first]! !
 
-!XMLTokenizer class methodsFor: 'instance creation' stamp: 'mir 11/16/2000 07:58'!
+!XMLTokenizer class methodsFor: 'instance creation' stamp: 'JAAyer 3/8/2010 10:42'!
 on: aStream
-	^self new parseStream: aStream! !
+	^self new stream: aStream! !
 
 !XMLWriter methodsFor: 'writing xml' stamp: 'mir 5/20/2003 11:04'!
 attribute: attributeName value: attributeValue
@@ -2597,9 +4119,9 @@ attribute: attributeName value: attributeValue
 		eq;
 		putAsXMLString: attributeValue! !
 
-!XMLWriter methodsFor: 'accessing' stamp: 'mir 12/7/2000 15:54'!
+!XMLWriter methodsFor: 'accessing' stamp: 'JAAyer 3/16/2010 16:21'!
 canonical
-	^canonical! !
+	^ canonical ifNil: [canonical := false]! !
 
 !XMLWriter methodsFor: 'accessing' stamp: 'mir 12/7/2000 15:54'!
 canonical: aBoolean
@@ -2617,26 +4139,19 @@ comment: aString
 	self stream nextPutAll: aString.
 	self endComment! !
 
-!XMLWriter methodsFor: 'namespaces' stamp: 'mir 6/24/2003 15:09'!
-declareNamespace: ns uri: uri
-	self scope declareNamespace: ns uri: uri! !
+!XMLWriter methodsFor: 'private' stamp: 'GeorgeHerolyants 1/10/2010 18:53'!
+cr
+	self newLinesAllowed ifTrue: [self stream cr].! !
 
-!XMLWriter methodsFor: 'namespaces' stamp: 'mir 6/24/2003 14:23'!
-defaultNamespace
-	^self scope defaultNamespace! !
-
-!XMLWriter methodsFor: 'namespaces' stamp: 'mir 6/24/2003 14:23'!
-defaultNamespace: ns
-	"Declare the default namespace."
-	self scope defaultNamespace: ns! !
-
-!XMLWriter methodsFor: 'private tags' stamp: 'mir 12/8/2000 18:01'!
+!XMLWriter methodsFor: 'private tags' stamp: 'GeorgeHerolyants 1/8/2010 19:50'!
 endCData
-	self stream nextPutAll: ']]>'! !
+	self stream nextPutAll: ']]>'.
+	self cr.! !
 
-!XMLWriter methodsFor: 'private tags' stamp: 'mir 12/8/2000 18:01'!
+!XMLWriter methodsFor: 'private tags' stamp: 'GeorgeHerolyants 1/8/2010 19:50'!
 endComment
-	self stream nextPutAll: ' -->'! !
+	self stream nextPutAll: ' -->'.
+	self cr.! !
 
 !XMLWriter methodsFor: 'writing dtd' stamp: 'mir 8/8/2000 18:13'!
 endDecl: type
@@ -2649,46 +4164,41 @@ endDeclaration
 		nextPut: $].
 	self endTag! !
 
-!XMLWriter methodsFor: 'writing xml' stamp: 'mir 12/8/2000 17:56'!
-endEmptyTag: tagName
-	self popTag: tagName.
+!XMLWriter methodsFor: 'writing xml' stamp: 'JAAyer 3/4/2010 05:18'!
+endElement: anElementName
+	self nestedScopes leaveScope.
+	self endTag: anElementName.! !
+
+!XMLWriter methodsFor: 'writing xml' stamp: 'JAAyer 3/16/2010 16:18'!
+endEmptyTag: aTagName
+	self openTags closeTag: aTagName.
 	self stream nextPutAll: '/>'.
 	self canonical
-		ifFalse: [self stream space]! !
+		ifFalse: [self stream space].
+	self cr.! !
 
-!XMLWriter methodsFor: 'private tags' stamp: 'mir 5/20/2003 12:13'!
+!XMLWriter methodsFor: 'private tags' stamp: 'GeorgeHerolyants 1/8/2010 19:50'!
 endPI
-	self stream nextPutAll: ' ?>'! !
+	self stream nextPutAll: ' ?>'.
+	self cr.! !
 
-!XMLWriter methodsFor: 'writing xml' stamp: 'mir 7/12/2006 16:07'!
+!XMLWriter methodsFor: 'writing xml' stamp: 'GeorgeHerolyants 1/8/2010 19:48'!
 endTag
 	self stream nextPutAll: '>'.
+	self cr.
 	self indent.
 	"self canonical
 		ifFalse: [self stream space]"! !
 
-!XMLWriter methodsFor: 'writing xml' stamp: 'mir 7/12/2006 17:02'!
-endTag: tagName
+!XMLWriter methodsFor: 'writing xml' stamp: 'JAAyer 3/16/2010 16:19'!
+endTag: aTagName
 	self outdent.
-	self endTag: tagName xmlns: nil! !
-
-!XMLWriter methodsFor: 'writing xml' stamp: 'mir 6/24/2003 14:46'!
-endTag: tagName xmlns: xmlns
-	self popTag: tagName.
+	self openTags closeTag: aTagName.
 	self stream
-		nextPutAll: '</'.
-	(xmlns notNil
-		and: [xmlns ~= self defaultNamespace])
-		ifTrue: [self stream
-			nextPutAll: xmlns;
-			nextPut: $:].
-	stream nextPutAll: tagName.
+		nextPutAll: '</';
+		nextPutAll: aTagName.
 	self endTag.
 ! !
-
-!XMLWriter methodsFor: 'namespaces' stamp: 'mir 6/24/2003 15:02'!
-enterScope
-	self scope enterScope! !
 
 !XMLWriter methodsFor: 'private' stamp: 'mir 12/8/2000 18:00'!
 eq
@@ -2712,38 +4222,35 @@ indentString: aString
 indentTab
 	self indentString: (String with: Character tab)! !
 
-!XMLWriter methodsFor: 'initialize' stamp: 'mir 7/12/2006 15:54'!
-initialize
-	stack := OrderedCollection new.
-	canonical := false.
-	scope := XMLNamespaceScope new! !
+!XMLWriter methodsFor: 'private' stamp: 'JAAyer 3/16/2010 16:20'!
+nestedScopes
+	^ nestedScopes ifNil: [nestedScopes := XMLNestedNamespaceScopes new]! !
 
-!XMLWriter methodsFor: 'namespaces' stamp: 'mir 6/24/2003 14:47'!
-leaveScope
-	self scope leaveScope! !
+!XMLWriter methodsFor: 'accessing' stamp: 'JAAyer 3/16/2010 16:21'!
+newLinesAllowed
+	^ newLinesAllowed ifNil: [newLinesAllowed := false]! !
 
-!XMLWriter methodsFor: 'private' stamp: 'mir 7/12/2006 17:05'!
+!XMLWriter methodsFor: 'accessing' stamp: 'GeorgeHerolyants 1/10/2010 18:51'!
+newLinesAllowed: aBoolean
+	newLinesAllowed := aBoolean! !
+
+!XMLWriter methodsFor: 'private' stamp: 'JAAyer 3/16/2010 16:20'!
+openTags
+	^ openTags ifNil: [openTags := XMLOpenTags new]! !
+
+!XMLWriter methodsFor: 'private' stamp: 'GeorgeHerolyants 1/10/2010 18:53'!
 outdent
 	currentIndent
 		ifNotNil: [
-			stream cr.
 			currentIndent := currentIndent-1.
 			self writeIndent.
 			currentIndent := currentIndent-1.]! !
 
-!XMLWriter methodsFor: 'writing xml' stamp: 'ar 12/15/2002 15:56'!
+!XMLWriter methodsFor: 'writing xml' stamp: 'GeorgeHerolyants 1/8/2010 20:08'!
 pcData: aString
-	| lastIndex nextIndex |
-	lastIndex := 1.
-	"Unroll the first search to avoid copying"
-	nextIndex := String findFirstInString: aString inSet: XMLTranslationMap startingAt: lastIndex.
-	nextIndex = 0 ifTrue:[^self stream nextPutAll: aString].
-	[self stream nextPutAll: (aString copyFrom: lastIndex to: nextIndex-1).
-	self stream nextPutAll: (XMLTranslation at: (aString at: nextIndex)).
-	lastIndex := nextIndex + 1.
-	nextIndex := String findFirstInString: aString inSet: XMLTranslationMap startingAt: lastIndex.
-	nextIndex = 0] whileFalse.
-	self stream nextPutAll: (aString copyFrom: lastIndex to: aString size).! !
+	self writeIndent.
+	self writeXmlEncoded: aString.
+	self cr.! !
 
 !XMLWriter methodsFor: 'writing xml' stamp: 'mir 12/11/2000 16:12'!
 pi: piTarget data: piData
@@ -2751,40 +4258,20 @@ pi: piTarget data: piData
 	self stream nextPutAll: piData.
 	self endPI! !
 
-!XMLWriter methodsFor: 'private' stamp: 'mir 8/7/2000 16:23'!
-popTag: tagName
-	| stackTop |
-	stackTop := self stack isEmpty
-		ifTrue: ['<empty>']
-		ifFalse: [self stack last].
-	^stackTop = tagName
-		ifTrue: [self stack removeLast]
-		ifFalse: [self error: 'Closing tag "' , tagName , '" does not match "' , stackTop]! !
+!XMLWriter methodsFor: 'accessing' stamp: 'GeorgeHerolyants 1/10/2010 19:20'!
+prettyPrint
+	self indentString: '    '.
+	self newLinesAllowed: true.! !
 
-!XMLWriter methodsFor: 'private' stamp: 'mir 8/7/2000 16:18'!
-pushTag: tagName
-	self stack add: tagName! !
-
-!XMLWriter methodsFor: 'private' stamp: 'pb 6/4/2012 16:33'!
+!XMLWriter methodsFor: 'private' stamp: 'pb 6/10/2012 18:11'!
 putAsXMLString: aValue
-	| useValue |
+	self stream nextPut: $".
 	self flag: #pbfix.
 	"handling nil"
-	self stream nextPut: $".
-	"self pcData: aValue."
-	useValue := aValue
-		ifNil: [ '' ]
-		ifNotNil: [ aValue ].
-	self pcData: useValue.
-	self stream nextPut: $".! !
-
-!XMLWriter methodsFor: 'private' stamp: 'mir 6/24/2003 14:22'!
-scope
-	^scope! !
-
-!XMLWriter methodsFor: 'private' stamp: 'mir 8/8/2000 17:02'!
-stack
-	^stack! !
+	"self writeXmlEncoded: aValue."
+	aValue ifNil: [self writeXmlEncoded: '']
+		ifNotNil: [self writeXmlEncoded: aValue].
+	self stream nextPut: $"! !
 
 !XMLWriter methodsFor: 'private tags' stamp: 'mir 12/8/2000 18:01'!
 startCData
@@ -2817,14 +4304,29 @@ startDeclaration: dtdName
 		nextPut: $[;
 		cr! !
 
-!XMLWriter methodsFor: 'writing xml' stamp: 'pb 6/4/2012 16:34'!
+!XMLWriter methodsFor: 'writing xml' stamp: 'JAAyer 3/8/2010 10:22'!
 startElement: elementName attributeList: attributeList
-	self canonical ifFalse: [ self stream newLine ].
+	"self canonical
+		ifFalse: [self stream cr]."
 	self startTag: elementName.
-	attributeList keys asSortedCollection do: [ :key |
-		self
-			attribute: key
-			value: (attributeList at: key) ].! !
+	attributeList printXMLOn: self.! !
+
+!XMLWriter methodsFor: 'writing xml' stamp: 'JAAyer 3/16/2010 16:23'!
+startElement: anElementName attributeList: anAttributeList namespaces: aNamespaceDictionary
+	self startTag: anElementName.
+	self nestedScopes enterScope.
+
+	aNamespaceDictionary keysAndValuesDo: [:name :uri |
+		name splitQualifiedNameInto: [:xmlns :prefix |
+			(prefix = 'xmlns')
+				ifTrue: [
+					(self nestedScopes defaultNamespace = uri)
+						ifFalse: [self xmlns: 'xmlns' uri: uri]]
+				ifFalse: [
+					(self nestedScopes isPrefix: prefix mappedTo: uri)
+						ifFalse: [self xmlns: prefix uri: uri]]]].
+
+	anAttributeList printXMLOn: self.! !
 
 !XMLWriter methodsFor: 'private tags' stamp: 'mir 12/8/2000 18:01'!
 startPI: identifier
@@ -2833,25 +4335,15 @@ startPI: identifier
 		nextPutAll: identifier;
 		space! !
 
-!XMLWriter methodsFor: 'writing xml' stamp: 'mir 7/12/2006 16:08'!
-startTag: tagName
+!XMLWriter methodsFor: 'writing xml' stamp: 'JAAyer 3/16/2010 16:18'!
+startTag: aTagName
 	self writeIndent.
-	self startTag: tagName xmlns: nil! !
-
-!XMLWriter methodsFor: 'writing xml' stamp: 'mir 6/24/2003 14:10'!
-startTag: tagName xmlns: xmlns
 	self stream
-		nextPut: $<.
-	(xmlns notNil
-		and: [xmlns ~= self scope defaultNamespace])
-		ifTrue: [self stream
-			nextPutAll: xmlns;
-			nextPut: $:].
-	self stream
-		nextPutAll: tagName.
+		nextPut: $<;
+		nextPutAll: aTagName.
 	"self canonical
 		ifFalse: [self stream space]."
-	self pushTag: tagName! !
+	self openTags openTag: aTagName! !
 
 !XMLWriter methodsFor: 'accessing' stamp: 'mir 12/8/2000 17:54'!
 stream
@@ -2866,6 +4358,20 @@ writeIndent
 	currentIndent ifNotNil: [
 		currentIndent timesRepeat: [self stream nextPutAll: indentString]]! !
 
+!XMLWriter methodsFor: 'private' stamp: 'GeorgeHerolyants 1/8/2010 20:07'!
+writeXmlEncoded: aString
+	| lastIndex nextIndex |
+	lastIndex := 1.
+	"Unroll the first search to avoid copying"
+	nextIndex := String findFirstInString: aString inSet: XMLTranslationMap startingAt: lastIndex.
+	nextIndex = 0 ifTrue:[self stream nextPutAll: aString. ^ self].
+	[self stream nextPutAll: (aString copyFrom: lastIndex to: nextIndex-1).
+	self stream nextPutAll: (XMLTranslation at: (aString at: nextIndex)).
+	lastIndex := nextIndex + 1.
+	nextIndex := String findFirstInString: aString inSet: XMLTranslationMap startingAt: lastIndex.
+	nextIndex = 0] whileFalse.
+	self stream nextPutAll: (aString copyFrom: lastIndex to: aString size).! !
+
 !XMLWriter methodsFor: 'writing xml' stamp: 'thf 9/2/2005 14:08'!
 xmlDeclaration: versionString encoding: encodingString
 	self canonical
@@ -2877,7 +4383,18 @@ xmlDeclaration: versionString encoding: encodingString
 				endPI.
 			self stream flush]! !
 
-!XMLWriter class methodsFor: 'class initialization' stamp: 'pb 6/5/2012 20:20'!
+!XMLWriter methodsFor: 'writing xml' stamp: 'JAAyer 3/16/2010 16:24'!
+xmlns: aNamespace uri: aUri
+	self nestedScopes declareNamespace: aNamespace uri: aUri.
+
+	self
+		attribute:
+			(aNamespace = 'xmlns'
+				ifTrue: ['xmlns']
+				ifFalse: ['xmlns:', aNamespace])
+		value: aUri! !
+
+!XMLWriter class methodsFor: 'class initialization' stamp: 'pb 6/10/2012 17:56'!
 initialize
 	"XMLWriter initialize"
 
@@ -2901,5 +4418,6 @@ on: aStream
 DTDEntityDeclaration initialize!
 DTDExternalEntityDeclaration initialize!
 DTDParameterEntityDeclaration initialize!
+XMLStreamReader initialize!
 XMLTokenizer initialize!
 XMLWriter initialize!

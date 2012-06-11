@@ -1,32 +1,34 @@
-'From Cuis 4.0 of 21 April 2012 [latest update: #1260] on 4 June 2012 at 11:15:23 pm'!
-'Description Split out from XML-Parser'!
-!classDefinition: #XPath category: #'XPath'!
+'From Cuis 4.0 of 21 April 2012 [latest update: #1260] on 11 June 2012 at 12:43:56 am'!
+'Description Based on XML-Parser-AlexandreBergel.15.mcz XPath.  Split out from XML-Parser
+
+XPath has been removed from XML-Parser... sticking with this version until a better solution is found.'!
+!classDefinition: #XPath category: #XPath!
 Object subclass: #XPath
 	instanceVariableNames: 'instructions literals path source block'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'XPath'!
-!classDefinition: 'XPath class' category: #'XPath'!
+!classDefinition: 'XPath class' category: #XPath!
 XPath class
 	instanceVariableNames: ''!
 
-!classDefinition: #XPathContext category: #'XPath'!
+!classDefinition: #XPathContext category: #XPath!
 Object subclass: #XPathContext
 	instanceVariableNames: 'root path parameters locals stack marker pc results done'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'XPath'!
-!classDefinition: 'XPathContext class' category: #'XPath'!
+!classDefinition: 'XPathContext class' category: #XPath!
 XPathContext class
 	instanceVariableNames: 'haltOnXPathError'!
 
-!classDefinition: #XPathParser category: #'XPath'!
+!classDefinition: #XPathParser category: #XPath!
 Object subclass: #XPathParser
 	instanceVariableNames: 'stream path pathSource'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'XPath'!
-!classDefinition: 'XPathParser class' category: #'XPath'!
+!classDefinition: 'XPathParser class' category: #XPath!
 XPathParser class
 	instanceVariableNames: ''!
 
@@ -41,12 +43,12 @@ My instance creation methods accept a string (or stream) and compile the string 
 !XPathContext commentStamp: '<historical>' prior: 0!
 Note: if your XPath is not returning the expected result, try enabling haltOnXPathError: on the class side.  This will halt execution at points where the problem could be due to an invalid XPath.!
 
-!XMLDOMParser methodsFor: '*xpath-content' stamp: 'PH 10/7/2003 07:34'!
+!XMLDOMParser methodsFor: '*xpath-content' stamp: 'pb 6/10/2012 23:05'!
 characters: aString 
 	| newElement |
-	newElement := XMLStringNode string: aString.
-	newElement parent: self top.
-	self top addContent: newElement! !
+	newElement := XMLString string: aString.
+	newElement parent: self topNode.
+	self topNode addContent: newElement! !
 
 !XMLDOMParser methodsFor: '*xpath-content' stamp: 'PH 10/7/2003 07:33'!
 processingInstruction: piName data: dataString 

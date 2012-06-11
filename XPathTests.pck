@@ -1,5 +1,7 @@
-'From Cuis 4.0 of 21 April 2012 [latest update: #1260] on 4 June 2012 at 7:46:45 pm'!
-'Description Split out from XML-Parser'!
+'From Cuis 4.0 of 21 April 2012 [latest update: #1260] on 11 June 2012 at 12:43:52 am'!
+'Description Based on XML-Parser-AlexandreBergel.15.mcz XPath tests.  Split out from XML-Parser.
+
+XPath has been removed from XML-Parser... sticking with this version until a better solution is found.'!
 !classDefinition: #XPathTest category: #XPathTests!
 TestCase subclass: #XPathTest
 	instanceVariableNames: 'xml document'
@@ -11,11 +13,57 @@ XPathTest class
 	instanceVariableNames: ''!
 
 
-!XPathTest methodsFor: 'as yet unclassified' stamp: 'PH 10/6/2003 20:47'!
+!XPathTest methodsFor: 'as yet unclassified' stamp: 'pb 6/11/2012 00:31'!
+addressBookXML
+	^'<addressbook>
+  <person employee-number="A0000" family-name="Gates" first-name="Bob">
+    <contact-info><!!--Confidential--></contact-info>
+    <address city="Los Angeles" number="1239" state="CA" street="Pine Rd."/>
+    <job-info employee-type="Full-Time" is-manager="no" job-description="Manager"/>
+    <manager employee-number="A0000"/>
+  </person>
+  <person employee-number="A7000" family-name="Brown"
+    first-name="Robert" middle-initial="L.">
+    <contact-info>
+      <email address="robb@iro.ibm.com"/>
+      <home-phone number="03-3987873"/>
+    </contact-info>
+    <address city="New York" number="344" state="NY" street="118 St."/>
+    <job-info employee-type="Full-Time" is-manager="yes" job-description="Group Leader"/>
+    <manager employee-number="A0000"/>
+  </person>
+  <person employee-number="A7890" family-name="DePaiva"
+    first-name="Kassie" middle-initial="W.">
+    <contact-info><!!-- Kassie''s agent phone: 03-987654 --></contact-info>
+    <address city="Los Angeles" number="1234" state="CA" street="Pine Rd."/>
+    <job-info employee-type="Full-Time" is-manager="no" job-description="Actor"/>
+    <manager employee-number="A0000"/>
+    <misc-info>One of the most talented actresses on Daytime. Kassie
+      plays the devious and beautiful Blair Cramer on ABC&apos;s
+      &quot;One Life To Live.&quot;</misc-info>
+  </person>
+  <person employee-number="A7987" family-name="Smith" first-name="Joe">
+    <contact-info>
+      <email address="joes@iro.ibm.com"/>
+      <mobile-phone number="888-7657765"/>
+      <home-phone number="03-8767898"/>
+      <home-phone number="03-8767871"/>
+    </contact-info>
+    <address city="New York" number="12789" state="NY" street="W. 15th Ave."/>
+    <job-info employee-type="Part-Time" is-manager="no" job-description="Hacker"/>
+    <manager employee-number="A7000"/>
+  </person>
+</addressbook>
+'! !
+
+!XPathTest methodsFor: 'as yet unclassified' stamp: 'pb 6/11/2012 00:32'!
 setUp
 	"Need this for VW parser"
 	| parser |
+	"
 	xml := XMLTokenizer addressBookXML.
+	"
+	xml := self addressBookXML.
 	"This is for the basic XML parser (what's it called again?)"
 	document := XMLDOMParser parseDocumentFrom: xml readStream.
 	"This is for the ported VW parser
