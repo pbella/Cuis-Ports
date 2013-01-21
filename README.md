@@ -3,7 +3,7 @@ Cuis-Ports
 
 These are various Smalltalk packages that have been ported to Cuis.  Where possible, the original source that the package is based on has been noted in this document as well as in the package description field.
 
-### Text Processing ### 
+### Text Processing
 
 
 XML-Parser - Based on http://squeaksource.cdn.st/XMLSupport/XML-Parser-NorbertHartl.141.mcz
@@ -11,11 +11,13 @@ XML-Parser - Based on http://squeaksource.cdn.st/XMLSupport/XML-Parser-NorbertHa
 XPath - Based on XML-Parser-AlexandreBergel.15.mcz XPath.  Split out from XML-Parser
 
 Installation
+
      | slash |
-    slash _ FileDirectory slash.
+
+    slash :=  FileDirectory slash.
 
     {
-         '..', slash, 'Cuis-Ports', slash, 'XML-Parser.pck.st' .
+         '..', slash, 'Cuis-Ports', slash,      'XML-Parser.pck.st' .
 
 
          '..', slash, 'Cuis-Ports', slash,   
@@ -39,6 +41,7 @@ Installation
     ]    
 
 Error messages while installing
+
     SAXHandler>>invokeDeprecated:withArguments:orForwardTo:withArguments: 
    (Deprecation is Undeclared) 
 
@@ -53,13 +56,13 @@ HTML - a tolerant HTML parser.  Does a decent job of consuming the various malfo
 VBRegex - A native regex implementation - no plugin required.  Based on http://www.squeaksource.com/Regex/VB-Regex-damienpollet.17.mcz
 
 
-### Math ### 
+### Math
 
 
 3DTransform - Based on 3DTransform-pbm.19.mcz
 
 
-### FFI ### 
+### FFI
 
 
 FFI - Using FFI from https://github.com/bpieber/Cuis-StyledTextEditor 
@@ -69,7 +72,7 @@ OpenGL - Originally based on OpenGL-Core-jrd.6.mcz and have merged in some of th
 Note: after loading FFI projects, you must call 'Smalltalk recreateSpecialObjectsArray.'
 
 
-### Misc notes: ### 
+### Misc notes: 
 
 
 The *Tests.pck files contain the SUnit tests for their base package name and can be ignored unless you have problems or plan to make changes to the package.  (i.e. if you just want to use the package and it's working for you, don't worry about the test projects)
