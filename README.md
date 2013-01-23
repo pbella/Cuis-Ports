@@ -64,7 +64,10 @@ Depends on 3DTransform and FFI.  If you are running on a Unix or Linux system, s
 
 FFI - See https://github.com/hhzl/Cuis-FFI
 
-Note: after loading FFI projects, you must call 'Smalltalk recreateSpecialObjectsArray.'
+Note: after loading FFI projects, you must call 
+    
+	Smalltalk recreateSpecialObjectsArray.
+	
 
 
 
@@ -75,3 +78,8 @@ The *Tests.pck files contain the SUnit tests for their base package name and can
 
 It is intended that this repository will *not* contain any non-permissive licenses (i.e. requiring more than attribution credit) such as GPL'd code to avoid potential issues.  Any ports that are distributed under less permissive licenses will be distributed via separate repositories as needed.
 
+
+### Other packages
+
+See also the more comprehensive list 
+https://github.com/jvuletich/Cuis/blob/master/ListOfCuisPackages.md
