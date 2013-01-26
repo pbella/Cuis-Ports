@@ -7,7 +7,8 @@ This repository contains various Smalltalk packages that have been ported to Cui
 
 #### XML
 
-XML-Parser - Based on http://squeaksource.cdn.st/XMLSupport/XML-Parser-NorbertHartl.141.mcz
+XML-Parser - Based on http://squeaksource.cdn.st/XMLSupport/XML-Parser-NorbertHartl.141.mcz. This is the version which 
+is loaded into Pharo 2.0beta as of January 2013.
 
 XPath - Based on XML-Parser-AlexandreBergel.15.mcz XPath.  Split out from XML-Parser
 
