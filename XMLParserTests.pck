@@ -1,4 +1,4 @@
-'From Cuis 4.0 of 21 April 2012 [latest update: #1260] on 10 June 2012 at 11:40:03 pm'!
+'From Cuis 4.0 of 21 April 2012 [latest update: #1260] on 30 September 2013 at 5:20:44 pm'!
 'Description Split out from XMLParser'!
 !classDefinition: #OPOpaxHandlerTestClass category: #'XMLParserTests-Opax'!
 OPOpaxHandler subclass: #OPOpaxHandlerTestClass
@@ -553,7 +553,7 @@ test030stringNode
 
 	self assertString: raw asXMLNode is: raw printed: escaped.! !
 
-!XMLNodeTest methodsFor: 'tests' stamp: 'pb 6/10/2012 23:32'!
+!XMLNodeTest methodsFor: 'tests' stamp: 'hjh 1/28/2013 08:06'!
 test040emptyNodeWithElements
 	| node |
 
@@ -570,11 +570,11 @@ test040emptyNodeWithElements
 		[ node topNode isNil ]
 			on: Error
 			do: [ :error |
-				self assert: error = 'this collection is empty' ].
+				self assert: error messageText = 'this collection is empty' ].
 		[ node topElement isNil ]
 			on: Error
 			do: [ :error |
-				self assert: error = 'this collection is empty' ].! !
+				self assert: error messageText = 'this collection is empty' ].! !
 
 !XMLNodeTest methodsFor: 'tests' stamp: 'JAAyer 3/23/2010 16:31'!
 test041namespaces
@@ -967,7 +967,7 @@ test082tagsNamedSearching
 		should: [:block | node tagsNamed: 'foo' contentsDo: block]
 		enumerate: elements first contents, elements third contents.! !
 
-!XMLNodeTest methodsFor: 'tests' stamp: 'pb 6/10/2012 23:33'!
+!XMLNodeTest methodsFor: 'tests' stamp: 'hjh 1/28/2013 08:06'!
 test083elementRemoving
 	| node nodes elements |
 
@@ -996,7 +996,7 @@ test083elementRemoving
 		[ node topElement isNil ]
 			on: Error
 			do: [ :error |
-				self assert: error = 'this collection is empty' ].! !
+				self assert: error messageText = 'this collection is empty' ].! !
 
 !XMLNodeTest methodsFor: 'tests' stamp: 'JAAyer 3/8/2010 07:34'!
 test084elementRenaming
@@ -1022,7 +1022,7 @@ test084elementRenaming
 	elements fourth name: 'foo'.
 	self assert: (node elementAt: 'foo') = elements last.! !
 
-!XMLNodeTest methodsFor: 'tests' stamp: 'pb 6/10/2012 23:33'!
+!XMLNodeTest methodsFor: 'tests' stamp: 'pb 9/30/2013 17:20'!
 test090documentTest
 	| doc root |
 	doc := XMLDocument new.
@@ -1042,7 +1042,7 @@ test090documentTest
 	[ doc root isNil ]
 		on: Error
 		do: [ :error |
-			self assert: error = 'this collection is empty' ].
+			self assert: error messageText = 'this collection is empty' ].
 	self
 		assertDocument: (doc dtd: '<!!DOCTYPE root>')
 		dtd: '<!!DOCTYPE root>'
