@@ -73,9 +73,20 @@ Note: after loading FFI projects, you must call
 ### OMeta 2
 
 Currently needs to be filed in, in sequence:
+
 OMeta2-stage1.st
 OMeta2-stage2a.st
 OMeta2-stage2b.st
+
+Notes:
+- Only very basic functionality has been verified.  Please report problems/bugs.
+- Requires Cuis4.2-2330 with the 2331 and 2332 changesets provided by Juan applied.
+- stage2b overwrites methods in stage1 that are needed to load stage2b
+- stage2a (a single method) is likely to experience breakage in future releases as it overrides an existing Cuis method and will need future changes merged.
+- Suggestions as to how to best package this are appreciated.  I'm currently thinking of merging stage1 and 2a into a file named OMeta2Preload.st and creating a package for stage2b called OMeta2.pck.st.  The issue in creating a package for the preload is that it gives the mistaken impression that it could be modified and saved which it can't be once stage2 is loaded.
+- Debugging support is weak (a known issue with OMeta in general... let's work to improve it)
+- Test cases need to be created.
+- OMeta2Examples has a few simple ones but more/better are needed.  Right now you can look at the <a href="http://tinlizzie.org/ometa-js/#Sample_Project">Javascript implementation</a> for some inspiration.
 
 ### Misc notes: 
 
