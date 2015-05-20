@@ -226,7 +226,6 @@ TODOS:
 * rewrite #char, #digit, #empty, #end, #exactly, #firstAndRest, #fromTo, #letter, #letterOrDigit, #listOf, #lower, #notLast, #number, #range, #space, #spaces, #string, #symbol, #token, and #upper in OMeta syntax
 * consider implementing position-related functionality (see http://www.tinlizzie.org/ometa-js/ometa-base.js)
 * consider the optimization suggestions in the comments of OMeta2Lib's methods!
-]style[(6 41 26 95 56 16 27 17 257)bcblack;,cblack;,f0,cblack;,f0cblack;,f0,f0cblack;,f0,f0cblack;!
 
 
 !OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/17/2009 14:01'!
@@ -969,7 +968,7 @@ space
 	^ self ometaOr: {
 		[self super: OMeta2 apply: #space withArgs: #()].
 		[self apply: #fromTo withArgs: {'/*'. '*/'}].
-		[self apply: #fromTo withArgs: {'//'. String cr}].
+		[self apply: #fromTo withArgs: {'//'. Character lf asString}].
 		[
 			self apply: #seq withArgs: {'//'}.
 			self many: [self super: OMeta2 apply: #space withArgs: #()]

@@ -70,7 +70,12 @@ Note: after loading FFI projects, you must call
 	Smalltalk recreateSpecialObjectsArray.
 	
 
+### OMeta 2
 
+Currently needs to be filed in, in sequence:
+OMeta2-stage1.st
+OMeta2-stage2a.st
+OMeta2-stage2b.st
 
 ### Misc notes: 
 

@@ -1211,7 +1211,7 @@ space
 	^ self ometaOr: {[self
 			super: OMeta2
 			apply: #space
-			withArgs: #()]. [self apply: #fromTo withArgs: {'/*'. '*/'}]. [self apply: #fromTo withArgs: {'//'. Character cr asString}]. [self apply: #seq withArgs: {'//'}.
+			withArgs: #()]. [self apply: #fromTo withArgs: {'/*'. '*/'}]. [self apply: #fromTo withArgs: {'//'. Character lf asString}]. [self apply: #seq withArgs: {'//'}.
 		self
 			many: [self
 					super: OMeta2
