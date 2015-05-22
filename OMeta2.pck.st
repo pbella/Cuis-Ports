@@ -1,18 +1,617 @@
-'From Squeak3.10.2 of ''5 June 2008'' [latest update: #7179] on 26 April 2009 at 12:46:09 am'!
+'From Cuis 4.2 of 25 July 2013 [latest update: #2332] on 22 May 2015 at 5:02:49.453859 pm'!
+'OMeta2 package (Note: you must filein OMeta2-stage1.st before loading this)'!
+!provides: 'OMeta2' 1 0!
+!classDefinition: #OMeta2Base category: #OMeta2!
+Object subclass: #OMeta2Base
+	instanceVariableNames: 'input om2streams haltingPoint'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'OMeta2'!
+!classDefinition: 'OMeta2Base class' category: #OMeta2!
+OMeta2Base class
+	instanceVariableNames: ''!
 
-!OMeta2 class methodsFor: '*additions' stamp: 'rkrk 4/25/2009 01:20'!
-firstPrecodeCommentFor: selector
-	"For compatibility with squeak dev"
+!classDefinition: #OMeta2 category: #OMeta2!
+OMeta2Base subclass: #OMeta2
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'OMeta2'!
+!classDefinition: 'OMeta2 class' category: #OMeta2!
+OMeta2 class
+	instanceVariableNames: ''!
 
-	^nil! !
-
-
-'From Moshi of 3 March 2007 [latest update: #908] on 21 May 2009 at 2:14:21 pm'!
+!classDefinition: #O2SqueakRecognizer category: #OMeta2!
 OMeta2 subclass: #O2SqueakRecognizer
 	instanceVariableNames: ''
 	classVariableNames: 'TypeTable'
 	poolDictionaries: ''
 	category: 'OMeta2'!
+!classDefinition: 'O2SqueakRecognizer class' category: #OMeta2!
+O2SqueakRecognizer class
+	instanceVariableNames: ''!
+
+!classDefinition: #OMeta2Examples category: #OMeta2!
+OMeta2 subclass: #OMeta2Examples
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'OMeta2'!
+!classDefinition: 'OMeta2Examples class' category: #OMeta2!
+OMeta2Examples class
+	instanceVariableNames: ''!
+
+!classDefinition: #OMeta2Flattener category: #OMeta2!
+OMeta2 subclass: #OMeta2Flattener
+	instanceVariableNames: 'ws'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'OMeta2'!
+!classDefinition: 'OMeta2Flattener class' category: #OMeta2!
+OMeta2Flattener class
+	instanceVariableNames: ''!
+
+!classDefinition: #OMeta2NullOpt category: #OMeta2!
+OMeta2 subclass: #OMeta2NullOpt
+	instanceVariableNames: 'didSomething'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'OMeta2'!
+!classDefinition: 'OMeta2NullOpt class' category: #OMeta2!
+OMeta2NullOpt class
+	instanceVariableNames: ''!
+
+!classDefinition: #OMeta2AndOrOpt category: #OMeta2!
+OMeta2NullOpt subclass: #OMeta2AndOrOpt
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'OMeta2'!
+!classDefinition: 'OMeta2AndOrOpt class' category: #OMeta2!
+OMeta2AndOrOpt class
+	instanceVariableNames: ''!
+
+!classDefinition: #OMeta2Optimizer category: #OMeta2!
+OMeta2 subclass: #OMeta2Optimizer
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'OMeta2'!
+!classDefinition: 'OMeta2Optimizer class' category: #OMeta2!
+OMeta2Optimizer class
+	instanceVariableNames: ''!
+
+!classDefinition: #OMeta2RuleParser category: #OMeta2!
+OMeta2 subclass: #OMeta2RuleParser
+	instanceVariableNames: 'temps'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'OMeta2'!
+!classDefinition: 'OMeta2RuleParser class' category: #OMeta2!
+OMeta2RuleParser class
+	instanceVariableNames: ''!
+
+!classDefinition: #OMeta2RuleTranslator category: #OMeta2!
+OMeta2 subclass: #OMeta2RuleTranslator
+	instanceVariableNames: 'grammarClass'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'OMeta2'!
+!classDefinition: 'OMeta2RuleTranslator class' category: #OMeta2!
+OMeta2RuleTranslator class
+	instanceVariableNames: ''!
+
+
+!OMeta2 commentStamp: '<historical>' prior: 0!
+TODOS:
+
+* implement OMeta -> Squeak translator
+* implement Squeak parser
+* implement OMeta/Squeak "compiler", make it OMeta2's compilerClass
+
+* rewrite #char, #digit, #empty, #end, #exactly, #firstAndRest, #fromTo, #letter, #letterOrDigit, #listOf, #lower, #notLast, #number, #range, #space, #spaces, #string, #symbol, #token, and #upper in OMeta syntax
+* consider implementing position-related functionality (see http://www.tinlizzie.org/ometa-js/ometa-base.js)
+* consider the optimization suggestions in the comments of OMeta2Lib's methods!
+
+!OMeta2Examples commentStamp: '<historical>' prior: 0!
+Here's how to run these examples:
+
+	OMeta2Examples match: 5 with: #fact.
+	OMeta2Examples matchAll: '1234' with: #number.
+	OMeta2Examples matchAll: 'abc123' with: #identifier.
+	OMeta2Examples matchAll: #($a $b $c 1 2 3 #(4 5)) with: #structure.
+	OMeta2Examples matchAll: 'howdy' with: #greeting.!
+
+!OMeta2Base methodsFor: 'as yet unclassified' stamp: 'aw 2/18/2009 16:05'!
+? aBoolean
+
+	^ self pred: aBoolean! !
+
+!OMeta2Base methodsFor: 'as yet unclassified' stamp: 'aw 2/16/2009 15:13'!
+anything
+
+	| ans |
+	ans := input head.
+	input := input tail.
+	^ ans! !
+
+!OMeta2Base methodsFor: 'as yet unclassified' stamp: 'aw 2/16/2009 14:01'!
+apply
+
+	| aRule |
+	aRule := self apply: #anything.
+	^ self apply: aRule! !
+
+!OMeta2Base methodsFor: 'as yet unclassified' stamp: 'aw 2/27/2009 14:09'!
+apply: aRule
+
+	" A memoRec is an association whose key is the answer,
+	  and whose value is the next input. Failers pretend to
+     be memoRecs, but throw a fail in response to #value "
+	| memo memoRec |
+	input == haltingPoint ifTrue: [self halt].
+	memo := input memo.
+	memoRec := memo at: aRule ifAbsent: [nil].
+	memoRec ifNil: [
+		| origInput failer ans |
+		origInput := input.
+		failer := OM2Failer new.
+		memo at: aRule put: failer.
+		ans := self perform: aRule.
+		memoRec := ans -> input.
+		memo at: aRule put: memoRec.
+		failer used ifTrue: [
+			" left recursion detected "
+			| sentinel keepGoing |
+			sentinel := input.
+			keepGoing := true.
+			[keepGoing] whileTrue: [
+				[
+					input := origInput.
+					ans := self perform: aRule.
+					input == sentinel ifTrue: [OMeta2Fail signal].
+					memoRec key: ans value: input.
+				] on: OM2Fail do: [keepGoing := false]
+			]
+		]		
+	].
+	input := memoRec value.
+	^ memoRec key! !
+
+!OMeta2Base methodsFor: 'as yet unclassified' stamp: 'aw 2/16/2009 13:39'!
+apply: aRule withArgs: args
+
+	args reverseDo: [:a | input := OM2Stream new initHead: a tail: input].
+	^ self perform: aRule! !
+
+!OMeta2Base methodsFor: 'as yet unclassified' stamp: 'aw 2/19/2009 23:17'!
+consumedBy: aBlock
+
+	| origInput i ws |
+	origInput := input.
+	aBlock value.
+	ws := WriteStream on: origInput inputSpecies new.
+	i := origInput.
+	[i == input] whileFalse: [
+		ws nextPut: i head.
+		i := i tail
+	].
+	^ ws contents! !
+
+!OMeta2Base methodsFor: 'as yet unclassified' stamp: 'aw 2/16/2009 14:11'!
+foreign
+
+	| aGrammar aRule g ans |
+	aGrammar := self apply: #anything.
+	aRule := self apply: #anything.
+	g := aGrammar new initInput: (OM2StreamProxy for: input).
+	ans := g apply: aRule.
+	input := g input target.
+	^ ans! !
+
+!OMeta2Base methodsFor: 'as yet unclassified' stamp: 'aw 2/26/2009 13:17'!
+forgetEverything
+
+	input transitiveForgetEverything.
+	om2streams valuesDo: [:s | s transitiveForgetEverything]! !
+
+!OMeta2Base methodsFor: 'as yet unclassified' stamp: 'aw 2/26/2009 11:33'!
+form: aBlock
+
+	| v origInput |
+	v := self apply: #anything.
+	self pred: (v isCollection and: [v isSequenceable and: [v isSymbol not]]).
+	origInput := input.
+	input := om2streams at: v ifAbsentPut: [OM2LazyStream for: v readStream withPos: 1].
+	aBlock value.
+	self apply: #end.
+	input := origInput.
+	^ v! !
+
+!OMeta2Base methodsFor: 'as yet unclassified' stamp: 'aw 2/16/2009 15:19'!
+genericMany: aBlock into: anOrderedCollection
+
+	[
+		| origInput |
+		origInput := input.
+		[anOrderedCollection addLast: aBlock value] on: OM2Fail do: [
+			input := origInput.
+			^ anOrderedCollection
+		].
+		true
+	] whileTrue! !
+
+!OMeta2Base methodsFor: 'as yet unclassified' stamp: 'aw 2/27/2009 11:25'!
+haltingPoint: anOM2Stream
+
+	haltingPoint := anOM2Stream! !
+
+!OMeta2Base methodsFor: 'as yet unclassified' stamp: 'aw 2/20/2009 14:57'!
+indexConsumedBy: aBlock
+
+	| from to |
+	from := self pos.
+	aBlock value.
+	to := self pos.
+	^ from -> to! !
+
+!OMeta2Base methodsFor: 'as yet unclassified' stamp: 'aw 2/16/2009 14:06'!
+initInput: i
+
+	input := i! !
+
+!OMeta2Base methodsFor: 'as yet unclassified' stamp: 'aw 2/26/2009 11:16'!
+initialize
+
+	super initialize.
+	om2streams := IdentityDictionary new! !
+
+!OMeta2Base methodsFor: 'as yet unclassified' stamp: 'aw 2/16/2009 14:10'!
+input
+
+	^ input! !
+
+!OMeta2Base methodsFor: 'as yet unclassified' stamp: 'aw 2/16/2009 13:48'!
+lookahead: aBlock
+
+	| origInput ans |
+	origInput := input.
+	ans := aBlock value.
+	input := origInput.
+	^ ans! !
+
+!OMeta2Base methodsFor: 'as yet unclassified' stamp: 'aw 2/16/2009 13:56'!
+many1: aBlock
+
+	^ self genericMany: aBlock into: (OrderedCollection with: aBlock value)! !
+
+!OMeta2Base methodsFor: 'as yet unclassified' stamp: 'aw 2/16/2009 13:56'!
+many: aBlock
+
+	^ self genericMany: aBlock into: OrderedCollection new! !
+
+!OMeta2Base methodsFor: 'as yet unclassified' stamp: 'aw 2/25/2009 11:28'!
+not: aBlock
+
+	| origInput |
+	origInput := input.
+	[aBlock value] on: OM2Fail do: [
+		input := origInput.
+		^ true
+	].
+	OMeta2Fail signal! !
+
+!OMeta2Base methodsFor: 'as yet unclassified' stamp: 'aw 2/25/2009 11:28'!
+ometaOr: choices
+
+	| origInput |
+	origInput := input.
+	choices do: [:choice |
+		input := origInput.
+		[^ choice value] on: OM2Fail do: []
+	].
+	OMeta2Fail signal! !
+
+!OMeta2Base methodsFor: 'as yet unclassified' stamp: 'aw 2/20/2009 14:33'!
+opt: aBlock
+
+	^ self ometaOr: {
+		[aBlock value].
+		[nil]
+	}! !
+
+!OMeta2Base methodsFor: 'as yet unclassified' stamp: 'aw 2/20/2009 14:48'!
+pos
+
+	^ input pos! !
+
+!OMeta2Base methodsFor: 'as yet unclassified' stamp: 'aw 2/25/2009 11:28'!
+pred: aBooleanValue
+
+	" may want to have the compiler inline this automatically, for performance "
+	aBooleanValue ifTrue: [^ true].
+	OMeta2Fail signal! !
+
+!OMeta2Base methodsFor: 'as yet unclassified' stamp: 'aw 2/16/2009 16:16'!
+seq
+
+	| xs |
+	xs := self apply: #anything.
+	xs do: [:x |
+		" may want to inline #apply:withArgs: below as an
+		  optimization, since this rule gets used a lot "
+		self apply: #exactly withArgs: {x}
+	].
+	^ xs
+	! !
+
+!OMeta2Base methodsFor: 'as yet unclassified' stamp: 'aw 2/16/2009 15:03'!
+super: superclass apply: aRule withArgs: args
+
+	args reverseDo: [:a | input := OM2Stream new initHead: a tail: input].
+	^ self perform: aRule withArguments: #() inSuperclass: superclass! !
+
+!OMeta2Base class methodsFor: 'as yet unclassified' stamp: 'aw 2/20/2009 14:52'!
+compilerClass
+
+        ^ OMeta2Compiler! !
+
+!OMeta2Base class methodsFor: 'as yet unclassified' stamp: 'aw 2/26/2009 12:52'!
+debugMatch: anObject with: aRule
+
+	^ self debugMatch: anObject with: aRule withArgs: #()! !
+
+!OMeta2Base class methodsFor: 'as yet unclassified' stamp: 'aw 2/26/2009 12:58'!
+debugMatch: anObject with: aRule withArgs: args
+
+	^ self debugMatchAll: {anObject} readStream with: aRule withArgs: args! !
+
+!OMeta2Base class methodsFor: 'as yet unclassified' stamp: 'aw 2/26/2009 12:35'!
+debugMatchAll: aSequenceableCollection with: aRule
+
+	^ self debugMatchAll: aSequenceableCollection with: aRule withArgs: #()! !
+
+!OMeta2Base class methodsFor: 'as yet unclassified' stamp: 'aw 2/26/2009 12:53'!
+debugMatchAll: aSequenceableCollection with: aRule withArgs: args
+
+	^ self matchStream: aSequenceableCollection readStream with: aRule withArgs: args withPlaybackDebugging: true! !
+
+!OMeta2Base class methodsFor: 'as yet unclassified' stamp: 'aw 2/26/2009 11:53'!
+match: anObject with: aRule
+
+	^ self match: anObject with: aRule withArgs: #()! !
+
+!OMeta2Base class methodsFor: 'as yet unclassified' stamp: 'aw 2/26/2009 12:55'!
+match: anObject with: aRule withArgs: args
+
+	^ self matchAll: {anObject} readStream with: aRule withArgs: args! !
+
+!OMeta2Base class methodsFor: 'as yet unclassified' stamp: 'aw 2/18/2009 15:39'!
+matchAll: aSequenceableCollection with: aRule
+
+	^ self matchAll: aSequenceableCollection with: aRule withArgs: #()! !
+
+!OMeta2Base class methodsFor: 'as yet unclassified' stamp: 'aw 2/26/2009 12:57'!
+matchAll: aSequenceableCollection with: aRule withArgs: args
+
+	^ self matchStream: aSequenceableCollection readStream with: aRule withArgs: args withPlaybackDebugging: false! !
+
+!OMeta2Base class methodsFor: 'as yet unclassified' stamp: 'aw 2/27/2009 14:14'!
+matchStream: aReadStream with: aRule withArgs: args withPlaybackDebugging: debugging
+
+	| input matcher ans|
+	input := OM2LazyStream for: aReadStream withPos: 1.
+	matcher := self new initInput: input.
+	[
+		matcher apply: #empty withArgs: args.
+		ans := matcher apply: aRule.
+		matcher apply: #end.
+		^ ans
+	] on: OM2Fail do: [:e |
+		| curr prev prevPrev |
+		debugging ifFalse: [e signal].
+		curr := input.
+		prev := nil.
+		prevPrev := nil.
+		[curr notNil] whileTrue: [
+			prevPrev := prev.
+			prev := curr.
+			curr := curr basicTail
+		].
+		curr := prevPrev ifNotNil: [prevPrev] ifNil: [prev].
+		self inform: 'will halt each time matcher reaches ', curr printString.
+		matcher
+			initInput: input;
+			forgetEverything.
+		curr ifNil: [self error: 'you''ve found a bug -- please tell Alex'].
+		curr become: (OM2StreamDebugger for: curr copy).
+		matcher haltingPoint: curr.
+		matcher apply: #empty withArgs: args.
+		ans := matcher apply: aRule.
+		matcher apply: #end.
+		^ ans
+	]! !
+
+!OMeta2Base class methodsFor: 'as yet unclassified' stamp: 'tak 4/7/2009 14:58'!
+matcherOn: aReadStream
+
+	| input matcher |
+	input := OM2LazyStream for: aReadStream withPos: 1.
+	matcher := self new initInput: input.
+	^ matcher! !
+
+!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/17/2009 14:01'!
+char
+
+	| x |
+	x := self apply: #anything.
+	self pred: (x isKindOf: Character).
+	^ x! !
+
+!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/17/2009 14:05'!
+digit
+
+	| x |
+	x := self apply: #char.
+	self pred: x isDigit.
+	^ x! !
+
+!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/16/2009 16:14'!
+empty
+
+	^ true! !
+
+!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/16/2009 16:17'!
+end
+
+	" may want to inline the sends below, since this rule gets used a lot "
+	^ self not: [self apply: #anything]! !
+
+!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/25/2009 11:32'!
+exactly
+
+	| wanted got |
+	wanted := self apply: #anything.
+	got := self apply: #anything.
+	self pred: wanted = got.
+	^ wanted! !
+
+!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/17/2009 13:52'!
+firstAndRest
+
+	| first rest |
+	first := self apply: #anything.
+	rest := self apply: #anything.
+	^ self genericMany: [self apply: rest] into: (OrderedCollection with: (self apply: first))! !
+
+!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/17/2009 15:40'!
+fromTo
+
+	| x y |
+	x := self apply: #string.
+	y := self apply: #string.
+	self apply: #seq withArgs: {x}.
+	self many: [
+		self not: [self apply: #seq withArgs: {y}].
+		self apply: #char
+	].
+	self apply: #seq withArgs: {y}! !
+
+!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/17/2009 14:03'!
+letter
+
+	| x |
+	x := self apply: #char.
+	self pred: x isLetter.
+	^ x! !
+
+!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/17/2009 14:05'!
+letterOrDigit
+
+	| x |
+	x := self apply: #char.
+	self pred: x isAlphaNumeric.
+	^ x! !
+
+!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/17/2009 13:50'!
+listOf
+
+	| rule delim |
+	rule := self apply: #anything.
+	delim := self apply: #anything.
+	^ self ometaOr: {
+		[
+			| x |
+			x := self apply: rule.
+			self genericMany: [
+				self apply: #token withArgs: {delim}.
+				self apply: rule
+			] into: (OrderedCollection with: x)
+		].
+		[
+			#()
+		]
+	}! !
+
+!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/17/2009 14:07'!
+lower
+
+	| x |
+	x := self apply: #char.
+	self pred: x isLowercase.
+	^ x! !
+
+!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/17/2009 13:54'!
+notLast
+
+	| rule ans |
+	rule := self apply: #anything.
+	ans := self apply: rule.
+	self lookahead: [self apply: rule].
+	^ ans! !
+
+!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/17/2009 14:02'!
+number
+
+	| x |
+	x := self apply: #anything.
+	self pred: x isNumber.
+	^ x! !
+
+!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/17/2009 15:42'!
+range
+
+	| a b x |
+	a := self apply: #anything.
+	b := self apply: #anything.
+	x := self apply: #anything.
+	self pred: (a <= x & x <= b).
+	^ x! !
+
+!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/17/2009 13:44'!
+space
+
+	| x |
+	x := self apply: #char.
+	self pred: x asciiValue <= 32.
+	^ x! !
+
+!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/17/2009 13:43'!
+spaces
+
+	^ self many: [self apply: #space]! !
+
+!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/17/2009 14:02'!
+string
+
+	| x |
+	x := self apply: #anything.
+	self pred: x isString.
+	^ x! !
+
+!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/18/2009 11:33'!
+symbol
+
+	| x |
+	x := self apply: #anything.
+	self pred: x isSymbol.
+	^ x! !
+
+!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/17/2009 13:46'!
+token
+
+	| t |
+	t := self apply: #anything.
+	self apply: #spaces.
+	^ self apply: #seq withArgs: {t}! !
+
+!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/17/2009 14:07'!
+upper
+
+	| x |
+	x := self apply: #char.
+	self pred: x isUppercase.
+	^ x! !
 
 !O2SqueakRecognizer methodsFor: 'as yet unclassified' stamp: 'aw 2/20/2009 00:43'!
 arrayConstr =
@@ -198,258 +797,20 @@ unit =
 |	"(" expr ")"
 ! !
 
-"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
-
-O2SqueakRecognizer class
-	instanceVariableNames: ''!
-
 !O2SqueakRecognizer class methodsFor: 'as yet unclassified' stamp: 'aw 2/20/2009 02:04'!
 initialize
 
 	TypeTable := #(#xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xDelimiter #xDelimiter #xBinary #xDelimiter #xDelimiter #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #doIt #xBinary #xDelimiter #xBinary #xDoubleQuote #xLitQuote #xDollar #xBinary #xBinary #xSingleQuote #leftParenthesis #rightParenthesis #xBinary #xBinary #xBinary #xBinary #period #xBinary #xDigit #xDigit #xDigit #xDigit #xDigit #xDigit #xDigit #xDigit #xDigit #xDigit #xColon #semicolon #xBinary #xBinary #xBinary #xBinary #xBinary #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #leftBracket #xBinary #rightBracket #upArrow #leftArrow #xBinary #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #leftBrace #verticalBar #rightBrace #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xLetter #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xLetter #xBinary #xBinary #xBinary #xBinary #xLetter #xBinary #xBinary #xBinary #xBinary #xBinary #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xBinary #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xBinary #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xBinary)! !
 
+!OMeta2Examples methodsFor: 'as yet unclassified' stamp: 'aw 2/20/2009 02:35'!
+aSqueakMethod
 
-O2SqueakRecognizer initialize!
-'From Moshi of 3 March 2007 [latest update: #908] on 21 May 2009 at 2:14:17 pm'!
-OMeta2Base subclass: #OMeta2
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'OMeta2'!
-!OMeta2 commentStamp: '<historical>' prior: 0!
-TODOS:
-
-* implement OMeta -> Squeak translator
-* implement Squeak parser
-* implement OMeta/Squeak "compiler", make it OMeta2's compilerClass
-
-* rewrite #char, #digit, #empty, #end, #exactly, #firstAndRest, #fromTo, #letter, #letterOrDigit, #listOf, #lower, #notLast, #number, #range, #space, #spaces, #string, #symbol, #token, and #upper in OMeta syntax
-* consider implementing position-related functionality (see http://www.tinlizzie.org/ometa-js/ometa-base.js)
-* consider the optimization suggestions in the comments of OMeta2Lib's methods!
-
-
-!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/17/2009 14:01'!
-char
-
-	| x |
-	x := self apply: #anything.
-	self pred: (x isKindOf: Character).
-	^ x! !
-
-!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/17/2009 14:05'!
-digit
-
-	| x |
-	x := self apply: #char.
-	self pred: x isDigit.
-	^ x! !
-
-!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/16/2009 16:14'!
-empty
-
-	^ true! !
-
-!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/16/2009 16:17'!
-end
-
-	" may want to inline the sends below, since this rule gets used a lot "
-	^ self not: [self apply: #anything]! !
-
-!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/25/2009 11:32'!
-exactly
-
-	| wanted got |
-	wanted := self apply: #anything.
-	got := self apply: #anything.
-	self pred: wanted = got.
-	^ wanted! !
-
-!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/17/2009 13:52'!
-firstAndRest
-
-	| first rest |
-	first := self apply: #anything.
-	rest := self apply: #anything.
-	^ self genericMany: [self apply: rest] into: (OrderedCollection with: (self apply: first))! !
-
-!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/17/2009 15:40'!
-fromTo
-
-	| x y |
-	x := self apply: #string.
-	y := self apply: #string.
-	self apply: #seq withArgs: {x}.
-	self many: [
-		self not: [self apply: #seq withArgs: {y}].
-		self apply: #char
-	].
-	self apply: #seq withArgs: {y}! !
-
-!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/17/2009 14:03'!
-letter
-
-	| x |
-	x := self apply: #char.
-	self pred: x isLetter.
-	^ x! !
-
-!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/17/2009 14:05'!
-letterOrDigit
-
-	| x |
-	x := self apply: #char.
-	self pred: x isAlphaNumeric.
-	^ x! !
-
-!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/17/2009 13:50'!
-listOf
-
-	| rule delim |
-	rule := self apply: #anything.
-	delim := self apply: #anything.
-	^ self ometaOr: {
-		[
-			| x |
-			x := self apply: rule.
-			self genericMany: [
-				self apply: #token withArgs: {delim}.
-				self apply: rule
-			] into: (OrderedCollection with: x)
-		].
-		[
-			#()
-		]
-	}! !
-
-!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/17/2009 14:07'!
-lower
-
-	| x |
-	x := self apply: #char.
-	self pred: x isLowercase.
-	^ x! !
-
-!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/17/2009 13:54'!
-notLast
-
-	| rule ans |
-	rule := self apply: #anything.
-	ans := self apply: rule.
-	self lookahead: [self apply: rule].
-	^ ans! !
-
-!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/17/2009 14:02'!
-number
-
-	| x |
-	x := self apply: #anything.
-	self pred: x isNumber.
-	^ x! !
-
-!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/17/2009 15:42'!
-range
-
-	| a b x |
-	a := self apply: #anything.
-	b := self apply: #anything.
-	x := self apply: #anything.
-	self pred: (a <= x & x <= b).
-	^ x! !
-
-!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/17/2009 13:44'!
-space
-
-	| x |
-	x := self apply: #char.
-	self pred: x asciiValue <= 32.
-	^ x! !
-
-!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/17/2009 13:43'!
-spaces
-
-	^ self many: [self apply: #space]! !
-
-!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/17/2009 14:02'!
-string
-
-	| x |
-	x := self apply: #anything.
-	self pred: x isString.
-	^ x! !
-
-!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/18/2009 11:33'!
-symbol
-
-	| x |
-	x := self apply: #anything.
-	self pred: x isSymbol.
-	^ x! !
-
-!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/17/2009 13:46'!
-token
-
-	| t |
-	t := self apply: #anything.
-	self apply: #spaces.
-	^ self apply: #seq withArgs: {t}! !
-
-!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/17/2009 14:07'!
-upper
-
-	| x |
-	x := self apply: #char.
-	self pred: x isUppercase.
-	^ x! !
-'From Moshi of 3 March 2007 [latest update: #908] on 21 May 2009 at 2:14:28 pm'!
-OMeta2NullOpt subclass: #OMeta2AndOrOpt
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'OMeta2'!
-
-!OMeta2AndOrOpt methodsFor: 'as yet unclassified' stamp: 'aw 5/20/2009 12:46'!
-and =
-
-	trans:x end setHelped -> [x]
-|	transInside(#And):xs -> [xs addFirst: #And; yourself]! !
-
-!OMeta2AndOrOpt methodsFor: 'as yet unclassified' stamp: 'aw 5/20/2009 12:46'!
-or =
-
-	trans:x end setHelped -> [x]
-|	transInside(#Or):xs -> [xs addFirst: #Or; yourself]! !
-
-!OMeta2AndOrOpt methodsFor: 'as yet unclassified' stamp: 'aw 5/20/2009 12:36'!
-transInside :t =
-
-	{exactly(t) transInside(t):xs} transInside(t):ys setHelped -> [xs, ys]
-|	trans:x transInside(t):xs -> [xs addFirst: x; yourself]
-|	empty -> [OrderedCollection new]! !
-'From Moshi of 3 March 2007 [latest update: #908] on 21 May 2009 at 2:14:27 pm'!
-OMeta2 subclass: #OMeta2Examples
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'OMeta2'!
-!OMeta2Examples commentStamp: '<historical>' prior: 0!
-Here's how to run these examples:
-
-	OMeta2Examples match: 5 with: #fact.
-	OMeta2Examples matchAll: '1234' with: #number.
-	OMeta2Examples matchAll: 'abc123' with: #identifier.
-	OMeta2Examples matchAll: #($a $b $c 1 2 3 #(4 5)) with: #structure.
-	OMeta2Examples matchAll: 'howdy' with: #greeting.!
-
+	self inform: 'hello world'! !
 
 !OMeta2Examples methodsFor: 'as yet unclassified' stamp: 'aw 2/20/2009 02:36'!
 anotherSqueakMethod
 
 	self inform: 'good-bye world'! !
-
-!OMeta2Examples methodsFor: 'as yet unclassified' stamp: 'aw 2/20/2009 02:35'!
-aSqueakMethod
-
-	self inform: 'hello world'! !
 
 !OMeta2Examples methodsFor: 'as yet unclassified' stamp: 'aw 2/27/2009 15:58'!
 digit =
@@ -508,14 +869,6 @@ structure =
 	// this example shows how the {}s are used for matching sequenceable collections
 
 	$a $b $c 1 2 3 {anything*}! !
-'From Moshi of 3 March 2007 [latest update: #908] on 21 May 2009 at 2:14:28 pm'!
-
-'From Moshi of 3 March 2007 [latest update: #908] on 21 May 2009 at 2:14:24 pm'!
-OMeta2 subclass: #OMeta2Flattener
-	instanceVariableNames: 'ws'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'OMeta2'!
 
 !OMeta2Flattener methodsFor: 'as yet unclassified' stamp: 'aw 2/18/2009 15:06'!
 flatten
@@ -546,12 +899,6 @@ initialize
 
 	super initialize.
 	ws := (String new: 64) writeStream! !
-'From Moshi of 3 March 2007 [latest update: #908] on 21 May 2009 at 2:14:28 pm'!
-OMeta2 subclass: #OMeta2NullOpt
-	instanceVariableNames: 'didSomething'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'OMeta2'!
 
 !OMeta2NullOpt methodsFor: 'as yet unclassified' stamp: 'aw 5/20/2009 12:44'!
 and = trans*:xs -> [xs addFirst: #And; yourself]! !
@@ -609,21 +956,28 @@ trans =
 
 	{:t [t asLowercase asSymbol]:t ?[self class canUnderstand: t] apply(t):ans} -> [ans]
 |	_! !
-'From Moshi of 3 March 2007 [latest update: #908] on 21 May 2009 at 2:14:29 pm'!
-OMeta2 subclass: #OMeta2Optimizer
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'OMeta2'!
+
+!OMeta2AndOrOpt methodsFor: 'as yet unclassified' stamp: 'aw 5/20/2009 12:46'!
+and =
+
+	trans:x end setHelped -> [x]
+|	transInside(#And):xs -> [xs addFirst: #And; yourself]! !
+
+!OMeta2AndOrOpt methodsFor: 'as yet unclassified' stamp: 'aw 5/20/2009 12:46'!
+or =
+
+	trans:x end setHelped -> [x]
+|	transInside(#Or):xs -> [xs addFirst: #Or; yourself]! !
+
+!OMeta2AndOrOpt methodsFor: 'as yet unclassified' stamp: 'aw 5/20/2009 12:36'!
+transInside :t =
+
+	{exactly(t) transInside(t):xs} transInside(t):ys setHelped -> [xs, ys]
+|	trans:x transInside(t):xs -> [xs addFirst: x; yourself]
+|	empty -> [OrderedCollection new]! !
 
 !OMeta2Optimizer methodsFor: 'as yet unclassified' stamp: 'aw 5/20/2009 12:53'!
 optimizeRule = _:ans (foreign(OMeta2AndOrOpt. #optimize. ans):ans)* -> [ans]! !
-'From Moshi of 3 March 2007 [latest update: #908] on 21 May 2009 at 2:14:25 pm'!
-OMeta2 subclass: #OMeta2RuleParser
-	instanceVariableNames: 'temps'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'OMeta2'!
 
 !OMeta2RuleParser methodsFor: 'as yet unclassified' stamp: 'aw 2/18/2009 13:58'!
 application
@@ -1022,21 +1376,10 @@ tokenSugar
 	self apply: #exactly withArgs: {$"}.
 	^ {#App. #token. (String withAll: xs) storeString}! !
 
-"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
-
-OMeta2RuleParser class
-	instanceVariableNames: ''!
-
 !OMeta2RuleParser class methodsFor: 'as yet unclassified' stamp: 'aw 2/23/2009 10:07'!
 isOMeta2Rule: aString
 
 	^ [(self matchAll: aString with: #rule) first ~= #Squeak] on: OM2Fail do: [false]! !
-'From Moshi of 3 March 2007 [latest update: #908] on 21 May 2009 at 2:14:26 pm'!
-OMeta2 subclass: #OMeta2RuleTranslator
-	instanceVariableNames: 'grammarClass'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'OMeta2'!
 
 !OMeta2RuleTranslator methodsFor: 'as yet unclassified' stamp: 'aw 2/18/2009 16:22'!
 act
@@ -1202,8 +1545,4 @@ translate
 
 	grammarClass := self apply: #anything.
 	^ self apply: #trans! !
-
-
-
-
-"-- END OF STAGE 2 BOOTSTRAP --"!
+O2SqueakRecognizer initialize!

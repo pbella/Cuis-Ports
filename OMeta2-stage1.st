@@ -3,42 +3,42 @@ Exception subclass: #OM2Fail
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'OMeta2'!
+	category: 'OMeta2Preload'!
 Object subclass: #OM2Failer
 	instanceVariableNames: 'used'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'OMeta2'!
+	category: 'OMeta2Preload'!
 Object subclass: #OM2Stream
 	instanceVariableNames: 'head tail memo'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'OMeta2'!
+	category: 'OMeta2Preload'!
 OM2Stream subclass: #OM2StreamProxy
 	instanceVariableNames: 'target'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'OMeta2'!
+	category: 'OMeta2Preload'!
 OM2Stream subclass: #OM2StreamDebugger
 	instanceVariableNames: 'om2stream'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'OMeta2'!
+	category: 'OMeta2Preload'!
 OM2Stream subclass: #OM2LazyStream
 	instanceVariableNames: 'stream pos'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'OMeta2'!
+	category: 'OMeta2Preload'!
 OM2Stream subclass: #OM2EndOfStream
 	instanceVariableNames: 'stream pos'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'OMeta2'!
+	category: 'OMeta2Preload'!
 Compiler subclass: #OMeta2Compiler
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'OMeta2'!
+	category: 'OMeta2Preload'!
 Object subclass: #OMeta2Base
 	instanceVariableNames: 'input om2streams haltingPoint'
 	classVariableNames: ''
@@ -71,6 +71,28 @@ OMeta2 subclass: #OMeta2Flattener
 	category: 'OMeta2'!
 
 Smalltalk at: #OMeta2Fail put: OM2Fail new!
+
+!CompiledMethod methodsFor: 'decompiling' stamp: 'pb 5/20/2015 15:28'!
+methodNode
+	"Return the parse tree that represents self.  Note: this is brittle and will need to be updated to reflect any upstream methodNode changes in the future."
+	| aClass source |
+	aClass := self methodClass.
+	source := self
+				getSourceFor: (self selector ifNil: [self defaultSelector])
+				in: aClass.
+	"Fix for debugging OMeta"
+	((self methodClass inheritsFrom: OMeta2) and: [
+		OMeta2RuleParser isOMeta2Rule: (self getSourceFromFile ifNil: [''])
+	]) ifTrue: [
+		^ self decompile
+	]. "end OMeta"
+	^(Parser new
+		encoderClass: (self isBlueBookCompiled
+						ifTrue: [EncoderForV3]
+						ifFalse: [EncoderForV3PlusClosures]);
+		parse: source class: aClass)
+			sourceText: source;
+			yourself! !
 
 !OM2Fail methodsFor: 'as yet unclassified' stamp: 'aw 2/26/2009 11:03'!
 defaultAction
