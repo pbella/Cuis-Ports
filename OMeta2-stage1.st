@@ -43,7 +43,7 @@ Object subclass: #OMeta2Base
 	instanceVariableNames: 'input om2streams haltingPoint'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'OMeta2'!
+	category: 'OMeta2Preload'!
 OMeta2Base subclass: #OMeta2
 	instanceVariableNames: ''
 	classVariableNames: ''
