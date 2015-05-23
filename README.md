@@ -72,7 +72,7 @@ Note: after loading FFI projects, you must call
 
 ### OMeta 2
 
-Currently needs to be filed in/loaded, in sequence:
+Currently needs to be filed in/installed, in sequence:
 
 1. OMeta2-stage1.st
 2. OMeta2.pck.st

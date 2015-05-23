@@ -1,6 +1,6 @@
-'From Cuis 4.2 of 25 July 2013 [latest update: #2332] on 22 May 2015 at 5:02:49.453859 pm'!
-'OMeta2 package (Note: you must filein OMeta2-stage1.st before loading this)'!
-!provides: 'OMeta2' 1 0!
+'From Cuis 4.2 of 25 July 2013 [latest update: #2332] on 22 May 2015 at 7:13:26.485179 pm'!
+'Description '!
+!provides: 'OMeta2' 1 1!
 !classDefinition: #OMeta2 category: #OMeta2!
 OMeta2Base subclass: #OMeta2
 	instanceVariableNames: ''
@@ -99,7 +99,7 @@ TODOS:
 * implement Squeak parser
 * implement OMeta/Squeak "compiler", make it OMeta2's compilerClass
 
-* rewrite #char, #digit, #empty, #end, #exactly, #firstAndRest, #fromTo, #letter, #letterOrDigit, #listOf, #lower, #notLast, #number, #range, #space, #spaces, #string, #symbol, #token, and #upper in OMeta syntax
+* rewrite #empty and #firstAndRest in OMeta syntax
 * consider implementing position-related functionality (see http://www.tinlizzie.org/ometa-js/ometa-base.js)
 * consider the optimization suggestions in the comments of OMeta2Lib's methods!
 
@@ -112,41 +112,30 @@ Here's how to run these examples:
 	OMeta2Examples matchAll: #($a $b $c 1 2 3 #(4 5)) with: #structure.
 	OMeta2Examples matchAll: 'howdy' with: #greeting.!
 
-!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/17/2009 14:01'!
-char
+!OMeta2 methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 18:23'!
+char =
 
-	| x |
-	x := self apply: #anything.
-	self pred: (x isKindOf: Character).
-	^ x! !
+	anything:x ?[x isKindOf: Character] -> [x]! !
 
-!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/17/2009 14:05'!
-digit
+!OMeta2 methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 18:24'!
+digit =
 
-	| x |
-	x := self apply: #char.
-	self pred: x isDigit.
-	^ x! !
+	char:x ?[x isDigit] -> [x]! !
 
 !OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/16/2009 16:14'!
 empty
 
 	^ true! !
 
-!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/16/2009 16:17'!
-end
+!OMeta2 methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 18:25'!
+end =
 
-	" may want to inline the sends below, since this rule gets used a lot "
-	^ self not: [self apply: #anything]! !
+	~anything! !
 
-!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/25/2009 11:32'!
-exactly
+!OMeta2 methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 18:25'!
+exactly :wanted =
 
-	| wanted got |
-	wanted := self apply: #anything.
-	got := self apply: #anything.
-	self pred: wanted = got.
-	^ wanted! !
+	anything:got ?[wanted = got] -> [wanted]! !
 
 !OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/17/2009 13:52'!
 firstAndRest
@@ -156,134 +145,76 @@ firstAndRest
 	rest := self apply: #anything.
 	^ self genericMany: [self apply: rest] into: (OrderedCollection with: (self apply: first))! !
 
-!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/17/2009 15:40'!
-fromTo
+!OMeta2 methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 18:27'!
+fromTo :x :y =
 
-	| x y |
-	x := self apply: #string.
-	y := self apply: #string.
-	self apply: #seq withArgs: {x}.
-	self many: [
-		self not: [self apply: #seq withArgs: {y}].
-		self apply: #char
-	].
-	self apply: #seq withArgs: {y}! !
+	seq(x) (~seq(y) char)* seq(y)! !
 
-!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/17/2009 14:03'!
-letter
+!OMeta2 methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 18:28'!
+letter =
 
-	| x |
-	x := self apply: #char.
-	self pred: x isLetter.
-	^ x! !
+	char:x ?[x isLetter] -> [x]! !
 
-!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/17/2009 14:05'!
-letterOrDigit
+!OMeta2 methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 18:28'!
+letterOrDigit =
 
-	| x |
-	x := self apply: #char.
-	self pred: x isAlphaNumeric.
-	^ x! !
+	char:x ?[x isAlphaNumeric] -> [x]! !
 
-!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/17/2009 13:50'!
-listOf
+!OMeta2 methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 18:29'!
+listOf :rule :delim =
 
-	| rule delim |
-	rule := self apply: #anything.
-	delim := self apply: #anything.
-	^ self ometaOr: {
-		[
-			| x |
-			x := self apply: rule.
-			self genericMany: [
-				self apply: #token withArgs: {delim}.
-				self apply: rule
-			] into: (OrderedCollection with: x)
-		].
-		[
-			#()
-		]
-	}! !
+		apply(rule):x (token(delim) apply(rule))*:xs -> [xs addFirst: x; yourself]
+	|	empty -> [#()]! !
 
-!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/17/2009 14:07'!
-lower
+!OMeta2 methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 18:30'!
+lower =
 
-	| x |
-	x := self apply: #char.
-	self pred: x isLowercase.
-	^ x! !
+	char:x ?[x isLowercase] -> [x]! !
 
-!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/17/2009 13:54'!
-notLast
+!OMeta2 methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 18:31'!
+notLast :rule =
 
-	| rule ans |
-	rule := self apply: #anything.
-	ans := self apply: rule.
-	self lookahead: [self apply: rule].
-	^ ans! !
+	apply(rule):ans &apply(rule) -> [ans]! !
 
-!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/17/2009 14:02'!
-number
+!OMeta2 methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 18:31'!
+number =
 
-	| x |
-	x := self apply: #anything.
-	self pred: x isNumber.
-	^ x! !
+	anything:x ?[x isNumber] -> [x]! !
 
-!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/17/2009 15:42'!
-range
+!OMeta2 methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 18:32'!
+range :a :b =
 
-	| a b x |
-	a := self apply: #anything.
-	b := self apply: #anything.
-	x := self apply: #anything.
-	self pred: (a <= x & x <= b).
-	^ x! !
+	anything:x ?[a <= x & (x <= b)] -> [x]! !
 
-!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/17/2009 13:44'!
-space
+!OMeta2 methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 18:32'!
+space =
 
-	| x |
-	x := self apply: #char.
-	self pred: x asciiValue <= 32.
-	^ x! !
+	char:x ?[x asciiValue <= 32] -> [x]! !
 
-!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/17/2009 13:43'!
-spaces
+!OMeta2 methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 18:33'!
+spaces =
 
-	^ self many: [self apply: #space]! !
+	space*! !
 
-!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/17/2009 14:02'!
-string
+!OMeta2 methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 18:34'!
+string =
 
-	| x |
-	x := self apply: #anything.
-	self pred: x isString.
-	^ x! !
+	anything:x ?[x isString] -> [x]! !
 
-!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/18/2009 11:33'!
-symbol
+!OMeta2 methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 18:34'!
+symbol =
 
-	| x |
-	x := self apply: #anything.
-	self pred: x isSymbol.
-	^ x! !
+	anything:x ?[x isSymbol] -> [x]! !
 
-!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/17/2009 13:46'!
-token
+!OMeta2 methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 18:34'!
+token :t =
 
-	| t |
-	t := self apply: #anything.
-	self apply: #spaces.
-	^ self apply: #seq withArgs: {t}! !
+	spaces seq(t)! !
 
-!OMeta2 methodsFor: 'as yet unclassified' stamp: 'aw 2/17/2009 14:07'!
-upper
+!OMeta2 methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 18:35'!
+upper =
 
-	| x |
-	x := self apply: #char.
-	self pred: x isUppercase.
-	^ x! !
+	char:x ?[x isUppercase] -> [x]! !
 
 !O2SqueakRecognizer methodsFor: 'as yet unclassified' stamp: 'aw 2/20/2009 00:43'!
 arrayConstr =
@@ -542,29 +473,16 @@ structure =
 
 	$a $b $c 1 2 3 {anything*}! !
 
-!OMeta2Flattener methodsFor: 'as yet unclassified' stamp: 'aw 2/18/2009 15:06'!
-flatten
+!OMeta2Flattener methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 18:40'!
+flatten :tree =
 
-	| tree |
-	tree := self apply: #anything.
-	self apply: #iFlatten withArgs: {tree}.
-	^ ws contents! !
+	iFlatten(tree) -> [ws contents]! !
 
-!OMeta2Flattener methodsFor: 'as yet unclassified' stamp: 'aw 2/18/2009 15:32'!
-iFlatten
+!OMeta2Flattener methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 18:41'!
+iFlatten =
 
-	^ self ometaOr: {
-		[
-			| s |
-			s := self apply: #string.
-			ws nextPutAll: s
-		].
-		[
-			self form: [
-				self many: [self apply: #iFlatten]
-			]
-		]
-	}! !
+	string:s 	[ws nextPutAll: s]
+|	{iFlatten*}! !
 
 !OMeta2Flattener methodsFor: 'as yet unclassified' stamp: 'aw 2/18/2009 15:05'!
 initialize
@@ -651,181 +569,72 @@ transInside :t =
 !OMeta2Optimizer methodsFor: 'as yet unclassified' stamp: 'aw 5/20/2009 12:53'!
 optimizeRule = _:ans (foreign(OMeta2AndOrOpt. #optimize. ans):ans)* -> [ans]! !
 
-!OMeta2RuleParser methodsFor: 'as yet unclassified' stamp: 'aw 2/18/2009 13:58'!
-application
+!OMeta2RuleParser methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 18:59'!
+application =
 
-	| kindOfApply rule args |
-	self ometaOr: {
-		[
-			self apply: #token withArgs: {'^'}.
-			kindOfApply := #SuperApp
-		].
-		[
-			kindOfApply := #App
-		]
-	}.
-	rule := self apply: #name.
-	args := self apply: #args.
-	^ (OrderedCollection with: kindOfApply)
-		add: rule;
-		addAll: args;
-		yourself! !
+	"^" name:rule args:as				-> [{#SuperApp. rule}, as]
+|	name:grm $. nsName:rule args:as	-> [{#App. #foreign. grm. ('#', rule) asSymbol}, as]
+|	name:rule args:as						-> [{#App. rule}, as]! !
 
-!OMeta2RuleParser methodsFor: 'as yet unclassified' stamp: 'aw 2/18/2009 14:03'!
-args
+!OMeta2RuleParser methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 19:00'!
+args =
 
-	| ans |
-	^ self ometaOr: {
-		[
-			self apply: #exactly withArgs: {$(}.
-			ans := self apply: #listOf withArgs: {#squeakExpression. '.'}.
-			self apply: #token withArgs: {')'}.
-			ans
-		].
-		[
-			self not: [self apply: #exactly withArgs: {$(}].
-			#()
-		]
-	}! !
+	$( listOf(#squeakExpression. '.'):ans ")" -> [ans]
+|	~$( -> [#()]! !
 
-!OMeta2RuleParser methodsFor: 'as yet unclassified' stamp: 'aw 2/18/2009 15:53'!
-characterLiteral
+!OMeta2RuleParser methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 19:00'!
+characterLiteral =
 
-	| c |
-	self apply: #spaces.
-	self apply: #exactly withArgs: {$$}.
-	c := self apply: #char.
-	^ {#App. #exactly. c storeString}! !
+	spaces $$ char:c -> [{#App. #exactly. c storeString}]! !
 
-!OMeta2RuleParser methodsFor: 'as yet unclassified' stamp: 'aw 2/20/2009 13:17'!
-characters
+!OMeta2RuleParser methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 19:01'!
+characters =
 
-	| xs |
-	self apply: #token withArgs: {'``'}.
-	xs := self many: [
-		self not: [
-			self apply: #exactly withArgs: {$'}.
-			self apply: #exactly withArgs: {$'}.
-		].
-		self apply: #char
-	].
-	self apply: #exactly withArgs: {$'}.
-	self apply: #exactly withArgs: {$'}.
-	^ {#App. #seq. (String withAll: xs) storeString}! !
+	"``" (~($' $') char)*:xs $' $' -> [{#App. #seq. (String withAll: xs) storeString}]! !
 
-!OMeta2RuleParser methodsFor: 'as yet unclassified' stamp: 'aw 2/18/2009 13:33'!
-expr
+!OMeta2RuleParser methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 19:01'!
+expr =
 
-	| xs |
-	xs := self apply: #listOf withArgs: {#expr4. '|'}.
-	^ (OrderedCollection with: #Or)
-		addAll: xs;
-		yourself! !
+	listOf(#expr4. '|'):xs -> [(OrderedCollection with: #Or) addAll: xs; yourself]! !
 
-!OMeta2RuleParser methodsFor: 'as yet unclassified' stamp: 'aw 2/23/2009 13:55'!
-expr1
+!OMeta2RuleParser methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 19:01'!
+expr1 =
 
-	| lit e |
-	^ self ometaOr: {
-		[
-			lit := self ometaOr: {
-				[self apply: #keyword withArgs: {'true'}].
-				[self apply: #keyword withArgs: {'false'}].
-				[self apply: #keyword withArgs: {'nil'}]
-			}.
-			{#App. #exactly. lit}
-		].
-		[self apply: #application].
-		[self apply: #semanticAction].
-		[self apply: #semanticPredicate].
-		[self apply: #characters].
-		[self apply: #tokenSugar].
-		[self apply: #stringLiteral].
-		[self apply: #symbolLiteral].
-		[self apply: #numberLiteral].
-		[self apply: #characterLiteral].
-		[
-			self apply: #token withArgs: {'{'}.
-			e := self apply: #expr.
-			self apply: #token withArgs: {'}'}.
-			{#Form. e}
-		].
-		[
-			self apply: #token withArgs: {'<'}.
-			e := self apply: #expr.
-			self apply: #token withArgs: {'>'}.
-			{#ConsBy. e}
-		].
-		[
-			self apply: #token withArgs: {'@<'}.
-			e := self apply: #expr.
-			self apply: #token withArgs: {'>'}.
-			{#IdxConsBy. e}
-		].
-		[
-			self apply: #token withArgs: {'('}.
-			e := self apply: #expr.
-			self apply: #token withArgs: {')'}.
-			e
-		]
-	}! !
+	(keyword('true') | keyword('false') | keyword('nil')):lit -> [{#App. #exactly. lit}]
+|	application
+|	semanticAction
+|	semanticPredicate
+|	characters
+|	tokenSugar
+|	stringLiteral
+|	symbolLiteral
+|	numberLiteral
+|	characterLiteral
+|	"{"  expr:e "}" -> [{#Form. e}]
+|	"<"  expr:e ">" -> [{#ConsBy. e}]
+|	"@<" expr:e ">" -> [{#IdxConsBy. e}]
+|	"("  expr:e ")" -> [e]! !
 
-!OMeta2RuleParser methodsFor: 'as yet unclassified' stamp: 'aw 2/18/2009 13:24'!
-expr2
+!OMeta2RuleParser methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 19:01'!
+expr2 =
 
-	| x |
-	^ self ometaOr: {
-		[
-			self apply: #token withArgs: {'~'}.
-			x := self apply: #expr2.
-			{#Not. x}
-		].
-		[
-			self apply: #token withArgs: {'&'}.
-			x := self apply: #expr2.
-			{#Lookahead. x}
-		].
-		[
-			self apply: #expr1
-		]
-	}! !
+	"~" expr2:x -> [{#Not. x}]
+|	"&" expr2:x -> [{#Lookahead. x}]
+|	expr1! !
 
-!OMeta2RuleParser methodsFor: 'as yet unclassified' stamp: 'aw 2/18/2009 16:27'!
-expr3
+!OMeta2RuleParser methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 19:02'!
+expr3 =
 
-	| x n |
-	^ self ometaOr: {
-		[
-			x := self apply: #expr2.
-			x := self apply: #optIter withArgs: {x}.
-			self ometaOr: {
-				[
-					self apply: #exactly withArgs: {$:}.
-					n := self apply: #nsName.
-					temps add: n.
-					{#Set. n. x}
-				].
-				[
-					x
-				]
-			}
-		].
-		[
-			self apply: #token withArgs: {':'}.
-			n := self apply: #nsName.
-			temps add: n.
-			{#Set. n. {#App. #anything}}
-		]
-	}! !
+	expr2:x optIter(x):x
+		(	$: nsName:n [temps add: n]	-> [{#Set. n. x}]
+		|	empty								-> [x]
+		)
+|	":" nsName:n [temps add: n]			-> [{#Set. n. {#App. #anything}}]! !
 
-!OMeta2RuleParser methodsFor: 'as yet unclassified' stamp: 'aw 2/18/2009 13:56'!
-expr4
+!OMeta2RuleParser methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 19:02'!
+expr4 =
 
-	| xs |
-	xs := self many: [self apply: #expr3].
-	^ (OrderedCollection with: #And)
-		addAll: xs;
-		yourself! !
+	expr3*:xs -> [(OrderedCollection with: #And) addAll: xs; yourself]! !
 
 !OMeta2RuleParser methodsFor: 'as yet unclassified' stamp: 'aw 2/18/2009 15:04'!
 initialize
@@ -833,262 +642,121 @@ initialize
 	super initialize.
 	temps := IdentitySet new! !
 
-!OMeta2RuleParser methodsFor: 'as yet unclassified' stamp: 'aw 2/18/2009 12:46'!
-keyword
+!OMeta2RuleParser methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 19:02'!
+keyword :xs =
 
-	| xs |
-	xs := self apply: #anything.
-	self apply: #token withArgs: {xs}.
-	self not: [self apply: #letterOrDigit].
-	^ xs! !
+	token(xs) ~letterOrDigit -> [xs]! !
 
-!OMeta2RuleParser methodsFor: 'as yet unclassified' stamp: 'aw 2/17/2009 16:09'!
-name
+!OMeta2RuleParser methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 19:02'!
+name =
 
-	self apply: #spaces.
-	^ self apply: #nsName! !
+	spaces nsName! !
 
-!OMeta2RuleParser methodsFor: 'as yet unclassified' stamp: 'aw 2/20/2009 01:17'!
-nameFirst
+!OMeta2RuleParser methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 19:03'!
+nameFirst =
 
-	^ self apply: #letter! !
+	letter! !
 
-!OMeta2RuleParser methodsFor: 'as yet unclassified' stamp: 'aw 2/17/2009 16:08'!
-nameRest
+!OMeta2RuleParser methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 19:03'!
+nameRest =
 
-	^ self ometaOr: {
-		[self apply: #nameFirst].
-		[self apply: #digit]
-	}! !
+	nameFirst | digit! !
 
-!OMeta2RuleParser methodsFor: 'as yet unclassified' stamp: 'aw 2/23/2009 10:50'!
-nsName
+!OMeta2RuleParser methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 19:03'!
+nsName =
 
-	| xs |
-	^ self ometaOr: {
-		[
-			xs := self apply: #firstAndRest withArgs: {#nameFirst. #nameRest}.
-			(String withAll: xs) asSymbol
-		].
-		[
-			self apply: #exactly withArgs: {$_}.
-			^ #anything
-		]
-	}
+	firstAndRest(#nameFirst. #nameRest):xs -> [(String withAll: xs) asSymbol]
+|	$_ -> [#anything]
 ! !
 
-!OMeta2RuleParser methodsFor: 'as yet unclassified' stamp: 'aw 2/18/2009 15:53'!
-numberLiteral
+!OMeta2RuleParser methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 19:04'!
+numberLiteral =
 
-	| sign ds |
-	self apply: #spaces.
-	sign := self ometaOr: {
-		[
-			self apply: #exactly withArgs: {$-}.
-			self apply: #spaces.
-			-1
-		].
-		[1]
-	}.
-	ds := self many1: [self apply: #digit].
-	^ {#App. #exactly. (sign * (String withAll: ds) asNumber) storeString}! !
+	spaces ($- spaces -> [-1] | empty -> [1]):sign digit+:ds
+		-> [{#App. #exactly. (sign * (String withAll: ds) asNumber) storeString}]! !
 
-!OMeta2RuleParser methodsFor: 'as yet unclassified' stamp: 'aw 2/25/2009 11:00'!
-optIter
+!OMeta2RuleParser methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 19:04'!
+optIter :x =
 
-	| x |
-	x := self apply: #anything.
-	^ self ometaOr: {
-		[
-			self apply: #token withArgs: {'*'}.
-			{#Many. x}
-		].
-		[
-			self apply: #token withArgs: {'+'}.
-			{#Many1. x}
-		].
-		[
-			self apply: #token withArgs: {'?'}.
-			self not: [self apply: #exactly withArgs: {$[}].
-			{#Opt. x}
-		].
-		[
-			x
-		]
-	}! !
+	"*"		-> [{#Many.  x}]
+|	"+"		-> [{#Many1. x}]
+|	"?" ~$[	-> [{#Opt. x}]
+|	empty		-> [x]! !
 
-!OMeta2RuleParser methodsFor: 'as yet unclassified' stamp: 'aw 2/27/2009 15:47'!
-rule
+!OMeta2RuleParser methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 19:04'!
+rule =
 
-	| n x xs squeakCode |
-	^ self ometaOr: {
-		[
-			self not: [
-				self many: [self super: OMeta2 apply: #space withArgs: #()].
-				self apply: #nsName.
-				self apply: #expr4.
-				self apply: #token withArgs: {'='}
-			].
-			squeakCode := self consumedBy: [self many: [self apply: #char]].
-			{#Squeak. squeakCode}
-		].
-		[
-			n := self lookahead: [
-				self many: [self super: OMeta2 apply: #space withArgs: #()].
-				self apply: #nsName
-			].
-			x := self apply: #rulePart withArgs: {n}.
-			xs := self many: [
-				self apply: #token withArgs: {','}.
-				self apply: #rulePart withArgs: {n}
-			].
-			self apply: #spaces.
-			self apply: #end.
-			{#Rule. n. temps asArray. (OrderedCollection with: #Or with: x) addAll: xs; yourself}
-		]
-	}! !
+	~(^space* nsName expr4 "=") <char*>:squeakCode -> [{#Squeak. squeakCode}]
+|	&(^space* nsName):n rulePart(n):x ("," rulePart(n))*:xs spaces end
+		-> [{#Rule. n. temps asSortedCollection. (OrderedCollection with: #Or with: x) addAll: xs; yourself}]! !
 
-!OMeta2RuleParser methodsFor: 'as yet unclassified' stamp: 'aw 2/17/2009 16:25'!
-rulePart
+!OMeta2RuleParser methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 19:05'!
+rulePart :ruleName =
 
-	| ruleName b1 b2 |
-	ruleName := self apply: #anything.
-	self pred: (self apply: #name) = ruleName.
-	b1 := self apply: #expr4.
-	^ self ometaOr: {
-		[
-			self apply: #token withArgs: {'='}.
-			b2 := self apply: #expr.
-			{#And. b1. b2}
-		].
-		[
-			b1
-		]
-	}! !
+	name:n ?[n = ruleName] expr4:b1
+		(	"=" expr:b2	-> [{#And. b1. b2}]
+		|	empty			-> [b1]
+		)! !
 
-!OMeta2RuleParser methodsFor: 'as yet unclassified' stamp: 'aw 2/18/2009 12:05'!
-semanticAction
+!OMeta2RuleParser methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 19:05'!
+semanticAction =
 
-	| e |
-	self ometaOr: {
-		[self apply: #token withArgs: {'->'}].
-		[]
-	}.
-	self apply: #token withArgs: {'['}.
-	e := self apply: #squeakExpression.
-	self apply: #exactly withArgs: {$]}.
-	^ {#Act. e}! !
+	"->"? "[" squeakExpression:e $] -> [{#Act. e}]! !
 
-!OMeta2RuleParser methodsFor: 'as yet unclassified' stamp: 'aw 2/25/2009 10:58'!
-semanticPredicate
+!OMeta2RuleParser methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 19:05'!
+semanticPredicate =
 
-	| e |
-	self apply: #token withArgs: {'?['}.
-	e := self apply: #squeakExpression.
-	self apply: #exactly withArgs: {$]}.
-	^ {#Pred. e}! !
+	"?[" squeakExpression:e $] -> [{#Pred. e}]! !
 
-!OMeta2RuleParser methodsFor: 'as yet unclassified' stamp: 'aw 2/27/2009 15:49'!
-space
+!OMeta2RuleParser methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 18:59'!
+space =
 
-	^ self ometaOr: {
-		[self super: OMeta2 apply: #space withArgs: #()].
-		[self apply: #fromTo withArgs: {'/*'. '*/'}].
-		[self apply: #fromTo withArgs: {'//'. Character lf asString}].
-		[
-			self apply: #seq withArgs: {'//'}.
-			self many: [self super: OMeta2 apply: #space withArgs: #()]
-		]
-	}! !
+	^space | fromTo('/*'. '*/') | fromTo('//'. Character lf asString)! !
 
 !OMeta2RuleParser methodsFor: 'as yet unclassified' stamp: 'aw 2/25/2009 11:08'!
 squeakExpression =
 
 	foreign(O2SqueakRecognizer. #squeakExpr):ans spaces -> [ans]! !
 
-!OMeta2RuleParser methodsFor: 'as yet unclassified' stamp: 'aw 2/18/2009 15:53'!
-stringLiteral
+!OMeta2RuleParser methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 19:06'!
+stringLiteral =
 
-	| xs |
-	self apply: #token withArgs: {''''}.
-	xs := self many: [
-		self ometaOr: {
-			[
-				self apply: #exactly withArgs: {$'}.
-				self apply: #exactly withArgs: {$'}.
-				$'
-			].
-			[
-				self not: [self apply: #exactly withArgs: {$'}].
-				self apply: #char
-			]
-		}
-	].
-	self apply: #exactly withArgs: {$'}.
-	^ {#App. #exactly. (String withAll: xs) storeString}! !
+	"'" ($' $' -> [$'] | ~$' char)*:xs $' -> [{#App. #exactly. (String withAll: xs) storeString}]! !
 
-!OMeta2RuleParser methodsFor: 'as yet unclassified' stamp: 'aw 2/18/2009 15:54'!
-symbolLiteral
+!OMeta2RuleParser methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 19:06'!
+symbolLiteral =
 
-	" TODO: make this accept, e.g., #foo:bar: "
-	| s |
-	self apply: #token withArgs: {'#'}.
-	s := self apply: #nsName.
-	^ {#App. #exactly. s storeString}! !
+	// TODO: make this accept, e.g., #foo:bar:
+	"#" nsName:s -> [{#App. #exactly. s storeString}]! !
 
-!OMeta2RuleParser methodsFor: 'as yet unclassified' stamp: 'aw 2/20/2009 00:33'!
-tokenSugar
+!OMeta2RuleParser methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 19:07'!
+tokenSugar =
 
-	| xs |
-	self apply: #token withArgs: {'"'}.
-	xs := self many: [
-		self not: [self apply: #exactly withArgs: {$"}].
-		self apply: #char
-	].
-	self apply: #exactly withArgs: {$"}.
-	^ {#App. #token. (String withAll: xs) storeString}! !
+	token('"') (~$" char)*:xs $" -> [{#App. #token. (String withAll: xs) storeString}]! !
 
 !OMeta2RuleParser class methodsFor: 'as yet unclassified' stamp: 'aw 2/23/2009 10:07'!
 isOMeta2Rule: aString
 
 	^ [(self matchAll: aString with: #rule) first ~= #Squeak] on: OM2Fail do: [false]! !
 
-!OMeta2RuleTranslator methodsFor: 'as yet unclassified' stamp: 'aw 2/18/2009 16:22'!
-act
+!OMeta2RuleTranslator methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 19:07'!
+act = string:x -> [{'('. x. ')'}]! !
 
-	| x |
-	x := self apply: #string.
-	^ {'('. x. ')'}! !
+!OMeta2RuleTranslator methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 19:08'!
+and = trans*:xs -> [{'(true ifTrue: ['. self delim: xs with: '. '. '])'}]! !
 
-!OMeta2RuleTranslator methodsFor: 'as yet unclassified' stamp: 'aw 2/26/2009 11:06'!
-and
+!OMeta2RuleTranslator methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 19:08'!
+app =
 
-	| xs |
-	xs := self many: [self apply: #trans.].
-	^ {'(true ifTrue: ['. self delim: xs with: '. '. '])'}! !
+	symbol:rule
+	(	anything+:args [self delim: args with: '. ']:args -> [{'(self apply: '. rule storeString. ' withArgs: {'. args. '})'}]
+	|	[{'(self apply: '. rule storeString. ')'}]
+	)! !
 
-!OMeta2RuleTranslator methodsFor: 'as yet unclassified' stamp: 'aw 2/18/2009 15:29'!
-app
+!OMeta2RuleTranslator methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 19:08'!
+consby =
 
-	| rule args |
-	rule := self apply: #symbol.
-	^ self ometaOr: {
-		[
-			args := self many1: [self apply: #anything].
-			args := self delim: args with: '. '.
-			{'(self apply: '. rule storeString. ' withArgs: {'. args. '})'}
-		].
-		[
-			{'(self apply: '. rule storeString. ')'}
-		]
-	}! !
-
-!OMeta2RuleTranslator methodsFor: 'as yet unclassified' stamp: 'aw 2/19/2009 23:34'!
-consby
-
-	| x |
-	x := self apply: #trans.
-	^ {'(self consumedBy: ['. x. '])'}! !
+	trans:x -> [{'(self consumedBy: ['. x. '])'}]! !
 
 !OMeta2RuleTranslator methodsFor: 'as yet unclassified' stamp: 'aw 2/18/2009 14:43'!
 delim: aSequenceableCollection  with: anObject
@@ -1103,118 +771,77 @@ delim: aSequenceableCollection  with: anObject
 	].
 	^ ans! !
 
-!OMeta2RuleTranslator methodsFor: 'as yet unclassified' stamp: 'aw 2/18/2009 16:06'!
-form
+!OMeta2RuleTranslator methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 19:09'!
+form =
 
-	| x |
-	x := self apply: #trans.
-	^ {'(self form: ['. x. '])'}! !
+	trans:x -> [{'(self form: ['. x. '])'}]! !
 
-!OMeta2RuleTranslator methodsFor: 'as yet unclassified' stamp: 'aw 2/20/2009 14:56'!
-idxconsby
+!OMeta2RuleTranslator methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 19:09'!
+idxconsby =
 
-	| x |
-	x := self apply: #trans.
-	^ {'(self indexConsumedBy: ['. x. '])'}! !
+	trans:x -> [{'(self indexConsumedBy: ['. x. '])'}]! !
 
-!OMeta2RuleTranslator methodsFor: 'as yet unclassified' stamp: 'aw 2/18/2009 16:07'!
-lookahead
+!OMeta2RuleTranslator methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 19:09'!
+lookahead =
 
-	| x |
-	x := self apply: #trans.
-	^ {'(self lookahead: ['. x. '])'}! !
+	trans:x -> [{'(self lookahead: ['. x. '])'}]! !
 
-!OMeta2RuleTranslator methodsFor: 'as yet unclassified' stamp: 'aw 2/18/2009 16:10'!
-many
+!OMeta2RuleTranslator methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 19:10'!
+many =
 
-	| x |
-	x := self apply: #trans.
-	^ {'(self many: ['. x. '])'}! !
+	trans:x -> [{'(self many: ['. x. '])'}]! !
 
-!OMeta2RuleTranslator methodsFor: 'as yet unclassified' stamp: 'aw 2/18/2009 16:10'!
-many1
+!OMeta2RuleTranslator methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 19:10'!
+many1 =
 
-	| x |
-	x := self apply: #trans.
-	^ {'(self many1: ['. x. '])'}! !
+	trans:x -> [{'(self many1: ['. x. '])'}]! !
 
-!OMeta2RuleTranslator methodsFor: 'as yet unclassified' stamp: 'aw 2/18/2009 16:08'!
-not
+!OMeta2RuleTranslator methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 19:10'!
+not =
 
-	| x |
-	x := self apply: #trans.
-	^ {'(self not: ['. x. '])'}! !
+	trans:x -> [{'(self not: ['. x. '])'}]! !
 
-!OMeta2RuleTranslator methodsFor: 'as yet unclassified' stamp: 'aw 2/20/2009 14:35'!
-opt
+!OMeta2RuleTranslator methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 19:10'!
+opt =
 
-	| x |
-	x := self apply: #trans.
-	^ {'(self opt: ['. x. '])'}! !
+	trans:x -> [{'(self opt: ['. x. '])'}]! !
 
-!OMeta2RuleTranslator methodsFor: 'as yet unclassified' stamp: 'aw 2/18/2009 15:51'!
-or
+!OMeta2RuleTranslator methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 19:11'!
+or =
 
-	| xs x |
-	xs := self many: [
-		x := self apply: #trans.
-		{'['. x. ']'}
-	].
-	^ {'(self ometaOr: {'. self delim: xs with: '. '. '})'}! !
+	(trans:x -> [{'['. x. ']'}])*:xs -> [{'(self ometaOr: {'. self delim: xs with: '. '. '})'}]! !
 
-!OMeta2RuleTranslator methodsFor: 'as yet unclassified' stamp: 'aw 2/18/2009 16:22'!
-pred
+!OMeta2RuleTranslator methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 19:11'!
+pred =
 
-	| x |
-	x := self apply: #string.
-	^ {'(self pred: ('. x. '))'}! !
+	string:x -> [{'(self pred: ('. x. '))'}]! !
 
-!OMeta2RuleTranslator methodsFor: 'as yet unclassified' stamp: 'aw 2/18/2009 19:20'!
-rule
+!OMeta2RuleTranslator methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 19:11'!
+rule =
 
-	| name temps body |
-	name := self apply: #symbol.
-	temps := self apply: #anything.
-	temps := temps select: [:t | (grammarClass instVarNames includes: t) not].
-	temps := temps collect: [:t | t asString].
-	body := self apply: #trans.
-	^ {name. ' |'. self delim: temps with: ' '. ' | ^ '. body}! !
+	symbol:name
+	anything:temps [temps select: [:t | (grammarClass instVarNames includes: t) not]]:temps
+	trans:body
+	-> [{name. ' |'. self delim: temps asSortedCollection with: ' '. ' | ^ '. body}]! !
 
-!OMeta2RuleTranslator methodsFor: 'as yet unclassified' stamp: 'aw 2/18/2009 16:09'!
-set
+!OMeta2RuleTranslator methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 19:12'!
+set =
 
-	| n v |
-	n := self apply: #symbol.
-	v := self apply: #trans.
-	^ {'('. n asString. ' := '. v. ')'}! !
+	symbol:n trans:v -> [{'('. n asString. ' := '. v. ')'}]! !
 
-!OMeta2RuleTranslator methodsFor: 'as yet unclassified' stamp: 'aw 2/20/2009 00:07'!
-squeak
+!OMeta2RuleTranslator methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 19:12'!
+squeak = string! !
 
-	^ self apply: #string! !
+!OMeta2RuleTranslator methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 19:12'!
+superapp =
 
-!OMeta2RuleTranslator methodsFor: 'as yet unclassified' stamp: 'aw 2/18/2009 15:46'!
-superapp
+	symbol:rule anything*:args
+	[self delim: args with: '. ']:args
+	-> [{'(self super: '. grammarClass superclass name. ' apply: '. rule storeString. ' withArgs: {'. args. '})'}]! !
 
-	| rule args |
-	rule := self apply: #symbol.
-	args := self many: [self apply: #anything].
-	args := self delim: args with: '. '.
-	^ {'(self super: '. grammarClass superclass name. ' apply: '. rule storeString. ' withArgs: {'. args. '})'}! !
+!OMeta2RuleTranslator methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 19:13'!
+trans = {symbol:type apply(type asLowercase asSymbol):ans} -> [ans]! !
 
-!OMeta2RuleTranslator methodsFor: 'as yet unclassified' stamp: 'aw 2/18/2009 15:46'!
-trans
-
-	| type ans |
-	self form: [
-		type := self apply: #symbol.
-		ans := self apply: type asLowercase asSymbol
-	].
-	^ ans! !
-
-!OMeta2RuleTranslator methodsFor: 'as yet unclassified' stamp: 'aw 2/18/2009 15:35'!
-translate
-
-	grammarClass := self apply: #anything.
-	^ self apply: #trans! !
+!OMeta2RuleTranslator methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 19:13'!
+translate :grammarClass = trans! !
 O2SqueakRecognizer initialize!
