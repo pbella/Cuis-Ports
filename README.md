@@ -51,13 +51,13 @@ VBRegex - A native regex implementation - no plugin required.
 Based on http://www.squeaksource.com/Regex/VB-Regex-damienpollet.17.mcz
 
 
-### Math
+#### Math
 
 
 3DTransform - Based on 3DTransform-pbm.19.mcz
 
 
-### OpenGL
+#### OpenGL
 
 OpenGL - Originally based on OpenGL-Core-jrd.6.mcz and have merged in some of the changes from OpenGL-Core-bf.17.mcz.  
 
@@ -70,15 +70,38 @@ Note: after loading FFI projects, you must call
 	Smalltalk recreateSpecialObjectsArray.
 	
 
-### OMeta 2
+#### OMeta 2
 
-Currently needs to be filed in/installed, in sequence:
+##### Installation
 
-1. OMeta2-stage1.st
-2. OMeta2.pck.st
-3. OMeta2Tests.pck.st (optional)
+A. Reestablish #compilerClass in Cuis
 
-Notes:
+	1. Unzip attached file compilerClass.zip
+	2. start Cuis 2330
+	3. Open file list
+	4. click on 2331
+	5. click on [install]
+	6. click on 2332
+	7. click on [install]
+
+B. pull down the OMeta*.st files from https://github.com/pbella/Cuis-Ports
+
+C. File in in the  following sequence
+
+	1. OMeta2-stage1.st
+	2. OMeta2.pck.st
+	3. OMeta2Examples.pck.st (optional)
+	4. OMeta2Tests.pck.st (optional)
+
+D. Check examples in the OMeta2Examples class
+
+	- OMeta2Examples match: 5 with: #fact.
+	- OMeta2Examples matchAll: '1234' with: #number.
+	- OMeta2Examples matchAll: 'abc123' with: #identifier.
+	- OMeta2Examples matchAll: #($a $b $c 1 2 3 #(4 5)) with: #structure.
+	- OMeta2Examples matchAll: 'howdy' with: #greeting.
+
+##### Notes
 - Only very basic functionality has been verified.  Please report problems/bugs.
 - Requires Cuis4.2-2330 with the 2331 and 2332 changesets provided by Juan applied.
 - stage2b overwrites methods in stage1 that are needed to load stage2b

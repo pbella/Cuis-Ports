@@ -1,5 +1,7 @@
-'From Cuis 4.2 of 25 July 2013 [latest update: #2332] on 22 May 2015 at 7:13:26.485179 pm'!
-'Description '!
+'From Cuis 4.2 of 25 July 2013 [latest update: #2332] on 22 May 2015 at 8:32:43.272722 pm'!
+'Description OMeta2-stage1.st needs to be filed in before loading this package
+
+Based on the original work by Alessandro Warth http://www.tinlizzie.org/ometa/OMeta.sar with updates from OMeta2-Preload-hmm.14.mcz OMeta2-Postload-hmm.12.mcz and modified as needed to run in Cuis 4.2 2332 or later.'!
 !provides: 'OMeta2' 1 1!
 !classDefinition: #OMeta2 category: #OMeta2!
 OMeta2Base subclass: #OMeta2
@@ -19,16 +21,6 @@ OMeta2 subclass: #O2SqueakRecognizer
 	category: 'OMeta2'!
 !classDefinition: 'O2SqueakRecognizer class' category: #OMeta2!
 O2SqueakRecognizer class
-	instanceVariableNames: ''!
-
-!classDefinition: #OMeta2Examples category: #OMeta2!
-OMeta2 subclass: #OMeta2Examples
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'OMeta2'!
-!classDefinition: 'OMeta2Examples class' category: #OMeta2!
-OMeta2Examples class
 	instanceVariableNames: ''!
 
 !classDefinition: #OMeta2Flattener category: #OMeta2!
@@ -93,6 +85,8 @@ OMeta2RuleTranslator class
 
 
 !OMeta2 commentStamp: '<historical>' prior: 0!
+OMeta Implementation
+
 TODOS:
 
 * implement OMeta -> Squeak translator
@@ -103,14 +97,26 @@ TODOS:
 * consider implementing position-related functionality (see http://www.tinlizzie.org/ometa-js/ometa-base.js)
 * consider the optimization suggestions in the comments of OMeta2Lib's methods!
 
-!OMeta2Examples commentStamp: '<historical>' prior: 0!
-Here's how to run these examples:
+!O2SqueakRecognizer commentStamp: '<historical>' prior: 0!
+OMeta implementation!
 
-	OMeta2Examples match: 5 with: #fact.
-	OMeta2Examples matchAll: '1234' with: #number.
-	OMeta2Examples matchAll: 'abc123' with: #identifier.
-	OMeta2Examples matchAll: #($a $b $c 1 2 3 #(4 5)) with: #structure.
-	OMeta2Examples matchAll: 'howdy' with: #greeting.!
+!OMeta2Flattener commentStamp: '<historical>' prior: 0!
+OMeta implementation!
+
+!OMeta2NullOpt commentStamp: '<historical>' prior: 0!
+OMeta implementation!
+
+!OMeta2AndOrOpt commentStamp: '<historical>' prior: 0!
+OMeta implementation!
+
+!OMeta2Optimizer commentStamp: '<historical>' prior: 0!
+OMeta implementation!
+
+!OMeta2RuleParser commentStamp: '<historical>' prior: 0!
+OMeta implementation!
+
+!OMeta2RuleTranslator commentStamp: '<historical>' prior: 0!
+OMeta implementation!
 
 !OMeta2 methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 18:23'!
 char =
@@ -404,74 +410,6 @@ unit =
 initialize
 
 	TypeTable := #(#xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xDelimiter #xDelimiter #xBinary #xDelimiter #xDelimiter #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #doIt #xBinary #xDelimiter #xBinary #xDoubleQuote #xLitQuote #xDollar #xBinary #xBinary #xSingleQuote #leftParenthesis #rightParenthesis #xBinary #xBinary #xBinary #xBinary #period #xBinary #xDigit #xDigit #xDigit #xDigit #xDigit #xDigit #xDigit #xDigit #xDigit #xDigit #xColon #semicolon #xBinary #xBinary #xBinary #xBinary #xBinary #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #leftBracket #xBinary #rightBracket #upArrow #leftArrow #xBinary #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #leftBrace #verticalBar #rightBrace #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xLetter #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xBinary #xLetter #xBinary #xBinary #xBinary #xBinary #xLetter #xBinary #xBinary #xBinary #xBinary #xBinary #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xBinary #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xBinary #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xLetter #xBinary)! !
-
-!OMeta2Examples methodsFor: 'as yet unclassified' stamp: 'aw 2/20/2009 02:35'!
-aSqueakMethod
-
-	self inform: 'hello world'! !
-
-!OMeta2Examples methodsFor: 'as yet unclassified' stamp: 'aw 2/20/2009 02:36'!
-anotherSqueakMethod
-
-	self inform: 'good-bye world'! !
-
-!OMeta2Examples methodsFor: 'as yet unclassified' stamp: 'aw 2/27/2009 15:58'!
-digit =
-
-	// this example shows the new syntax for super rule applications
-	// think of the ^ as an arrow that's pointing up to the parent grammar
-
-	^digit:d -> [d digitValue]! !
-
-!OMeta2Examples methodsFor: 'as yet unclassified' stamp: 'aw 5/20/2009 12:58'!
-fact 0 = [1],
-fact _:n = fact(n - 1):m -> [n * m]
-
-// this example shows that rules can have multiple definitions (they are tried in order)
-! !
-
-!OMeta2Examples methodsFor: 'as yet unclassified' stamp: 'aw 2/26/2009 12:04'!
-formTest =
-
-	{[self inform: input hash printString] #foo #bar}
-|	{[self inform: input hash printString] #bar}! !
-
-!OMeta2Examples methodsFor: 'as yet unclassified' stamp: 'aw 2/20/2009 14:36'!
-greeting = <``howdy'' ``-ho''?>! !
-
-!OMeta2Examples methodsFor: 'as yet unclassified' stamp: 'aw 2/27/2009 15:45'!
-identifier =
-
-	// this is an example of the new <> operator
-
-	spaces <letter (letter | digit)*>! !
-
-!OMeta2Examples methodsFor: 'as yet unclassified' stamp: 'aw 2/27/2009 15:48'!
-identifierIdx =
-
-	// this is an example of the new @<> operator
-
-	spaces @<letter (letter | digit)*>! !
-
-!OMeta2Examples methodsFor: 'as yet unclassified' stamp: 'aw 2/20/2009 14:54'!
-identifiers =
-
-	([self inform: self pos printString] identifier)*! !
-
-!OMeta2Examples methodsFor: 'as yet unclassified' stamp: 'aw 2/27/2009 15:46'!
-number =
-
-	// this is an example of left recursion support
-
-	number:n digit:d -> [n * 10 + d]
-|	digit! !
-
-!OMeta2Examples methodsFor: 'as yet unclassified' stamp: 'aw 2/27/2009 15:46'!
-structure =
-
-	// this example shows how the {}s are used for matching sequenceable collections
-
-	$a $b $c 1 2 3 {anything*}! !
 
 !OMeta2Flattener methodsFor: 'as yet unclassified' stamp: 'pb 5/22/2015 18:40'!
 flatten :tree =

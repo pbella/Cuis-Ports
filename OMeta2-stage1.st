@@ -72,6 +72,21 @@ OMeta2 subclass: #OMeta2Flattener
 
 Smalltalk at: #OMeta2Fail put: OM2Fail new!
 
+!OMeta2 commentStamp: '<historical>' prior: 0!
+Smalltalk implementation!
+
+!OMeta2RuleParser commentStamp: '<historical>' prior: 0!
+Smalltalk implementation!
+
+!OMeta2RuleTranslator commentStamp: '<historical>' prior: 0!
+Smalltalk implementation!
+
+!OMeta2Optimizer commentStamp: '<historical>' prior: 0!
+Smalltalk implementation!
+
+!OMeta2Flattener commentStamp: '<historical>' prior: 0!
+Smalltalk implementation!
+
 !CompiledMethod methodsFor: 'decompiling' stamp: 'pb 5/20/2015 15:28'!
 methodNode
 	"Return the parse tree that represents self.  Note: this is brittle and will need to be updated to reflect any upstream methodNode changes in the future."
@@ -747,11 +762,6 @@ match: anObject with: aRule withArgs: args
 
 
 
-OMeta2 subclass: #OMeta2Examples
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'OMeta2'!
 OMeta2 subclass: #O2SqueakRecognizer
 	instanceVariableNames: ''
 	classVariableNames: 'TypeTable'
@@ -767,6 +777,15 @@ OMeta2NullOpt subclass: #OMeta2AndOrOpt
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'OMeta2'!
+
+!O2SqueakRecognizer commentStamp: '<historical>' prior: 0!
+Smalltalk implementation!
+
+!OMeta2NullOpt commentStamp: '<historical>' prior: 0!
+Smalltalk implementation!
+
+!OMeta2AndOrOpt commentStamp: '<historical>' prior: 0!
+Smalltalk implementation!
 
 !OMeta2 methodsFor: 'as yet unclassified'!
 char
@@ -917,104 +936,6 @@ upper
 	t1 := self apply: #char.
 	self pred: t1 isUppercase.
 	^ t1! !
-
-
-!OMeta2Examples methodsFor: 'as yet unclassified'!
-anotherSqueakMethod
-	self inform: 'good-bye world'! !
-
-!OMeta2Examples methodsFor: 'as yet unclassified'!
-aSqueakMethod
-	self inform: 'hello world'! !
-
-!OMeta2Examples methodsFor: 'as yet unclassified'!
-digit
-	| t1 |
-	^ true
-		ifTrue: [t1 := self
-						super: OMeta2
-						apply: #digit
-						withArgs: {}.
-			t1 digitValue]! !
-
-!OMeta2Examples methodsFor: 'as yet unclassified'!
-fact
-	| t1 t2 |
-	^ self ometaOr: {[true
-			ifTrue: [self apply: #exactly withArgs: {0}.
-				1]]. [true
-			ifTrue: [t1 := self apply: #anything.
-				t2 := self apply: #fact withArgs: {t1 - 1}.
-				t1 * t2]]}! !
-
-!OMeta2Examples methodsFor: 'as yet unclassified'!
-formTest
-	^ self ometaOr: {[self
-			form: [true
-					ifTrue: [self inform: input hash printString.
-						self apply: #exactly withArgs: {#foo}.
-						self apply: #exactly withArgs: {#bar}]]]. [self
-			form: [true
-					ifTrue: [self inform: input hash printString.
-						self apply: #exactly withArgs: {#bar}]]]}! !
-
-!OMeta2Examples methodsFor: 'as yet unclassified'!
-greeting
-	^ self
-		consumedBy: [true
-				ifTrue: [self apply: #seq withArgs: {'howdy'}.
-					self
-						opt: [self apply: #seq withArgs: {'-ho'}]]]! !
-
-!OMeta2Examples methodsFor: 'as yet unclassified'!
-identifier
-	^ true
-		ifTrue: [self apply: #spaces.
-			self
-				consumedBy: [true
-						ifTrue: [self apply: #letter.
-							self
-								many: [self ometaOr: {[self apply: #letter]. [self apply: #digit]}]]]]! !
-
-!OMeta2Examples methodsFor: 'as yet unclassified'!
-identifierIdx
-	^ true
-		ifTrue: [self apply: #spaces.
-			self
-				indexConsumedBy: [true
-						ifTrue: [self apply: #letter.
-							self
-								many: [self ometaOr: {[self apply: #letter]. [self apply: #digit]}]]]]! !
-
-!OMeta2Examples methodsFor: 'as yet unclassified'!
-identifiers
-	^ self
-		many: [true
-				ifTrue: [self inform: self pos printString.
-					self apply: #identifier]]! !
-
-!OMeta2Examples methodsFor: 'as yet unclassified'!
-number
-	| t1 t2 |
-	^ self ometaOr: {[true
-			ifTrue: [t1 := self apply: #number.
-				t2 := self apply: #digit.
-				t1 * 10 + t2]]. [self apply: #digit]}! !
-
-!OMeta2Examples methodsFor: 'as yet unclassified'!
-structure
-	^ true
-		ifTrue: [self apply: #exactly withArgs: {$a}.
-			self apply: #exactly withArgs: {$b}.
-			self apply: #exactly withArgs: {$c}.
-			self apply: #exactly withArgs: {1}.
-			self apply: #exactly withArgs: {2}.
-			self apply: #exactly withArgs: {3}.
-			self
-				form: [self
-						many: [self apply: #anything]]]! !
-
-
 
 !OMeta2RuleParser methodsFor: 'as yet unclassified'!
 application
