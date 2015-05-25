@@ -87,6 +87,18 @@ Smalltalk implementation!
 !OMeta2Flattener commentStamp: '<historical>' prior: 0!
 Smalltalk implementation!
 
+MethodNode subclass: #OMeta2MethodNode
+        instanceVariableNames: ''
+        classVariableNames: ''
+        poolDictionaries: ''
+        category: 'OMeta2Preload'!
+
+!OMeta2MethodNode methodsFor: 'debugger support' stamp: 'hmm 8/25/2012 14:28'!
+schematicTempNamesString
+        "The decompiler wants a list of temp names. However, this mechanism depends on a number of assumptions that do not hold with OMeta2 generated methods. Therefore we simply skip the temp names, letting the decompiler build generic ones.
+This fixes an error when attempting to prettyPrint OMeta source code."
+        ^nil! !
+
 !CompiledMethod methodsFor: 'decompiling' stamp: 'pb 5/20/2015 15:28'!
 methodNode
 	"Return the parse tree that represents self.  Note: this is brittle and will need to be updated to reflect any upstream methodNode changes in the future."
@@ -407,14 +419,18 @@ parserClass
 parse: aStream class: aClass noPattern: noPattern context: ctxt notifying: req ifFail: aBlock
 
 	^ [
-		| parseTree structuredCode code |
+		| parseTree structuredCode code node |
 		parseTree := OMeta2RuleParser matchAll: aStream contents with: #rule.
 		structuredCode := OMeta2RuleTranslator match: parseTree with: #translate withArgs: {aClass}.
 		code := OMeta2Flattener match: structuredCode with: #flatten.
-		Parser new parse: code readStream class: aClass noPattern: noPattern context: ctxt notifying: req ifFail: aBlock
+		node := Parser new parse: code readStream class: aClass noPattern: noPattern context: ctxt notifying: req ifFail: aBlock.
+		OMeta2MethodNode adoptInstance: node.
+		node
 	] on: OM2Fail do: [aBlock value]! !
 
-
+!OMeta2Compiler methodsFor: 'as yet unclassified' stamp: 'hmm 5/24/2010 10:51'!
+parser
+        ^ self parserClass new! !
 
 !OMeta2Base methodsFor: 'as yet unclassified' stamp: 'aw 2/16/2009 15:13'!
 anything
@@ -894,7 +910,7 @@ range
 	t1 := self apply: #anything.
 	t2 := self apply: #anything.
 	t3 := self apply: #anything.
-	self pred: t1 <= t3 & t3 <= t2.
+	self pred: t1 <= t3 & (t3 <= t2).
 	^ t3! !
 
 !OMeta2 methodsFor: 'as yet unclassified'!
@@ -1815,5 +1831,11 @@ compilerClass
         ^ OMeta2Compiler! !
 
 
+OM2Fail initialize!
+"
+OM2PostloadPackageInfo initialize!
+OM2PreloadPackageInfo initialize!
+"
+O2SqueakRecognizer initialize!
 
 "-- END OF STAGE 1 BOOTSTRAP --"!
