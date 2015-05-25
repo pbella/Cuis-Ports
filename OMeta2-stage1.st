@@ -1832,10 +1832,6 @@ compilerClass
 
 
 OM2Fail initialize!
-"
-OM2PostloadPackageInfo initialize!
-OM2PreloadPackageInfo initialize!
-"
 O2SqueakRecognizer initialize!
 
 "-- END OF STAGE 1 BOOTSTRAP --"!
