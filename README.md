@@ -74,17 +74,9 @@ Note: after loading FFI projects, you must call
 
 ##### Installation
 
-A. Reestablish #compilerClass in Cuis
+A. Download Cuis4.2-2337 or later
 
-	1. Unzip attached file compilerClass.zip
-	2. start Cuis 2330
-	3. Open file list
-	4. click on 2331
-	5. click on [install]
-	6. click on 2332
-	7. click on [install]
-
-B. pull down the OMeta*.st files from https://github.com/pbella/Cuis-Ports
+B. Pull down the OMeta*.st files from https://github.com/pbella/Cuis-Ports
 
 C. File in in the  following sequence
 
@@ -93,7 +85,7 @@ C. File in in the  following sequence
 	3. OMeta2Examples.pck.st (optional)
 	4. OMeta2Tests.pck.st (optional)
 
-D. Check examples in the OMeta2Examples class
+D. Check examples in the OMeta2Examples class (for more examples, see class comments in OMeta2Examples category)
 
 	- OMeta2Examples match: 5 with: #fact.
 	- OMeta2Examples matchAll: '1234' with: #number.
@@ -102,14 +94,9 @@ D. Check examples in the OMeta2Examples class
 	- OMeta2Examples matchAll: 'howdy' with: #greeting.
 
 ##### Notes
-- Only very basic functionality has been verified.  Please report problems/bugs.
-- Requires Cuis4.2-2330 with the 2331 and 2332 changesets provided by Juan applied.
-- stage2b overwrites methods in stage1 that are needed to load stage2b
-- stage2a (a single method) is likely to experience breakage in future releases as it overrides an existing Cuis method and will need future changes merged.
-- Suggestions as to how to best package this are appreciated.  I'm currently thinking of merging stage1 and 2a into a file named OMeta2Preload.st and creating a package for stage2b called OMeta2.pck.st.  The issue in creating a package for the preload is that it gives the mistaken impression that it could be modified and saved which it can't be once stage2 is loaded.
+- OMeta2.pck.st overrides methods in OMeta2-stage1.st that are needed to load the package.  This is why stage1 has not been moved into a package (i.e. to not give the illusion that its contents can be changed and saved out once the full OMeta2 package has been loaded)
 - Debugging support is weak (a known issue with OMeta in general... let's work to improve it)
-- Test cases need to be created.
-- OMeta2Examples has a few simple ones but more/better are needed.  Right now you can look at the <a href="http://tinlizzie.org/ometa-js/#Sample_Project">Javascript implementation</a> for some inspiration.
+- More test cases and examples are need.
 
 ### Misc notes: 
 
