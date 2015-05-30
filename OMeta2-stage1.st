@@ -514,11 +514,15 @@ foreign
 	input := g input target.
 	^ ans! !
 
+!OMeta2Base methodsFor: 'as yet unclassified' stamp: 'pb 5/26/2015 14:53'!
+om2streams
+	^ om2streams ifNil: [om2streams := IdentityDictionary new].! !
+
 !OMeta2Base methodsFor: 'as yet unclassified' stamp: 'aw 2/26/2009 13:17'!
 forgetEverything
 
 	input transitiveForgetEverything.
-	om2streams valuesDo: [:s | s transitiveForgetEverything]! !
+	self om2streams valuesDo: [:s | s transitiveForgetEverything]! !
 
 !OMeta2Base methodsFor: 'as yet unclassified' stamp: 'aw 2/26/2009 11:33'!
 form: aBlock
@@ -527,7 +531,7 @@ form: aBlock
 	v := self apply: #anything.
 	self pred: (v isCollection and: [v isSequenceable and: [v isSymbol not]]).
 	origInput := input.
-	input := om2streams at: v ifAbsentPut: [OM2LazyStream for: v readStream withPos: 1].
+	input := self om2streams at: v ifAbsentPut: [OM2LazyStream for: v readStream withPos: 1].
 	aBlock value.
 	self apply: #end.
 	input := origInput.

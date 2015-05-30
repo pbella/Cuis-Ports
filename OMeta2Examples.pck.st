@@ -1,6 +1,6 @@
-'From Cuis 4.2 of 25 July 2013 [latest update: #2332] on 23 May 2015 at 10:08:45.189392 pm'!
+'From Cuis 4.2 of 25 July 2013 [latest update: #2337] on 29 May 2015 at 10:35:24.91306 pm'!
 'Description Example parsers for OMeta2'!
-!provides: 'OMeta2Examples' 1 1!
+!provides: 'OMeta2Examples' 1 2!
 !requires: 'OMeta2' 1 0 nil!
 !classDefinition: #OMeta2Examples category: #OMeta2Examples!
 OMeta2 subclass: #OMeta2Examples
@@ -20,6 +20,16 @@ OMeta2 subclass: #OMeta2LambdaCalculusParserExample
 	category: 'OMeta2Examples'!
 !classDefinition: 'OMeta2LambdaCalculusParserExample class' category: #OMeta2Examples!
 OMeta2LambdaCalculusParserExample class
+	instanceVariableNames: ''!
+
+!classDefinition: #OMeta2LispExample category: #OMeta2Examples!
+OMeta2 subclass: #OMeta2LispExample
+	instanceVariableNames: 'env envStack envStackPointer'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'OMeta2Examples'!
+!classDefinition: 'OMeta2LispExample class' category: #OMeta2Examples!
+OMeta2LispExample class
 	instanceVariableNames: ''!
 
 !classDefinition: #OMeta2TreeWalkerExample category: #OMeta2Examples!
@@ -89,7 +99,16 @@ There are several other OMeta examples at this site.  Unfortunately for Smalltal
 
 To run this example:
 
-OMeta2LambdaCalculus demo!
+OMeta2LambdaCalculusParserExample demo!
+
+!OMeta2LispExample commentStamp: '<historical>' prior: 0!
+Implementation of http://www.tinlizzie.org/ometa-js/#Lisp
+
+There are several examples at this site.  Unfortunately for Smalltalk users, they're all in Javascript.  Hopefully this example will help you to translate the syntax.
+
+To run this example:
+
+OMeta2LispExample demo!
 
 !OMeta2TreeWalkerExample commentStamp: '<historical>' prior: 0!
 See OMeta2TreeExample!
@@ -247,6 +266,150 @@ rootHang = root:r  ';' expr:ef -> [{r. ef}]
 !OMeta2LambdaCalculusParserExample class methodsFor: 'as yet unclassified' stamp: 'pb 5/23/2015 19:22'!
 demo
 	^ self matchAll: 'x and y;x*y' with: #root.! !
+
+!OMeta2LispExample methodsFor: 'as yet unclassified' stamp: 'pb 5/29/2015 21:43'!
+app = #car                {{:hd anything*}}                -> [hd]
+         | #cdr                {{:hd anything*:tl}}             -> [tl]
+         | #cons               {:hd :tl}                              -> [{hd. tl}]
+         | #atom               {:x}                                   -> [(x class = Array) not]
+         | #eq                 {:x :y}                                 -> [(x == y)]
+         | {#lambda :fs :body} :args
+             enter bind(fs. args) ev(body):ans leave     -> [ans]
+! !
+
+!OMeta2LispExample methodsFor: 'as yet unclassified' stamp: 'pb 5/29/2015 19:00'!
+bind   = {}                {}
+         | {:f anything*:fs} {:a anything*:as} bind(fs. as) -> [self envAt: f put: a]! !
+
+!OMeta2LispExample methodsFor: 'as yet unclassified' stamp: 'pb 5/23/2015 04:07'!
+condF  = ~condT anything! !
+
+!OMeta2LispExample methodsFor: 'as yet unclassified' stamp: 'pb 5/29/2015 21:32'!
+condT  = {ev:x ?[x] ev:ans}                                 -> [ans]! !
+
+!OMeta2LispExample methodsFor: 'as yet unclassified' stamp: 'pb 5/29/2015 18:08'!
+enter = -> [self push]
+! !
+
+!OMeta2LispExample methodsFor: 'as yet unclassified' stamp: 'pb 5/29/2015 22:34'!
+envAt: key
+	| value |
+	value := env
+		at: key
+		ifAbsent: [ ].
+		"
+	Transcript
+		show: 'get ' , key asString , ' = ' , value asString;
+		finishEntry.
+		"
+	^ value.! !
+
+!OMeta2LispExample methodsFor: 'as yet unclassified' stamp: 'pb 5/29/2015 22:35'!
+envAt: key put: value
+	"
+	Transcript
+		show: 'set ' , key asString , ' := ' , value asString;
+		finishEntry.
+		"
+	env
+		at: key
+		put: value.! !
+
+!OMeta2LispExample methodsFor: 'as yet unclassified' stamp: 'pb 5/26/2015 18:09'!
+ev    = string:a                                                    -> [self envAt: a]
+         | {#lambda :fs :body}                                 -> [{#lambda. fs. body}]
+         | {#quote   :ans}                                        -> [ans]
+         | {#cond    evCond:ans}                             -> [ans]
+         | {ev:f        ev*:xs}     app(f. xs):ans            -> [ans]! !
+
+!OMeta2LispExample methodsFor: 'as yet unclassified' stamp: 'pb 5/29/2015 21:35'!
+evCond = 
+//	condF* condT:ans anything*                       -> [x]
+//	| condF* anything*	-> [nil]
+	condF* condT:ans anything*                       -> [ans]
+	| condF* anything*	-> [nil]
+! !
+
+!OMeta2LispExample methodsFor: 'as yet unclassified' stamp: 'pb 5/29/2015 18:13'!
+initialize
+	envStack := OrderedCollection new.
+	envStackPointer := 0.
+	env := Dictionary new
+			at: #car
+			put: 'car';
+		
+			at: #cdr
+			put: 'cdr';
+		
+			at: #cons
+			put: 'cons';
+		
+			at: #atom
+			put: 'atom';
+		
+			at: #eq
+			put: 'eq';
+			
+			at: #lambda
+			put: 'lambda';
+		
+			at: #nil
+			put: nil;
+		
+			at: #t
+			put: true;
+		yourself.! !
+
+!OMeta2LispExample methodsFor: 'as yet unclassified' stamp: 'pb 5/29/2015 18:25'!
+leave = -> [self pop]
+! !
+
+!OMeta2LispExample methodsFor: 'as yet unclassified' stamp: 'pb 5/29/2015 18:10'!
+pop
+	env := envStack at: envStackPointer.
+	envStack removeAt: envStackPointer.
+	envStackPointer := envStackPointer - 1.
+! !
+
+!OMeta2LispExample methodsFor: 'as yet unclassified' stamp: 'pb 5/29/2015 20:55'!
+push
+	| savedEnv |
+	envStackPointer := envStackPointer + 1.
+	savedEnv := env copy.
+	envStack size < envStackPointer
+		ifTrue: [ envStack add: savedEnv ]
+		ifFalse: [
+			envStack
+				at: envStackPointer
+				put: savedEnv ].! !
+
+!OMeta2LispExample methodsFor: 'as yet unclassified' stamp: 'pb 5/29/2015 17:28'!
+sexp = sexp:s ev:e -> [e]
+	| ev:e                 -> [e]
+! !
+
+!OMeta2LispExample class methodsFor: 'as yet unclassified' stamp: 'pb 5/29/2015 19:12'!
+demo
+	^ OMeta2LispExample evalDebugAll: #(
+		(cons
+			((lambda (x) (cons x x)) (quote boo))
+			(eq x (quote boo)))).! !
+
+!OMeta2LispExample class methodsFor: 'as yet unclassified' stamp: 'pb 5/29/2015 17:10'!
+eval: x
+	^ self match: x with: #ev! !
+
+!OMeta2LispExample class methodsFor: 'as yet unclassified' stamp: 'pb 5/29/2015 17:30'!
+evalAll: x
+	^ self matchAll: x with: #sexp! !
+
+!OMeta2LispExample class methodsFor: 'as yet unclassified' stamp: 'pb 5/29/2015 17:31'!
+evalDebug: x
+	^ self debugMatch: x with: #ev! !
+
+!OMeta2LispExample class methodsFor: 'as yet unclassified' stamp: 'pb 5/29/2015 17:31'!
+evalDebugAll: x
+	^ self debugMatchAll: x with: #sexp! !
 
 !OMeta2TreeWalkerExample methodsFor: 'as yet unclassified' stamp: 'pb 5/23/2015 14:49'!
 depth =
