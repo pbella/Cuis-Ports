@@ -1,5 +1,7 @@
-'From Cuis 4.0 of 21 April 2012 [latest update: #1260] on 4 June 2012 at 7:49:49 pm'!
+'From Cuis 4.2 of 25 July 2013 [latest update: #2169] on 19 February 2015 at 9:25:32.092776 pm'!
 'Description Split out from HTML'!
+!provides: 'HTMLTests' 1 1!
+!requires: 'HTML' 1 0 nil!
 !classDefinition: #HtmlParserTest category: #HTMLTests!
 TestCase subclass: #HtmlParserTest
 	instanceVariableNames: ''

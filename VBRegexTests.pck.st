@@ -1,5 +1,7 @@
-'From Cuis 4.0 of 21 April 2012 [latest update: #1260] on 4 June 2012 at 7:46:04 pm'!
+'From Cuis 4.2 of 25 July 2013 [latest update: #2169] on 19 February 2015 at 9:24:49.456862 pm'!
 'Description Split out from VBRegex'!
+!provides: 'VBRegexTests' 1 1!
+!requires: 'VBRegex' 1 0 nil!
 !classDefinition: #RxParserTest category: #VBRegexTests!
 TestCase subclass: #RxParserTest
 	instanceVariableNames: ''

@@ -7,8 +7,7 @@ This repository contains various Smalltalk packages that have been ported to Cui
 
 #### XML
 
-XML-Parser - Based on http://squeaksource.cdn.st/XMLSupport/XML-Parser-NorbertHartl.141.mcz. This is the version which 
-is loaded into Pharo 2.0beta as of January 2013.
+XML-Parser - Obsolete and has been removed... replaced by optional YAXO package in main Cuis repository.
 
 XPath - Based on XML-Parser-AlexandreBergel.15.mcz XPath.  Split out from XML-Parser
 
@@ -19,9 +18,6 @@ Installation
     slash :=  FileDirectory slash.
 
     {
-         '..', slash, 'Cuis-Ports', slash, 'XML-Parser.pck.st' .
-         '..', slash, 'Cuis-Ports', slash, 'XMLParserTests.pck.st' .
-
          '..', slash, 'Cuis-Ports', slash, 'XPath.pck.st'.
          '..', slash, 'Cuis-Ports', slash, 'XPathTests.pck.st' .
     }
@@ -29,15 +25,6 @@ Installation
     [ :fileName | CodePackageFile installPackageStream:
                  (FileStream concreteStream readOnlyFileNamed: fileName)
     ]    
-
-Error messages while installing
-
-     SAXHandler>>invokeDeprecated:withArguments:orForwardTo:withArguments: 
-    (Deprecation is Undeclared) 
-
-     Package XML-Parser successfully installed
-
-     Undeclared: a Dictionary(#Deprecation->nil #Unicode->nil )
 
 	 
 #### HTML
@@ -103,7 +90,7 @@ The general idea is that the examples progress in complexity: OMeta2Examples (tr
 ### Misc notes: 
 
 
-The *Tests.pck files contain the SUnit tests for their base package name and can be ignored unless you have problems or plan to make changes to the package.  (i.e. if you just want to use the package and it's working for you, don't worry about the test projects)
+The *Tests.pck.st files contain the SUnit tests for their base package name and can be ignored unless you have problems or plan to make changes to the package.  (i.e. if you just want to use the package and it's working for you, don't worry about the test projects)
 
 It is intended that this repository will *not* contain any non-permissive licenses (i.e. requiring more than attribution credit) such as GPL'd code to avoid potential issues.  Any ports that are distributed under less permissive licenses will be distributed via separate repositories as needed.
 

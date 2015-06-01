@@ -1,7 +1,8 @@
-'From Cuis 4.0 of 21 April 2012 [latest update: #1260] on 11 June 2012 at 12:43:56 am'!
+'From Cuis 4.2 of 25 July 2013 [latest update: #2203] on 9 March 2015 at 1:18:08.855735 am'!
 'Description Based on XML-Parser-AlexandreBergel.15.mcz XPath.  Split out from XML-Parser
 
 XPath has been removed from XML-Parser... sticking with this version until a better solution is found.'!
+!provides: 'XPath' 1 1!
 !classDefinition: #XPath category: #XPath!
 Object subclass: #XPath
 	instanceVariableNames: 'instructions literals path source block'
@@ -43,12 +44,19 @@ My instance creation methods accept a string (or stream) and compile the string 
 !XPathContext commentStamp: '<historical>' prior: 0!
 Note: if your XPath is not returning the expected result, try enabling haltOnXPathError: on the class side.  This will halt execution at points where the problem could be due to an invalid XPath.!
 
-!XMLDOMParser methodsFor: '*xpath-content' stamp: 'pb 6/10/2012 23:05'!
+!XMLDOMParser methodsFor: '*xpath-content' stamp: 'pb 3/9/2015 01:16'!
 characters: aString 
 	| newElement |
+	"
 	newElement := XMLString string: aString.
 	newElement parent: self topNode.
-	self topNode addContent: newElement! !
+	self topNode addContent: newElement.
+	"
+	"Changes for YAXO - need to test"
+	self flag: #FIXME.
+	newElement := XMLNode new.
+	newElement parent: self top.
+	self top addContent: newElement.! !
 
 !XMLDOMParser methodsFor: '*xpath-content' stamp: 'PH 10/7/2003 07:33'!
 processingInstruction: piName data: dataString 

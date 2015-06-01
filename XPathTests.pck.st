@@ -1,7 +1,9 @@
-'From Cuis 4.0 of 21 April 2012 [latest update: #1260] on 11 June 2012 at 12:43:52 am'!
+'From Cuis 4.2 of 25 July 2013 [latest update: #2169] on 19 February 2015 at 9:24:24.089253 pm'!
 'Description Based on XML-Parser-AlexandreBergel.15.mcz XPath tests.  Split out from XML-Parser.
 
 XPath has been removed from XML-Parser... sticking with this version until a better solution is found.'!
+!provides: 'XPathTests' 1 1!
+!requires: 'XPath' 1 1 nil!
 !classDefinition: #XPathTest category: #XPathTests!
 TestCase subclass: #XPathTest
 	instanceVariableNames: 'xml document'
