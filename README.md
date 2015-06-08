@@ -59,33 +59,7 @@ Note: after loading FFI projects, you must call
 
 #### OMeta 2
 
-##### Installation
-
-A. Download Cuis4.2-2337 or later
-
-B. Pull down the OMeta*.st files from https://github.com/pbella/Cuis-Ports
-
-C. File in in the  following sequence
-
-	1. OMeta2-stage1.st
-	2. OMeta2.pck.st
-	3. OMeta2Examples.pck.st (optional)
-	4. OMeta2Tests.pck.st (optional)
-
-D. Check examples in the OMeta2Examples class (for more examples, see class comments in OMeta2Examples category)
-
-	- OMeta2Examples match: 5 with: #fact.
-	- OMeta2Examples matchAll: '1234' with: #number.
-	- OMeta2Examples matchAll: 'abc123' with: #identifier.
-	- OMeta2Examples matchAll: #($a $b $c 1 2 3 #(4 5)) with: #structure.
-	- OMeta2Examples matchAll: 'howdy' with: #greeting.
-
-The general idea is that the examples progress in complexity: OMeta2Examples (trivial) -> OMeta2TreeExample (simple but actually does something useful) -> OMeta2LamdaCalculusParserExample (parses a simple language but doesn't do anything with it) -> OMeta2LispExample (parses a minimal subset of a real language and executes it.)  Also, for more samples of using the examples, see the tests which are currently all using the example parsers.
-
-##### Notes
-- OMeta2.pck.st overrides methods in OMeta2-stage1.st that are needed to load the package.  This is why stage1 has not been moved into a package (i.e. to not give the illusion that its contents can be changed and saved out once the full OMeta2 package has been loaded)
-- Debugging support is weak (a known issue with OMeta in general... let's work to improve it)
-- More test cases and examples are need.
+Moved to https://github.com/pbella/OMeta-Cuis
 
 ### Misc notes: 
 
