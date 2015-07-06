@@ -1,9 +1,9 @@
-'From Cuis 4.2 of 25 July 2013 [latest update: #2169] on 19 February 2015 at 9:18:07.222456 pm'!
+'From Cuis 4.2 of 25 July 2013 [latest update: #2400] on 6 July 2015 at 4:29:03.102449 am'!
 'Description Originally based on OpenGL-Core-jrd.6.mcz and have merged in some of the changes from OpenGL-Core-bf.17.mcz.  Requires 3DTransform and FFI.
 '!
-!provides: 'OpenGL' 1 1!
+!provides: 'OpenGL' 1 2!
 !requires: 'FFI' 1 8 nil!
-!requires: '3DTransform' 1 0 nil!
+!requires: '3DTransform' 1 1 nil!
 !classDefinition: #GLExtConstants category: #'OpenGL-Pools'!
 SharedPool subclass: #GLExtConstants
 	instanceVariableNames: ''
@@ -1354,64 +1354,52 @@ doesNotUnderstand: aMessage
 	].
 	^super doesNotUnderstand: aMessage! !
 
-!OGLExtManager methodsFor: 'dynamic lookup' stamp: 'ar 7/17/2007 09:23'!
+!OGLExtManager methodsFor: 'dynamic lookup' stamp: 'pb 7/6/2015 04:28'!
 loadExtension: extName
 	"Load and install the extension with the given name"
-
 	| selectors callType method ffiCall ffiAddr methodCopy |
-	ogl ifNil:[^self error: 'OGLExtManager must be bound to a specific context'].
-
+	ogl ifNil: [ ^ self error: 'OGLExtManager must be bound to a specific context' ].
 	"see if the extension is present"
-	(ogl extensions includes: extName) ifFalse:[^self error: extName, ' is not present'].
-
+	(ogl extensions includes: extName) ifFalse: [ ^ self error: extName , ' is not present' ].
 	"verify that we're an anonymous subclass of OGLExtManager"
-	(self class superclass ~~ OGLExtManager or:[
-		OGLExtManager subclasses includes: self class]) 
-			ifTrue:[^self error: 'Must be anonymous'].
-
+	(self class superclass ~~ OGLExtManager or: [ OGLExtManager subclasses includes: self class ]) ifTrue: [ ^ self error: 'Must be anonymous' ].
 	"pick up the selectors"
-	selectors := OGLExtManager class "!!" organization listAtCategoryNamed: extName.
-
+	selectors := OGLExtManager class organization listAtCategoryNamed: extName.
+	"!!"
 	"get the calling convention"
 	callType := ogl glExtCallingConvention.
-
 	"install the methods"
-	selectors do:[:sel|
-		method := OGLExtManager class compiledMethodAt: sel ifAbsent:[nil].
-		(method notNil 
-			and:[method numLiterals > 0 
-				and:[(ffiCall := method literalAt: 1) isKindOf: ExternalLibraryFunction]]) 
-					ifTrue:[
-
+	selectors do: [ :sel |
+		method := OGLExtManager class
+			compiledMethodAt: sel
+			ifAbsent: [ ].
+		(method notNil and: [
+			method numLiterals > 0 and: [ (ffiCall := method literalAt: 1) isKindOf: ExternalLibraryFunction ]]) ifTrue: [
 			"clone the method"
-			methodCopy := method clone.
-
+			methodCopy := method shallowCopy.
 			"set up a new ffi function"
-			ffiCall := ExternalLibraryFunction new 
-				name: ffiCall name 
-				module: (ogl glExtModule ifNil: [ffiCall module]) "see glExtModule"
-				flags: callType 
+			ffiCall := ExternalLibraryFunction new
+				name: ffiCall name
+				module: (ogl glExtModule ifNil: [ ffiCall module ])
+				flags: callType
 				argTypes: ffiCall argTypes.
-
+			"see glExtModule"
 			"Lookup address through OpenGL, unless we use a regular FFI lookup."
 			ogl glExtModule ifNil: [
 				"get the address of the extension function"
 				ffiAddr := ogl glExtGetProcAddress: ffiCall name asString.
-				(ffiAddr == nil or:[ffiAddr = 0]) ifTrue:[
-					self error: 'Failed to find ', ffiCall name.
-				] ifFalse:[
-					ffiAddr := ExternalAddress new fromInteger: ffiAddr.
-				].
-				ffiCall setHandle: ffiAddr].
-
+				(ffiAddr == nil or: [ ffiAddr = 0 ])
+					ifTrue: [ self error: 'Failed to find ' , ffiCall name ]
+					ifFalse: [ ffiAddr := ExternalAddress new fromInteger: ffiAddr ].
+				ffiCall setHandle: ffiAddr ].
 			"install the new ffi call"
-			methodCopy literalAt: 1 put: ffiCall.
-
+			methodCopy
+				literalAt: 1
+				put: ffiCall.
 			"add the copy to our method dictionary"
-			self class addSelectorSilently: sel withMethod: methodCopy.
-		].
-	].
-! !
+			self class
+				addSelectorSilently: sel
+				withMethod: methodCopy ]].! !
 
 !OGLExtManager methodsFor: 'accessing' stamp: 'das 3/12/2004 12:44'!
 ogl
@@ -3225,13 +3213,14 @@ initialize: glX
 	fonts := IdentityDictionary new.
 	charList := ByteArray new: 256.! !
 
-!OGLFontManager methodsFor: 'displaying' stamp: 'pb 6/6/2012 03:35'!
+!OGLFontManager methodsFor: 'displaying' stamp: 'pb 7/6/2015 00:59'!
 uploadFont: aFont
 	| glFontID form |
 	glFontID := glx glGenLists: 256.
 	0 to: 255 do:[:i|
 		"form := aFont characterFormAt: (i asCharacter)."
-		form := (aFont characterFormAt: (i asCharacter)) asFormOfDepth: 1.
+		"form := (aFont characterFormAt: (i asCharacter)) asFormOfDepth: 1."
+		form := (aFont glyphAt: (i asCharacter)) asFormOfDepth: 1.
 		self flag: #pbfix.
 		"major issues"
 		"
@@ -8273,13 +8262,21 @@ initialize
 	bufferObjects := Dictionary new.
 	super initialize.! !
 
-!OpenGL methodsFor: 'initialize' stamp: 'das 6/13/2005 14:58'!
+!OpenGL methodsFor: 'initialize' stamp: 'pb 7/5/2015 22:21'!
 initializeIn: bounds
-	handle := self primCreateRenderer: 1 "B3DSoftwareRenderer" + 2 "B3DHardwareRenderer" + 4 "B3DStencilBuffer" 
-		x: bounds left y: bounds top w: bounds width h: bounds height.
+	handle := self
+		primCreateRenderer: 1 + 2 + 4
+		x: bounds left
+		y: bounds top
+		w: bounds width
+		h: bounds height.
+	"B3DSoftwareRenderer"
+	"B3DHardwareRenderer"
+	"B3DStencilBuffer"
 	bufRect := bounds.
-	handle ifNotNil:[glExt := OGLExtManager new ogl: self].
-	^handle ifNotNil:[self]! !
+	handle ifNil: [self error: 'nil'].
+	handle ifNotNil: [ glExt := OGLExtManager new ogl: self ].
+	^ handle ifNotNil: [ self ].! !
 
 !OpenGL methodsFor: 'textures' stamp: 'ar 1/30/2006 12:54'!
 installTexture: aTForm

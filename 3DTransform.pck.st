@@ -1,5 +1,6 @@
-'From Cuis 4.0 of 21 April 2012 [latest update: #1260] on 6 June 2012 at 12:54:11 am'!
+'From Cuis 4.2 of 25 July 2013 [latest update: #2400] on 6 July 2015 at 1:38:12.630297 pm'!
 'Description Based on 3DTransform-pbm.19.mcz'!
+!provides: '3DTransform' 1 1!
 !classDefinition: #CatmullRom category: #'3DTransform-Vectors'!
 Object subclass: #CatmullRom
 	instanceVariableNames: 'p1 p2 p3 p4'
@@ -130,26 +131,6 @@ VectorArray variableWordSubclass: #Vector3Array
 Vector3Array class
 	instanceVariableNames: ''!
 
-!classDefinition: #VectorColor category: #'3DTransform-Vectors'!
-Vector variableWordSubclass: #VectorColor
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: '3DTransform-Vectors'!
-!classDefinition: 'VectorColor class' category: #'3DTransform-Vectors'!
-VectorColor class
-	instanceVariableNames: ''!
-
-!classDefinition: #VectorColor3 category: #'3DTransform-Vectors'!
-Vector variableWordSubclass: #VectorColor3
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: '3DTransform-Vectors'!
-!classDefinition: 'VectorColor3 class' category: #'3DTransform-Vectors'!
-VectorColor3 class
-	instanceVariableNames: ''!
-
 !classDefinition: #VectorColor3Array category: #'3DTransform-Arrays'!
 VectorArray variableWordSubclass: #VectorColor3Array
 	instanceVariableNames: ''
@@ -180,18 +161,35 @@ VectorArray variableWordSubclass: #VectorRotationArray
 VectorRotationArray class
 	instanceVariableNames: ''!
 
+!classDefinition: #VectorColor category: #'3DTransform-Vectors'!
+Vector variableWordSubclass: #VectorColor
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: '3DTransform-Vectors'!
+!classDefinition: 'VectorColor class' category: #'3DTransform-Vectors'!
+VectorColor class
+	instanceVariableNames: ''!
+
+!classDefinition: #VectorColor3 category: #'3DTransform-Vectors'!
+Vector variableWordSubclass: #VectorColor3
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: '3DTransform-Vectors'!
+!classDefinition: 'VectorColor3 class' category: #'3DTransform-Vectors'!
+VectorColor3 class
+	instanceVariableNames: ''!
+
 
 !CatmullRom commentStamp: 'das 8/1/2006 16:30' prior: 0!
 Simple Catmull-Rom spline object. Simply seed it with four vectors of any dimensionality, then ask for the interpolated value with CatmullRom>>at:t where t is a value between 0.0 and 1.0.!
 
+!Vector commentStamp: '<historical>' prior: 0!
+I am the superclass for all floating point vector objects in Croquet.!
+
 !Matrix4x4 commentStamp: '<historical>' prior: 0!
 I represent a standard 4x4 transformation matrix used throughout 3D graphics.!
-
-!Matrix4x4Array commentStamp: '<historical>' prior: 0!
-I am an array of Matrix4x4Arrays.!
-
-!MatrixArray commentStamp: '<historical>' prior: 0!
-I am an array of Matrices.!
 
 !Quaternion commentStamp: '<historical>' prior: 0!
 I represent general 3d rotations by using Unit-Quaternions. Unit-Quaternions are one of the best available representation for rotations in computer graphics because they provide an easy way of doing arithmetic with them and also because they allow us to use spherical linear interpolation (so-called "slerps") of rotations.
@@ -204,23 +202,11 @@ Indexed Variables:
 
 !
 
-!Texture2Array commentStamp: '<historical>' prior: 0!
-I am an efficient representation of texture coordinates.!
-
-!Vector commentStamp: '<historical>' prior: 0!
-I am the superclass for all floating point vector objects in Croquet.!
-
 !Vector2 commentStamp: '<historical>' prior: 0!
 I represent simple 2D coordinates in Croquet. I may be used to represent both, 2D points and 2D texture coordinates. !
 
-!Vector2Array commentStamp: '<historical>' prior: 0!
-I am an efficient representation of Vector2 elements!
-
 !Vector3 commentStamp: '<historical>' prior: 0!
 I represent simple 3D coordinates, used throughout Croquet.!
-
-!Vector3Array commentStamp: '<historical>' prior: 0!
-I am an efficient representation of Vector3 elements.!
 
 !Vector4 commentStamp: '<historical>' prior: 0!
 I represent 3D points in homogenous coordinates.!
@@ -228,14 +214,56 @@ I represent 3D points in homogenous coordinates.!
 !VectorArray commentStamp: '<historical>' prior: 0!
 I am an array of Vectors.!
 
-!VectorColor commentStamp: '<historical>' prior: 0!
-I represent an RGBA color value in floating point format. I am used during the lighting and shading computations.!
+!MatrixArray commentStamp: '<historical>' prior: 0!
+I am an array of Matrices.!
+
+!Matrix4x4Array commentStamp: '<historical>' prior: 0!
+I am an array of Matrix4x4Arrays.!
+
+!Texture2Array commentStamp: '<historical>' prior: 0!
+I am an efficient representation of texture coordinates.!
+
+!Vector2Array commentStamp: '<historical>' prior: 0!
+I am an efficient representation of Vector2 elements!
+
+!Vector3Array commentStamp: '<historical>' prior: 0!
+I am an efficient representation of Vector3 elements.!
 
 !VectorColor4Array commentStamp: 'das 5/22/2005 15:23' prior: 0!
 I am an inplace storage area for Color4 items used during lighting and shading.!
 
 !VectorRotationArray commentStamp: '<historical>' prior: 0!
 I am an array of Quaternions.!
+
+!VectorColor commentStamp: '<historical>' prior: 0!
+I represent an RGBA color value in floating point format. I am used during the lighting and shading computations.!
+
+!SequenceableCollection methodsFor: '*3DTransform' stamp: 'ar 2/7/2006 17:36'!
+asVectorColor
+	
+	^ VectorColor new copyFrom: self.! !
+
+!FloatArray methodsFor: '*3DTransform' stamp: 'ar 2/2/2006 20:15'!
+floatAt: index
+	<primitive: 'primitiveAt' module: 'FloatArrayPlugin'>
+	^Float fromIEEE32Bit: (self basicAt: index)! !
+
+!FloatArray methodsFor: '*3DTransform' stamp: 'ar 2/2/2006 20:15'!
+floatAt: index put: value
+	<primitive: 'primitiveAtPut' module: 'FloatArrayPlugin'>
+	value isFloat 
+		ifTrue:[self basicAt: index put: value asIEEE32BitWord]
+		ifFalse:[self at: index put: value asFloat].
+	^value! !
+
+!Color methodsFor: '*3DTransform' stamp: 'ar 2/7/2006 17:35'!
+asVectorColor
+	"Convert the receiver into a color"
+	^VectorColor new loadFrom: self! !
+
+!Point methodsFor: '*3DTransform' stamp: 'das 5/23/2005 10:42'!
+@ aNumber
+	^Vector3 x: x y: y z: aNumber! !
 
 !CatmullRom methodsFor: 'compute' stamp: 'das 8/1/2006 16:19'!
 at: t
@@ -281,23 +309,79 @@ varray: varray
 
 	^ self new v1:(varray at:1) v2:(varray at:2) v3: (varray at:3) v4:(varray at:4).! !
 
-!Color methodsFor: '*3DTransform' stamp: 'ar 2/7/2006 17:35'!
-asVectorColor
-	"Convert the receiver into a color"
-	^VectorColor new loadFrom: self! !
+!Vector methodsFor: 'as yet unclassified' stamp: 'ar 2/7/2006 16:51'!
+copyFrom: array
 
-!FloatArray methodsFor: '*3DTransform' stamp: 'ar 2/2/2006 20:15'!
+	| sz |
+	sz := self size min: array size.
+	1 to: sz do:[:index | self at:index put: (array at: index)].! !
+
+!Vector methodsFor: 'accessing' stamp: 'ar 2/2/2001 15:47'!
 floatAt: index
+	"For subclasses that override #at:"
 	<primitive: 'primitiveAt' module: 'FloatArrayPlugin'>
 	^Float fromIEEE32Bit: (self basicAt: index)! !
 
-!FloatArray methodsFor: '*3DTransform' stamp: 'ar 2/2/2006 20:15'!
+!Vector methodsFor: 'accessing' stamp: 'ar 2/2/2001 15:47'!
 floatAt: index put: value
+	"For subclasses that override #at:put:"
 	<primitive: 'primitiveAtPut' module: 'FloatArrayPlugin'>
-	value isFloat 
-		ifTrue:[self basicAt: index put: value asIEEE32BitWord]
-		ifFalse:[self at: index put: value asFloat].
+	self basicAt: index put: value asIEEE32BitWord.
 	^value! !
+
+!Vector methodsFor: 'initialize'!
+loadFrom: srcObject
+	self == srcObject ifTrue:[^self].
+	self class == srcObject class
+		ifTrue:[self replaceFrom: 1 to: self size with: srcObject startingAt: 1]
+		ifFalse:[self privateLoadFrom: srcObject]! !
+
+!Vector methodsFor: 'accessing' stamp: 'ar 2/1/1999 21:23'!
+numElements
+	^self class numElements! !
+
+!Vector methodsFor: 'private' stamp: 'ar 2/1/1999 21:23'!
+privateLoadFrom: srcObject
+	"Load the receiver from the given source object."
+	self error:'Cannot load a ', srcObject class name,' into a ', self class name.! !
+
+!Vector methodsFor: 'private' stamp: 'ar 7/22/2006 19:39'!
+replaceFrom: start to: stop with: replacement startingAt: repStart 
+	"Primitive. This destructively replaces elements from start to stop in the receiver starting at index, repStart, in the collection, replacement. Answer the receiver. Range checks are performed in the primitive only. Optional. See Object documentation whatIsAPrimitive."
+	| index repOff |
+	<primitive: 105>
+	repOff := repStart - start.
+	index := start - 1.
+	[(index := index + 1) <= stop]
+		whileTrue: [self basicAt: index put: (replacement basicAt: repOff + index)]! !
+
+!Vector methodsFor: 'accessing' stamp: 'ar 2/15/1999 22:10'!
+wordAt: index
+	<primitive: 60>
+	^self primitiveFailed! !
+
+!Vector methodsFor: 'accessing' stamp: 'ar 2/15/1999 22:10'!
+wordAt: index put: value
+	<primitive: 61>
+	^self primitiveFailed! !
+
+!Vector class methodsFor: 'island' stamp: 'ar 3/13/2006 17:15'!
+howToPassAsArgument
+	"We clone all vectors, even the array ones to point out that manipulation of those vectors outside of some context is not a goof idea. We may reassess this later."
+	^#passByClone:! !
+
+!Vector class methodsFor: 'class initialization' stamp: 'ar 3/8/2006 23:11'!
+initialize
+	"Vector initialize"
+	DataStream initialize. "register with DataStream"! !
+
+!Vector class methodsFor: 'instance creation' stamp: 'ar 2/1/1999 21:20'!
+new
+	^super new: self numElements! !
+
+!Vector class methodsFor: 'instance creation' stamp: 'ar 2/1/1999 21:21'!
+numElements
+	^0! !
 
 !Matrix4x4 methodsFor: 'transforming' stamp: 'das 5/22/2005 14:23'!
 * m2
@@ -863,10 +947,10 @@ inplaceHouseHolderTransform: aVector
 	^Vector4 x: (x at: 1) y: (x at: 2) z: (x at: 3) w: (x at: 4)
 ! !
 
-!Matrix4x4 methodsFor: 'transforming' stamp: 'das 5/16/2005 12:06'!
+!Matrix4x4 methodsFor: 'transforming' stamp: 'pb 7/6/2015 13:36'!
 inverseTransformation
 	"Return the inverse matrix of the receiver."
-	^self clone inplaceHouseHolderInvert.! !
+	^ self shallowCopy inplaceHouseHolderInvert.! !
 
 !Matrix4x4 methodsFor: 'testing' stamp: 'das 5/22/2005 15:16'!
 isIdentity
@@ -941,35 +1025,47 @@ normalize
 	self column2: (self column3 cross: self column1) normalized.
 	self column3: (self column1 cross: self column2) normalized.! !
 
-!Matrix4x4 methodsFor: 'accessing' stamp: 'das 5/16/2005 12:06'!
+!Matrix4x4 methodsFor: 'accessing' stamp: 'pb 7/6/2015 13:36'!
 orientation
-"This is used to return just the orientation part of the matrix.The translation part is 0.0."
+	"This is used to return just the orientation part of the matrix.The translation part is 0.0."
 	| mat |
-
-	mat := self clone.
-	mat translationX: 0.0 y: 0.0 z: 0.0.
+	mat := self shallowCopy.
+	mat
+		translationX: 0.0
+		y: 0.0
+		z: 0.0.
 	^ mat.! !
 
-!Matrix4x4 methodsFor: 'transforming' stamp: 'ar 3/26/2006 22:42'!
+!Matrix4x4 methodsFor: 'transforming' stamp: 'pb 7/6/2015 13:36'!
 orthoNormInverse
 	| m x y z rx ry rz |
 	<primitive: 'primitiveOrthoNormInverseMatrix' module: 'CroquetPlugin'>
-	m := self clone.
+	m := self shallowCopy.
 	"transpose upper 3x3 matrix"
-	m a11: self a11; a12: self a21; a13: self a31.
-	m a21: self a12; a22: self a22; a23: self a32.
-	m a31: self a13; a32: self a23; a33: self a33.
+	m
+		a11: self a11;
+		a12: self a21;
+		a13: self a31.
+	m
+		a21: self a12;
+		a22: self a22;
+		a23: self a32.
+	m
+		a31: self a13;
+		a32: self a23;
+		a33: self a33.
 	"Compute inverse translation vector"
 	x := self a14.
 	y := self a24.
 	z := self a34.
-	rx := (x * m a11) + (y * m a12) + (z * m a13).
-	ry := (x * m a21) + (y * m a22) + (z * m a23).
-	rz := (x * m a31) + (y * m a32) + (z * m a33).
-
-	m a14: 0.0-rx; a24: 0.0-ry; a34: 0.0-rz.
-	^m
-" Used to be:
+	rx := x * m a11 + (y * m a12) + (z * m a13).
+	ry := x * m a21 + (y * m a22) + (z * m a23).
+	rz := x * m a31 + (y * m a32) + (z * m a33).
+	m
+		a14: 0.0 - rx;
+		a24: 0.0 - ry;
+		a34: 0.0 - rz.
+	^ m" Used to be:
 	m := self clone.
 	v := m translation.
 	m translation: Vector3 zero.
@@ -977,7 +1073,7 @@ orthoNormInverse
 	v := (m localPointToGlobal: v) negated.
 	m translation: v.
 	^ m.
-"! !
+".! !
 
 !Matrix4x4 methodsFor: 'accessing' stamp: 'das 5/16/2005 12:06'!
 pitchYawRoll
@@ -1556,24 +1652,23 @@ skew: vector
 	self a23: vector x negated.
 ! !
 
-!Matrix4x4 methodsFor: 'solving' stamp: 'das 5/16/2005 12:06'!
+!Matrix4x4 methodsFor: 'solving' stamp: 'pb 7/6/2015 13:37'!
 solve3x3: aVector
 	"Solve a 3x3 system of linear equations. Assume that all the a[4,x] and a[x,4] are zero.
 	NOTE: This is a hack, but it's the fastest way for now."
 	| m |
-	m := self clone.
-	m a44: 1. "need this for inversion"
+	m := self shallowCopy.
+	m a44: 1.
+	"need this for inversion"
 	m := m inplaceHouseHolderInvert.
-	m ifNil:[^nil].
-	^m localDirToGlobal: aVector.! !
+	m ifNil: [ ^ nil ].
+	^ m localDirToGlobal: aVector.! !
 
-!Matrix4x4 methodsFor: 'solving' stamp: 'das 5/16/2005 12:06'!
+!Matrix4x4 methodsFor: 'solving' stamp: 'pb 7/6/2015 13:37'!
 solve: aVector
-
-	^self clone inplaceHouseHolderTransform: aVector
-	"or:
+	^ self shallowCopy inplaceHouseHolderTransform: aVector"or:
 	^self clone inplaceDecomposeLU solveLU: aVector
-	"! !
+	".! !
 
 !Matrix4x4 methodsFor: 'solving' stamp: 'das 5/16/2005 12:06'!
 solveLU: aVector
@@ -1767,36 +1862,6 @@ withScale: amount
 !Matrix4x4 class methodsFor: 'instance creation' stamp: 'das 5/16/2005 12:06'!
 zero
 	^self new! !
-
-!Matrix4x4Array methodsFor: 'as yet unclassified' stamp: 'dsa 3/28/2008 16:02'!
-addMatrix: mat
-	1 to: self size do:[:i | self at: i put: (self at: i)+mat.].! !
-
-!Matrix4x4Array methodsFor: 'as yet unclassified' stamp: 'dsa 3/28/2008 15:59'!
-contentsClass
-	^Matrix4x4! !
-
-!Matrix4x4Array methodsFor: 'as yet unclassified' stamp: 'dsa 3/28/2008 15:48'!
-contentsSize
-	^16! !
-
-!Matrix4x4Array class methodsFor: 'as yet unclassified' stamp: 'dsa 3/28/2008 15:52'!
-contentsClass
-	^Matrix4x4! !
-
-!Matrix4x4Array class methodsFor: 'as yet unclassified' stamp: 'dsa 3/28/2008 15:52'!
-initialize
-	"Matrix4x4Array initialize"
-	Zero4x4Matrix := Matrix4x4 new.! !
-
-!MatrixArray methodsFor: 'as yet unclassified' stamp: 'dsa 3/28/2008 16:06'!
-size
-	"Return the number of primitive vertices that can be stored in the receiver"
-	^self basicSize // self contentsSize! !
-
-!Point methodsFor: '*3DTransform' stamp: 'das 5/23/2005 10:42'!
-@ aNumber
-	^Vector3 x: x y: y z: aNumber! !
 
 !Quaternion methodsFor: 'arithmetic' stamp: 'das 5/22/2005 12:08'!
 * aRotation
@@ -2079,96 +2144,6 @@ radiansAngle: anAngle axis: aVector3
 x: xValue y: yValue z: zValue a: anAngle
 	^self new x: xValue y: yValue z: zValue a: anAngle! !
 
-!SequenceableCollection methodsFor: '*3DTransform' stamp: 'ar 2/7/2006 17:36'!
-asVectorColor
-	
-	^ VectorColor new copyFrom: self.! !
-
-!Texture2Array methodsFor: 'accessing' stamp: 'das 5/16/2005 08:54'!
-at: index put: value
-	value isPoint
-		ifTrue:[super at: index put: (Vector2 u: value x v: value y)]
-		ifFalse:[super at: index put: value].
-	^value! !
-
-!Texture2Array class methodsFor: 'accessing' stamp: 'das 5/16/2005 08:55'!
-contentsClass
-	^Vector2! !
-
-!Vector methodsFor: 'as yet unclassified' stamp: 'ar 2/7/2006 16:51'!
-copyFrom: array
-
-	| sz |
-	sz := self size min: array size.
-	1 to: sz do:[:index | self at:index put: (array at: index)].! !
-
-!Vector methodsFor: 'accessing' stamp: 'ar 2/2/2001 15:47'!
-floatAt: index
-	"For subclasses that override #at:"
-	<primitive: 'primitiveAt' module: 'FloatArrayPlugin'>
-	^Float fromIEEE32Bit: (self basicAt: index)! !
-
-!Vector methodsFor: 'accessing' stamp: 'ar 2/2/2001 15:47'!
-floatAt: index put: value
-	"For subclasses that override #at:put:"
-	<primitive: 'primitiveAtPut' module: 'FloatArrayPlugin'>
-	self basicAt: index put: value asIEEE32BitWord.
-	^value! !
-
-!Vector methodsFor: 'initialize'!
-loadFrom: srcObject
-	self == srcObject ifTrue:[^self].
-	self class == srcObject class
-		ifTrue:[self replaceFrom: 1 to: self size with: srcObject startingAt: 1]
-		ifFalse:[self privateLoadFrom: srcObject]! !
-
-!Vector methodsFor: 'accessing' stamp: 'ar 2/1/1999 21:23'!
-numElements
-	^self class numElements! !
-
-!Vector methodsFor: 'private' stamp: 'ar 2/1/1999 21:23'!
-privateLoadFrom: srcObject
-	"Load the receiver from the given source object."
-	self error:'Cannot load a ', srcObject class name,' into a ', self class name.! !
-
-!Vector methodsFor: 'private' stamp: 'ar 7/22/2006 19:39'!
-replaceFrom: start to: stop with: replacement startingAt: repStart 
-	"Primitive. This destructively replaces elements from start to stop in the receiver starting at index, repStart, in the collection, replacement. Answer the receiver. Range checks are performed in the primitive only. Optional. See Object documentation whatIsAPrimitive."
-	| index repOff |
-	<primitive: 105>
-	repOff := repStart - start.
-	index := start - 1.
-	[(index := index + 1) <= stop]
-		whileTrue: [self basicAt: index put: (replacement basicAt: repOff + index)]! !
-
-!Vector methodsFor: 'accessing' stamp: 'ar 2/15/1999 22:10'!
-wordAt: index
-	<primitive: 60>
-	^self primitiveFailed! !
-
-!Vector methodsFor: 'accessing' stamp: 'ar 2/15/1999 22:10'!
-wordAt: index put: value
-	<primitive: 61>
-	^self primitiveFailed! !
-
-!Vector class methodsFor: 'island' stamp: 'ar 3/13/2006 17:15'!
-howToPassAsArgument
-	"We clone all vectors, even the array ones to point out that manipulation of those vectors outside of some context is not a goof idea. We may reassess this later."
-	^#passByClone:! !
-
-!Vector class methodsFor: 'class initialization' stamp: 'ar 3/8/2006 23:11'!
-initialize
-	"Vector initialize"
-	DataStream initialize. "register with DataStream"! !
-
-!Vector class methodsFor: 'instance creation' stamp: 'ar 2/1/1999 21:20'!
-new
-	^super new: self numElements! !
-
-!Vector class methodsFor: 'instance creation' stamp: 'ar 2/1/1999 21:21'!
-numElements
-	^0! !
-
 !Vector2 methodsFor: 'converting' stamp: 'ar 2/13/1999 20:03'!
 asPoint
 	^self x @ self y! !
@@ -2231,10 +2206,6 @@ u: uValue v: vValue
 !Vector2 class methodsFor: 'instance creation' stamp: 'ar 5/4/2000 15:49'!
 x: uValue y: vValue
 	^self new x: uValue y: vValue! !
-
-!Vector2Array class methodsFor: 'instance creation' stamp: 'das 5/16/2005 08:55'!
-contentsClass
-	^Vector2! !
 
 !Vector3 methodsFor: 'vector functions' stamp: 'das 12/18/2002 00:03'!
 angleTo: aVector 
@@ -2431,72 +2402,6 @@ x: x y: y z: z
 zero
 	^self new! !
 
-!Vector3Array methodsFor: 'math functions' stamp: 'das 9/8/2003 11:02'!
-addVector: vec
-	1 to: self size do:[:i | self at: i put: (self at: i)+vec.].! !
-
-!Vector3Array methodsFor: 'accessing' stamp: 'ar 6/23/2002 16:17'!
-at: index
-	"Return the primitive vertex at the given index"
-	| vtx |
-	vtx := ZeroVertex clone.
-	vtx replaceFrom: 1 to: 3 with: self startingAt: index - 1 * 3 + 1.
-	^vtx! !
-
-!Vector3Array methodsFor: 'accessing' stamp: 'ar 6/23/2002 16:17'!
-at: index put: anObject
-	"Store the object at the given index in the receiver"
-	| idx |
-	idx := index - 1 * 3.
-	self privateReplaceFrom: idx+1 to: idx + 3 with: anObject startingAt: 1.
-	^anObject! !
-
-!Vector3Array methodsFor: 'accessing' stamp: 'das 5/16/2005 08:48'!
-contentsClass
-	^Vector3! !
-
-!Vector3Array methodsFor: 'accessing' stamp: 'ar 6/23/2002 16:13'!
-contentsSize
-	^3! !
-
-!Vector3Array methodsFor: 'math functions' stamp: 'das 9/7/2003 15:25'!
-divideByArray: array
-
-	1 to: self size do:[:i | self at: i put: (self at: i)/(array at: i).].! !
-
-!Vector3Array methodsFor: 'math functions' stamp: 'das 9/7/2003 15:22'!
-lengthInto: target
-
-	1 to: self size do:[:i | target at: i put: (self at: i) length.].! !
-
-!Vector3Array methodsFor: 'math functions' stamp: 'das 9/7/2003 15:26'!
-normalize
-
-	1 to: self size do:[:i | self at: i put: (self at: i) / (self at: i)length.].! !
-
-!Vector3Array methodsFor: 'math functions' stamp: 'das 9/7/2003 15:25'!
-scaleByArray: array
-
-	1 to: self size do:[:i | self at: i put: (self at: i)*(array at: i).].! !
-
-!Vector3Array methodsFor: 'math functions' stamp: 'das 9/7/2003 15:24'!
-squaredLengthInto: target
-
-	1 to: self size do:[:i | target at: i put: (self at: i) squaredLength.].! !
-
-!Vector3Array methodsFor: 'math functions' stamp: 'das 9/8/2003 11:02'!
-subtractVector: vec
-	1 to: self size do:[:i | self at: i put: (self at: i)-vec.].! !
-
-!Vector3Array class methodsFor: 'instance creation' stamp: 'das 5/16/2005 08:48'!
-contentsClass
-	^Vector3! !
-
-!Vector3Array class methodsFor: 'class initialization' stamp: 'das 5/16/2005 08:48'!
-initialize
-	"Vector3Array initialize"
-	ZeroVertex := Vector3 new.! !
-
 !Vector4 methodsFor: 'converting' stamp: 'das 5/16/2005 09:12'!
 asVector3
 	| wValue |
@@ -2664,6 +2569,208 @@ howToPassAsArgument
 !VectorArray class methodsFor: 'instance creation' stamp: 'ar 2/5/1999 22:49'!
 new: n
 	^super new: self contentsSize*n! !
+
+!MatrixArray methodsFor: 'as yet unclassified' stamp: 'dsa 3/28/2008 16:06'!
+size
+	"Return the number of primitive vertices that can be stored in the receiver"
+	^self basicSize // self contentsSize! !
+
+!Matrix4x4Array methodsFor: 'as yet unclassified' stamp: 'dsa 3/28/2008 16:02'!
+addMatrix: mat
+	1 to: self size do:[:i | self at: i put: (self at: i)+mat.].! !
+
+!Matrix4x4Array methodsFor: 'as yet unclassified' stamp: 'dsa 3/28/2008 15:59'!
+contentsClass
+	^Matrix4x4! !
+
+!Matrix4x4Array methodsFor: 'as yet unclassified' stamp: 'dsa 3/28/2008 15:48'!
+contentsSize
+	^16! !
+
+!Matrix4x4Array class methodsFor: 'as yet unclassified' stamp: 'dsa 3/28/2008 15:52'!
+contentsClass
+	^Matrix4x4! !
+
+!Matrix4x4Array class methodsFor: 'as yet unclassified' stamp: 'dsa 3/28/2008 15:52'!
+initialize
+	"Matrix4x4Array initialize"
+	Zero4x4Matrix := Matrix4x4 new.! !
+
+!Texture2Array methodsFor: 'accessing' stamp: 'das 5/16/2005 08:54'!
+at: index put: value
+	value isPoint
+		ifTrue:[super at: index put: (Vector2 u: value x v: value y)]
+		ifFalse:[super at: index put: value].
+	^value! !
+
+!Texture2Array class methodsFor: 'accessing' stamp: 'das 5/16/2005 08:55'!
+contentsClass
+	^Vector2! !
+
+!Vector2Array class methodsFor: 'instance creation' stamp: 'das 5/16/2005 08:55'!
+contentsClass
+	^Vector2! !
+
+!Vector3Array methodsFor: 'math functions' stamp: 'das 9/8/2003 11:02'!
+addVector: vec
+	1 to: self size do:[:i | self at: i put: (self at: i)+vec.].! !
+
+!Vector3Array methodsFor: 'accessing' stamp: 'pb 7/6/2015 04:27'!
+at: index
+	"Return the primitive vertex at the given index"
+	| vtx |
+	vtx := ZeroVertex shallowCopy.
+	vtx
+		replaceFrom: 1
+		to: 3
+		with: self
+		startingAt: index - 1 * 3 + 1.
+	^ vtx.! !
+
+!Vector3Array methodsFor: 'accessing' stamp: 'ar 6/23/2002 16:17'!
+at: index put: anObject
+	"Store the object at the given index in the receiver"
+	| idx |
+	idx := index - 1 * 3.
+	self privateReplaceFrom: idx+1 to: idx + 3 with: anObject startingAt: 1.
+	^anObject! !
+
+!Vector3Array methodsFor: 'accessing' stamp: 'das 5/16/2005 08:48'!
+contentsClass
+	^Vector3! !
+
+!Vector3Array methodsFor: 'accessing' stamp: 'ar 6/23/2002 16:13'!
+contentsSize
+	^3! !
+
+!Vector3Array methodsFor: 'math functions' stamp: 'das 9/7/2003 15:25'!
+divideByArray: array
+
+	1 to: self size do:[:i | self at: i put: (self at: i)/(array at: i).].! !
+
+!Vector3Array methodsFor: 'math functions' stamp: 'das 9/7/2003 15:22'!
+lengthInto: target
+
+	1 to: self size do:[:i | target at: i put: (self at: i) length.].! !
+
+!Vector3Array methodsFor: 'math functions' stamp: 'das 9/7/2003 15:26'!
+normalize
+
+	1 to: self size do:[:i | self at: i put: (self at: i) / (self at: i)length.].! !
+
+!Vector3Array methodsFor: 'math functions' stamp: 'das 9/7/2003 15:25'!
+scaleByArray: array
+
+	1 to: self size do:[:i | self at: i put: (self at: i)*(array at: i).].! !
+
+!Vector3Array methodsFor: 'math functions' stamp: 'das 9/7/2003 15:24'!
+squaredLengthInto: target
+
+	1 to: self size do:[:i | target at: i put: (self at: i) squaredLength.].! !
+
+!Vector3Array methodsFor: 'math functions' stamp: 'das 9/8/2003 11:02'!
+subtractVector: vec
+	1 to: self size do:[:i | self at: i put: (self at: i)-vec.].! !
+
+!Vector3Array class methodsFor: 'instance creation' stamp: 'das 5/16/2005 08:48'!
+contentsClass
+	^Vector3! !
+
+!Vector3Array class methodsFor: 'class initialization' stamp: 'das 5/16/2005 08:48'!
+initialize
+	"Vector3Array initialize"
+	ZeroVertex := Vector3 new.! !
+
+!VectorColor3Array methodsFor: 'special ops' stamp: 'das 6/30/2006 07:21'!
++= aColor
+	"Add the given color to all the elements in the receiver"
+	| r g b |
+	r := aColor red.
+	g := aColor green.
+	b := aColor blue.
+	1 to: self basicSize by: 4 do:[:i|
+		self floatAt: i put: (self floatAt: i) + r.
+		self floatAt: i+1 put: (self floatAt: i+1) + g.
+		self floatAt: i+2 put: (self floatAt: i+2) + b.
+	].! !
+
+!VectorColor3Array methodsFor: 'special ops' stamp: 'das 6/30/2006 07:21'!
+add: aColor4 at: index
+	| baseIdx |
+	baseIdx := index-1*4.
+	self floatAt: baseIdx+1 put: (self floatAt: baseIdx+1) + aColor4 red.
+	self floatAt: baseIdx+2 put: (self floatAt: baseIdx+2) + aColor4 green.
+	self floatAt: baseIdx+3 put: (self floatAt: baseIdx+3) + aColor4 blue.
+! !
+
+!VectorColor3Array methodsFor: 'special ops' stamp: 'das 6/30/2006 07:20'!
+clampAllFrom: minValue to: maxValue
+	"Clamp all elements in the receiver to be in the range (minValue, maxValue)"
+	| value |
+	1 to: self basicSize do:[:i|
+		value := self floatAt: i.
+		value := value min: maxValue.
+		value := value max: minValue.
+		self floatAt: i put: value.
+	].! !
+
+!VectorColor3Array methodsFor: 'special ops' stamp: 'das 6/30/2006 07:20'!
+fillWith: anInteger
+	<primitive: 145>
+	self primitiveFailed! !
+
+!VectorColor3Array class methodsFor: 'instance creation' stamp: 'das 6/30/2006 07:21'!
+contentsClass
+	^VectorColor3! !
+
+!VectorColor4Array methodsFor: 'special ops' stamp: 'ar 2/4/1999 01:50'!
++= aColor
+	"Add the given color to all the elements in the receiver"
+	| r g b a |
+	r := aColor red.
+	g := aColor green.
+	b := aColor blue.
+	a := aColor alpha.
+	1 to: self basicSize by: 4 do:[:i|
+		self floatAt: i put: (self floatAt: i) + r.
+		self floatAt: i+1 put: (self floatAt: i+1) + g.
+		self floatAt: i+2 put: (self floatAt: i+2) + b.
+		self floatAt: i+3 put: (self floatAt: i+3) + a.
+	].! !
+
+!VectorColor4Array methodsFor: 'special ops' stamp: 'das 5/22/2005 15:23'!
+add: aColor4 at: index
+	| baseIdx |
+	baseIdx := index-1*4.
+	self floatAt: baseIdx+1 put: (self floatAt: baseIdx+1) + aColor4 red.
+	self floatAt: baseIdx+2 put: (self floatAt: baseIdx+2) + aColor4 green.
+	self floatAt: baseIdx+3 put: (self floatAt: baseIdx+3) + aColor4 blue.
+	self floatAt: baseIdx+4 put: (self floatAt: baseIdx+4) + aColor4 alpha.
+! !
+
+!VectorColor4Array methodsFor: 'special ops'!
+clampAllFrom: minValue to: maxValue
+	"Clamp all elements in the receiver to be in the range (minValue, maxValue)"
+	| value |
+	1 to: self basicSize do:[:i|
+		value := self floatAt: i.
+		value := value min: maxValue.
+		value := value max: minValue.
+		self floatAt: i put: value.
+	].! !
+
+!VectorColor4Array methodsFor: 'special ops'!
+fillWith: anInteger
+	<primitive: 145>
+	self primitiveFailed! !
+
+!VectorColor4Array class methodsFor: 'instance creation' stamp: 'ar 2/7/2006 17:33'!
+contentsClass
+	^VectorColor! !
+
+!VectorRotationArray class methodsFor: 'instance creation' stamp: 'das 5/22/2005 12:08'!
+contentsClass
+	^Quaternion! !
 
 !VectorColor methodsFor: 'accessing' stamp: 'das 11/30/2005 15:14'!
 a
@@ -2961,99 +3068,8 @@ red: r green: g blue: b
 
 	^ newColor.
 ! !
-
-!VectorColor3Array methodsFor: 'special ops' stamp: 'das 6/30/2006 07:21'!
-+= aColor
-	"Add the given color to all the elements in the receiver"
-	| r g b |
-	r := aColor red.
-	g := aColor green.
-	b := aColor blue.
-	1 to: self basicSize by: 4 do:[:i|
-		self floatAt: i put: (self floatAt: i) + r.
-		self floatAt: i+1 put: (self floatAt: i+1) + g.
-		self floatAt: i+2 put: (self floatAt: i+2) + b.
-	].! !
-
-!VectorColor3Array methodsFor: 'special ops' stamp: 'das 6/30/2006 07:21'!
-add: aColor4 at: index
-	| baseIdx |
-	baseIdx := index-1*4.
-	self floatAt: baseIdx+1 put: (self floatAt: baseIdx+1) + aColor4 red.
-	self floatAt: baseIdx+2 put: (self floatAt: baseIdx+2) + aColor4 green.
-	self floatAt: baseIdx+3 put: (self floatAt: baseIdx+3) + aColor4 blue.
-! !
-
-!VectorColor3Array methodsFor: 'special ops' stamp: 'das 6/30/2006 07:20'!
-clampAllFrom: minValue to: maxValue
-	"Clamp all elements in the receiver to be in the range (minValue, maxValue)"
-	| value |
-	1 to: self basicSize do:[:i|
-		value := self floatAt: i.
-		value := value min: maxValue.
-		value := value max: minValue.
-		self floatAt: i put: value.
-	].! !
-
-!VectorColor3Array methodsFor: 'special ops' stamp: 'das 6/30/2006 07:20'!
-fillWith: anInteger
-	<primitive: 145>
-	self primitiveFailed! !
-
-!VectorColor3Array class methodsFor: 'instance creation' stamp: 'das 6/30/2006 07:21'!
-contentsClass
-	^VectorColor3! !
-
-!VectorColor4Array methodsFor: 'special ops' stamp: 'ar 2/4/1999 01:50'!
-+= aColor
-	"Add the given color to all the elements in the receiver"
-	| r g b a |
-	r := aColor red.
-	g := aColor green.
-	b := aColor blue.
-	a := aColor alpha.
-	1 to: self basicSize by: 4 do:[:i|
-		self floatAt: i put: (self floatAt: i) + r.
-		self floatAt: i+1 put: (self floatAt: i+1) + g.
-		self floatAt: i+2 put: (self floatAt: i+2) + b.
-		self floatAt: i+3 put: (self floatAt: i+3) + a.
-	].! !
-
-!VectorColor4Array methodsFor: 'special ops' stamp: 'das 5/22/2005 15:23'!
-add: aColor4 at: index
-	| baseIdx |
-	baseIdx := index-1*4.
-	self floatAt: baseIdx+1 put: (self floatAt: baseIdx+1) + aColor4 red.
-	self floatAt: baseIdx+2 put: (self floatAt: baseIdx+2) + aColor4 green.
-	self floatAt: baseIdx+3 put: (self floatAt: baseIdx+3) + aColor4 blue.
-	self floatAt: baseIdx+4 put: (self floatAt: baseIdx+4) + aColor4 alpha.
-! !
-
-!VectorColor4Array methodsFor: 'special ops'!
-clampAllFrom: minValue to: maxValue
-	"Clamp all elements in the receiver to be in the range (minValue, maxValue)"
-	| value |
-	1 to: self basicSize do:[:i|
-		value := self floatAt: i.
-		value := value min: maxValue.
-		value := value max: minValue.
-		self floatAt: i put: value.
-	].! !
-
-!VectorColor4Array methodsFor: 'special ops'!
-fillWith: anInteger
-	<primitive: 145>
-	self primitiveFailed! !
-
-!VectorColor4Array class methodsFor: 'instance creation' stamp: 'ar 2/7/2006 17:33'!
-contentsClass
-	^VectorColor! !
-
-!VectorRotationArray class methodsFor: 'instance creation' stamp: 'das 5/22/2005 12:08'!
-contentsClass
-	^Quaternion! !
-Matrix4x4 initialize!
-Matrix4x4Array initialize!
-Quaternion initialize!
 Vector initialize!
+Matrix4x4 initialize!
+Quaternion initialize!
+Matrix4x4Array initialize!
 Vector3Array initialize!
