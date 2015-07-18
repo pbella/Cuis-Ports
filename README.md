@@ -40,22 +40,11 @@ Based on http://www.squeaksource.com/Regex/VB-Regex-damienpollet.17.mcz
 
 #### Math
 
-
-3DTransform - Based on 3DTransform-pbm.19.mcz
-
+Moved to https://github.com/pbella/Cuis-OpenGL
 
 #### OpenGL
 
-OpenGL - Originally based on OpenGL-Core-jrd.6.mcz and have merged in some of the changes from OpenGL-Core-bf.17.mcz.  
-
-Depends on 3DTransform and FFI.  If you are running on a Unix or Linux system, see the comment in OGLUnix openGLLibraryName. This was pushed out prematurely and has at least a couple of issues yet to be resolved: font handling is broken, and there are at least one or two hacks that were forgotten about that need to be fixed. 
-
-FFI - See https://github.com/hhzl/Cuis-FFI
-
-Note: after loading FFI projects, you must call 
-    
-	Smalltalk recreateSpecialObjectsArray.
-	
+Moved to https://github.com/pbella/Cuis-OpenGL
 
 #### OMeta 2
 
