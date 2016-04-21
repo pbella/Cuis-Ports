@@ -1,8 +1,8 @@
-'From Cuis 4.2 of 25 July 2013 [latest update: #2169] on 19 February 2015 at 9:24:24.089253 pm'!
+'From Cuis 4.2 of 25 July 2013 [latest update: #2689] on 28 February 2016 at 7:06:03.352926 am'!
 'Description Based on XML-Parser-AlexandreBergel.15.mcz XPath tests.  Split out from XML-Parser.
 
 XPath has been removed from XML-Parser... sticking with this version until a better solution is found.'!
-!provides: 'XPathTests' 1 1!
+!provides: 'XPathTests' 1 2!
 !requires: 'XPath' 1 1 nil!
 !classDefinition: #XPathTest category: #XPathTests!
 TestCase subclass: #XPathTest
@@ -58,7 +58,7 @@ addressBookXML
 </addressbook>
 '! !
 
-!XPathTest methodsFor: 'as yet unclassified' stamp: 'pb 6/11/2012 00:32'!
+!XPathTest methodsFor: 'Running' stamp: 'pb 6/11/2012 00:32'!
 setUp
 	"Need this for VW parser"
 	| parser |
@@ -74,7 +74,7 @@ setUp
 	parser scanDocument.
 	document := parser documentNode root"! !
 
-!XPathTest methodsFor: 'as yet unclassified' stamp: 'PH 10/7/2003 07:14'!
+!XPathTest methodsFor: 'test case' stamp: 'PH 10/7/2003 07:14'!
 testAttribute
 	| path results |
 	path := XPath for: 'person/address/@city'.
@@ -83,7 +83,7 @@ testAttribute
 	self assert: (results at: 1)
 			= 'Los Angeles'! !
 
-!XPathTest methodsFor: 'as yet unclassified' stamp: 'PH 10/12/2003 21:53'!
+!XPathTest methodsFor: 'test case' stamp: 'PH 10/12/2003 21:53'!
 testCount
 	| path results |
 	path := XPath for: 'count(person)'.
@@ -91,7 +91,7 @@ testCount
 	self assert: results size = 1.
 	self assert: ((results at: 1) = 4).! !
 
-!XPathTest methodsFor: 'as yet unclassified' stamp: 'PH 10/7/2003 07:15'!
+!XPathTest methodsFor: 'test case' stamp: 'PH 10/7/2003 07:15'!
 testDescendant
 	| path results |
 	path := XPath for: '//address/@city'.
@@ -101,7 +101,7 @@ testDescendant
 			= 'Los Angeles'.
 ! !
 
-!XPathTest methodsFor: 'as yet unclassified' stamp: 'PH 10/7/2003 07:15'!
+!XPathTest methodsFor: 'test case' stamp: 'PH 10/7/2003 07:15'!
 testDot
 	| path results |
 	path := XPath for: 'person/address/./@city'.
@@ -111,7 +111,7 @@ testDot
 			= 'Los Angeles'.
 ! !
 
-!XPathTest methodsFor: 'as yet unclassified' stamp: 'PH 10/7/2003 07:15'!
+!XPathTest methodsFor: 'test case' stamp: 'PH 10/7/2003 07:15'!
 testDotDot
 	| path results |
 	path := XPath for: 'person/address/../address/@city'.
@@ -121,56 +121,56 @@ testDotDot
 			= 'Los Angeles'.
 ! !
 
-!XPathTest methodsFor: 'as yet unclassified' stamp: 'PH 10/7/2003 07:15'!
+!XPathTest methodsFor: 'test case' stamp: 'PH 10/7/2003 07:15'!
 testDotDotTooHigh
 	| path results |
 	path := XPath for: 'person/address/../../../address/@city'.
 	results := path in: document.
 	self assert: (results size = 0).! !
 
-!XPathTest methodsFor: 'as yet unclassified' stamp: 'PH 8/20/2002 07:33'!
+!XPathTest methodsFor: 'test case' stamp: 'PH 8/20/2002 07:33'!
 testLast
 	| path results |
 	path := XPath for: 'person/last()'.
 	results := path in: document.
 	self assert: (results size = 4).! !
 
-!XPathTest methodsFor: 'as yet unclassified' stamp: 'PH 10/7/2003 07:16'!
+!XPathTest methodsFor: 'test case' stamp: 'PH 10/7/2003 07:16'!
 testOneLevel
 	| path results |
 	path := XPath for: 'person'.
 	results := path in: document.
 	self assert: (results size = 4).! !
 
-!XPathTest methodsFor: 'as yet unclassified' stamp: 'PH 10/7/2003 07:16'!
+!XPathTest methodsFor: 'test case' stamp: 'PH 10/7/2003 07:16'!
 testThreeLevel
 	| path results |
 	path := XPath for: 'person/contact-info/email'.
 	results := path in: document.
 	self assert: (results size = 2).! !
 
-!XPathTest methodsFor: 'as yet unclassified' stamp: 'PH 10/7/2003 07:16'!
+!XPathTest methodsFor: 'test case' stamp: 'PH 10/7/2003 07:16'!
 testTwoLevel
 	| path results |
 	path := XPath for: 'person/address'.
 	results := path in: document.
 	self assert: (results size = 4).! !
 
-!XPathTest methodsFor: 'as yet unclassified' stamp: 'PH 8/19/2002 07:53'!
+!XPathTest methodsFor: 'test case' stamp: 'PH 8/19/2002 07:53'!
 testWildcard
 	| path results |
 	path := XPath for: '/*'.
 	results := path in: document.
 	self assert: (results size = 4).! !
 
-!XPathTest methodsFor: 'as yet unclassified' stamp: 'PH 8/19/2002 07:52'!
+!XPathTest methodsFor: 'test case' stamp: 'PH 8/19/2002 07:52'!
 testWildcardDescendant
 	| path results |
 	path := XPath for: '//*'.
 	results := path in: document.
 	self assert: (results size = 27).! !
 
-!XPathTest methodsFor: 'as yet unclassified' stamp: 'PH 10/7/2003 07:16'!
+!XPathTest methodsFor: 'test case' stamp: 'PH 10/7/2003 07:16'!
 testWildcardDescendantAttribute
 	| path results |
 	path := XPath for: '//*/@city'.

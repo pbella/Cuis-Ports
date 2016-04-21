@@ -1,6 +1,6 @@
-'From Cuis 4.2 of 25 July 2013 [latest update: #2169] on 19 February 2015 at 9:25:32.092776 pm'!
+'From Cuis 4.2 of 25 July 2013 [latest update: #2689] on 28 February 2016 at 7:05:12.530031 am'!
 'Description Split out from HTML'!
-!provides: 'HTMLTests' 1 1!
+!provides: 'HTMLTests' 1 2!
 !requires: 'HTML' 1 0 nil!
 !classDefinition: #HtmlParserTest category: #HTMLTests!
 TestCase subclass: #HtmlParserTest
@@ -83,7 +83,7 @@ Page</a> -- fight the tyranny!!
 </body>
 </html>'! !
 
-!HtmlParserTest methodsFor: 'as yet unclassified' stamp: 'sd 12/4/2010 21:38'!
+!HtmlParserTest methodsFor: 'test case' stamp: 'sd 12/4/2010 21:38'!
 testParser
 	"self run: #testParser"
 	
@@ -91,7 +91,7 @@ testParser
 	input := ReadStream on: self htmlDoc.
 	self shouldnt: [HtmlParser parse: input] raise: Error! !
 
-!HtmlTokenizerTest methodsFor: 'Running' stamp: 'FBS 11/7/2003 23:09'!
+!HtmlTokenizerTest methodsFor: 'test case' stamp: 'FBS 11/7/2003 23:09'!
 testEmptyTag
 
 	| tok tag |

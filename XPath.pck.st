@@ -1,8 +1,8 @@
-'From Cuis 4.2 of 25 July 2013 [latest update: #2203] on 9 March 2015 at 1:18:08.855735 am'!
+'From Cuis 4.2 of 25 July 2013 [latest update: #2658] on 30 January 2016 at 6:19:34.157156 pm'!
 'Description Based on XML-Parser-AlexandreBergel.15.mcz XPath.  Split out from XML-Parser
 
 XPath has been removed from XML-Parser... sticking with this version until a better solution is found.'!
-!provides: 'XPath' 1 1!
+!provides: 'XPath' 1 2!
 !classDefinition: #XPath category: #XPath!
 Object subclass: #XPath
 	instanceVariableNames: 'instructions literals path source block'
@@ -44,29 +44,33 @@ My instance creation methods accept a string (or stream) and compile the string 
 !XPathContext commentStamp: '<historical>' prior: 0!
 Note: if your XPath is not returning the expected result, try enabling haltOnXPathError: on the class side.  This will halt execution at points where the problem could be due to an invalid XPath.!
 
-!XMLDOMParser methodsFor: '*xpath-content' stamp: 'pb 3/9/2015 01:16'!
-characters: aString 
-	| newElement |
+!XMLDOMParser methodsFor: '*xpath-content' stamp: 'pb 1/30/2016 18:18'!
+charactersXPath: aString
 	"
 	newElement := XMLString string: aString.
 	newElement parent: self topNode.
 	self topNode addContent: newElement.
 	"
 	"Changes for YAXO - need to test"
+	| newElement |
 	self flag: #FIXME.
+	"
 	newElement := XMLNode new.
+	newElement := XMLElement new.
+	"
+	newElement := XMLStringNode string: aString.
 	newElement parent: self top.
 	self top addContent: newElement.! !
 
 !XMLDOMParser methodsFor: '*xpath-content' stamp: 'PH 10/7/2003 07:33'!
-processingInstruction: piName data: dataString 
+processingInstructionXPath: piName data: dataString 
 	| newElement |
 	newElement := XMLPI target: piName data: dataString.
 	newElement parent: self top.
 	self top addElement: newElement! !
 
 !XMLDOMParser methodsFor: '*xpath-content' stamp: 'PH 10/7/2003 07:34'!
-startElement: elementName attributeList: attributeList 
+startElementXPath: elementName attributeList: attributeList 
 	| newElement |
 	newElement := XMLElement named: elementName attributes: attributeList.
 	newElement parent: self top.
