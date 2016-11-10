@@ -38,6 +38,10 @@ VBRegex - A native regex implementation - no plugin required.
 Based on http://www.squeaksource.com/Regex/VB-Regex-damienpollet.17.mcz
 
 
+#### Other
+
+BTree - Jonathan Kelly's BTree implementation
+
 #### Math
 
 Moved to https://github.com/pbella/Cuis-OpenGL
