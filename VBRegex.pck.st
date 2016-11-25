@@ -1,7 +1,8 @@
-'From Cuis 4.0 of 21 April 2012 [latest update: #1260] on 5 June 2012 at 8:19:20 pm'!
+'From Cuis 5.0 of 7 November 2016 [latest update: #2986] on 25 November 2016 at 1:12:02 pm'!
 'Description Based on http://www.squeaksource.com/Regex/VB-Regex-damienpollet.17.mcz
 
 Tests have been moved to VBRegexTest'!
+!provides: 'VBRegex' 1 1!
 !classDefinition: #RegexError category: #'VBRegex-Exceptions'!
 Error subclass: #RegexError
 	instanceVariableNames: ''
@@ -307,15 +308,6 @@ Instance variables:
 	input		<Stream> A stream with the regular expression being parsed.
 	lookahead	<Character>!
 
-!RxmBranch commentStamp: '<historical>' prior: 0!
--- Regular Expression Matcher v 1.1 (C) 1996, 1999 Vassili Bykov
--- See `documentation' protocol of RxParser class for user's guide.
---
-This is a branch of a matching process. Either `next' chain should match, or `alternative', if not nil, should match. Since this is also used to build loopbacks to match repetitions, `loopback' variable indicates whether the instance is a loopback: it affects the matcher-building operations (which of the paths through the branch is to consider as the primary when we have to find the "tail" of a matcher construct).
-Instance variables
-	alternative		<RxmLink> to match if `next' fails to match.
-	loopback		<Boolean>!
-
 !RxmLink commentStamp: '<historical>' prior: 0!
 -- Regular Expression Matcher v 1.1 (C) 1996, 1999 Vassili Bykov
 -- See `documentation' protocol of RxParser class for user's guide.
@@ -331,6 +323,15 @@ Principal method:
 		stream position to whatever it was before the matching attempt.
 Instance variables:
 	next		<RxmLink | RxmTerminator> The next link in the structure.!
+
+!RxmBranch commentStamp: '<historical>' prior: 0!
+-- Regular Expression Matcher v 1.1 (C) 1996, 1999 Vassili Bykov
+-- See `documentation' protocol of RxParser class for user's guide.
+--
+This is a branch of a matching process. Either `next' chain should match, or `alternative', if not nil, should match. Since this is also used to build loopbacks to match repetitions, `loopback' variable indicates whether the instance is a loopback: it affects the matcher-building operations (which of the paths through the branch is to consider as the primary when we have to find the "tail" of a matcher construct).
+Instance variables
+	alternative		<RxmLink> to match if `next' fails to match.
+	loopback		<Boolean>!
 
 !RxmMarker commentStamp: '<historical>' prior: 0!
 -- Regular Expression Matcher v 1.1 (C) 1996, 1999 Vassili Bykov
@@ -368,6 +369,12 @@ Instance variables:
 -- See `documentation' protocol of RxParser class for user's guide.
 --
 Instances of this class are used to terminate matcher's chains. When a match reaches this (an instance receives #matchAgainst: message), the match is considered to succeed. Instances also support building protocol of RxmLinks, with some restrictions.!
+
+!RxsNode commentStamp: '<historical>' prior: 0!
+-- Regular Expression Matcher v 1.1 (C) 1996, 1999 Vassili Bykov
+-- See `documentation' protocol of RxParser class for user's guide.
+--
+A generic syntax tree node, provides some common responses to the standard tests, as well as tree structure printing -- handy for debugging.!
 
 !RxsBranch commentStamp: '<historical>' prior: 0!
 -- Regular Expression Matcher v 1.1 (C) 1996, 1999 Vassili Bykov
@@ -417,12 +424,6 @@ A message predicate represents a condition on a character that is tested (at the
 Instance variables:
 	selector		<Symbol>!
 
-!RxsNode commentStamp: '<historical>' prior: 0!
--- Regular Expression Matcher v 1.1 (C) 1996, 1999 Vassili Bykov
--- See `documentation' protocol of RxParser class for user's guide.
---
-A generic syntax tree node, provides some common responses to the standard tests, as well as tree structure printing -- handy for debugging.!
-
 !RxsPiece commentStamp: '<historical>' prior: 0!
 -- Regular Expression Matcher v 1.1 (C) 1996, 1999 Vassili Bykov
 -- See `documentation' protocol of RxParser class for user's guide.
@@ -466,13 +467,85 @@ Instance variables:
 isAlphabetic
 	^ self isLetter! !
 
+!String methodsFor: '*vbregex'!
+allRegexMatches: rxString
+	^rxString asRegex matchesIn: self! !
+
+!String methodsFor: '*vbregex'!
+asRegex
+	"Compile the receiver as a regex matcher. May raise RxParser>>syntaxErrorSignal
+	or RxParser>>compilationErrorSignal.
+	This is a part of the Regular Expression Matcher package, (c) 1996, 1999 Vassili Bykov.
+	Refer to `documentation' protocol of RxParser class for details."
+	^RxParser preferredMatcherClass for: (RxParser new parse: self)! !
+
+!String methodsFor: '*vbregex'!
+asRegexIgnoringCase
+	"Compile the receiver as a regex matcher. May raise RxParser>>syntaxErrorSignal
+	or RxParser>>compilationErrorSignal.
+	This is a part of the Regular Expression Matcher package, (c) 1996, 1999 Vassili Bykov.
+	Refer to `documentation' protocol of RxParser class for details."
+	^RxParser preferredMatcherClass
+		for: (RxParser new parse: self)
+		ignoreCase: true! !
+
+!String methodsFor: '*vbregex'!
+copyWithRegex: rxString matchesReplacedWith: aString
+	^rxString asRegex
+		copy: self replacingMatchesWith: aString! !
+
+!String methodsFor: '*vbregex'!
+copyWithRegex: rxString matchesTranslatedUsing: aBlock
+	^rxString asRegex
+		copy: self translatingMatchesUsing: aBlock! !
+
+!String methodsFor: '*vbregex'!
+matchesRegex: regexString
+	"Test if the receiver matches a regex.  May raise RxParser>>regexErrorSignal or
+	child signals.
+	This is a part of the Regular Expression Matcher package, (c) 1996, 1999 Vassili Bykov.
+	Refer to `documentation' protocol of RxParser class for details."
+	^regexString asRegex matches: self! !
+
+!String methodsFor: '*vbregex'!
+matchesRegexIgnoringCase: regexString
+	"Test if the receiver matches a regex.  May raise RxParser>>regexErrorSignal or
+	child signals.
+	This is a part of the Regular Expression Matcher package, (c) 1996, 1999 Vassili Bykov.
+	Refer to `documentation' protocol of RxParser class for details."
+	^regexString asRegexIgnoringCase matches: self! !
+
+!String methodsFor: '*vbregex'!
+prefixMatchesRegex: regexString
+	"Test if the receiver's prefix matches a regex.	
+	May raise RxParser class>>regexErrorSignal or child signals.
+	This is a part of the Regular Expression Matcher package, (c) 1996, 1999 Vassili Bykov.
+	Refer to `documentation' protocol of RxParser class for details."
+	^regexString asRegex matchesPrefix: self! !
+
+!String methodsFor: '*vbregex'!
+prefixMatchesRegexIgnoringCase: regexString
+	"Test if the receiver's prefix matches a regex.	
+	May raise RxParser class>>regexErrorSignal or child signals.
+	This is a part of the Regular Expression Matcher package, (c) 1996, 1999 Vassili Bykov.
+	Refer to `documentation' protocol of RxParser class for details."
+	^regexString asRegexIgnoringCase matchesPrefix: self! !
+
+!String methodsFor: '*vbregex'!
+regex: rxString matchesCollect: aBlock
+	^rxString asRegex matchesIn: self collect: aBlock! !
+
+!String methodsFor: '*vbregex'!
+regex: rxString matchesDo: aBlock
+	^rxString asRegex matchesIn: self do: aBlock! !
+
 !RxCharSetParser methodsFor: 'parsing'!
 addChar: aChar
 	elements add: (RxsCharacter with: aChar)! !
 
-!RxCharSetParser methodsFor: 'parsing'!
+!RxCharSetParser methodsFor: 'parsing' stamp: 'pb 11/25/2016 13:11:01'!
 addRangeFrom: firstChar to: lastChar
-	firstChar asInteger > lastChar asInteger ifTrue:
+	firstChar numericValue > lastChar numericValue ifTrue:
 		[RxParser signalSyntaxException: ' bad character range'].
 	elements add: (RxsRange from: firstChar to: lastChar)! !
 
@@ -2719,46 +2792,6 @@ testSuite
 		('(.*)c(.*)' 'abcde' true (1 'abcde' 2 'ab' 3 'de'))
 		('\((.*), (.*)\)' '(a, b)' true (2 'a' 3 'b')))! !
 
-!RxmBranch methodsFor: 'initialize-release'!
-alternative: aBranch
-	"See class comment for instance variable description."
-	alternative := aBranch! !
-
-!RxmBranch methodsFor: 'initialize-release'!
-beLoopback
-	"See class comment for instance variable description."
-	loopback := true! !
-
-!RxmBranch methodsFor: 'initialize-release'!
-initialize
-	"See class comment for instance variable description."
-	loopback := false! !
-
-!RxmBranch methodsFor: 'matching'!
-matchAgainst: aMatcher
-	"Match either `next' or `alternative'. Fail if the alternative is nil."
-	^(next matchAgainst: aMatcher)
-		or: [alternative notNil
-			and: [alternative matchAgainst: aMatcher]]! !
-
-!RxmBranch methodsFor: 'building'!
-pointTailTo: aNode
-	"See superclass for explanations."
-	loopback
-		ifTrue: [alternative == nil
-			ifTrue: [alternative := aNode]
-			ifFalse: [alternative pointTailTo: aNode]]
-		ifFalse: [super pointTailTo: aNode]! !
-
-!RxmBranch methodsFor: 'building'!
-terminateWith: aNode
-	"See superclass for explanations."
-	loopback
-		ifTrue: [alternative == nil
-			ifTrue: [alternative := aNode]
-			ifFalse: [alternative terminateWith: aNode]]
-		ifFalse: [super terminateWith: aNode]! !
-
 !RxmLink methodsFor: 'initialize-release'!
 initialize
 	"Subclasses may want to initialize."! !
@@ -2801,6 +2834,46 @@ terminateWith: aTerminator
 !RxmLink class methodsFor: 'instance creation'!
 new
 	^super new initialize! !
+
+!RxmBranch methodsFor: 'initialize-release'!
+alternative: aBranch
+	"See class comment for instance variable description."
+	alternative := aBranch! !
+
+!RxmBranch methodsFor: 'initialize-release'!
+beLoopback
+	"See class comment for instance variable description."
+	loopback := true! !
+
+!RxmBranch methodsFor: 'initialize-release'!
+initialize
+	"See class comment for instance variable description."
+	loopback := false! !
+
+!RxmBranch methodsFor: 'matching'!
+matchAgainst: aMatcher
+	"Match either `next' or `alternative'. Fail if the alternative is nil."
+	^(next matchAgainst: aMatcher)
+		or: [alternative notNil
+			and: [alternative matchAgainst: aMatcher]]! !
+
+!RxmBranch methodsFor: 'building'!
+pointTailTo: aNode
+	"See superclass for explanations."
+	loopback
+		ifTrue: [alternative == nil
+			ifTrue: [alternative := aNode]
+			ifFalse: [alternative pointTailTo: aNode]]
+		ifFalse: [super pointTailTo: aNode]! !
+
+!RxmBranch methodsFor: 'building'!
+terminateWith: aNode
+	"See superclass for explanations."
+	loopback
+		ifTrue: [alternative == nil
+			ifTrue: [alternative := aNode]
+			ifFalse: [alternative terminateWith: aNode]]
+		ifFalse: [super terminateWith: aNode]! !
 
 !RxmMarker methodsFor: 'initialize-release'!
 index: anIndex
@@ -2958,6 +3031,26 @@ terminateWith: aTerminator
 	aTerminator ~~ self
 		ifTrue: [RxParser signalCompilationException:
 				'internal matcher build error - wrong terminator']! !
+
+!RxsNode methodsFor: 'constants'!
+indentCharacter
+	"Normally, #printOn:withIndent: method in subclasses
+	print several characters returned by this method to indicate
+	the tree structure."
+	^$+! !
+
+!RxsNode methodsFor: 'testing'!
+isAtomic
+	"Answer whether the node is atomic, i.e. matches exactly one 
+	constant predefined normal character.  A matcher may decide to 
+	optimize matching of a sequence of atomic nodes by glueing them 
+	together in a string."
+	^false "tentatively"! !
+
+!RxsNode methodsFor: 'testing'!
+isNullable
+	"True if the node can match an empty sequence of characters."
+	^false "for most nodes"! !
 
 !RxsBranch methodsFor: 'accessing'!
 branch
@@ -3202,26 +3295,6 @@ negated
 !RxsMessagePredicate methodsFor: 'accessing'!
 selector
 	^selector! !
-
-!RxsNode methodsFor: 'constants'!
-indentCharacter
-	"Normally, #printOn:withIndent: method in subclasses
-	print several characters returned by this method to indicate
-	the tree structure."
-	^$+! !
-
-!RxsNode methodsFor: 'testing'!
-isAtomic
-	"Answer whether the node is atomic, i.e. matches exactly one 
-	constant predefined normal character.  A matcher may decide to 
-	optimize matching of a sequence of atomic nodes by glueing them 
-	together in a string."
-	^false "tentatively"! !
-
-!RxsNode methodsFor: 'testing'!
-isNullable
-	"True if the node can match an empty sequence of characters."
-	^false "for most nodes"! !
 
 !RxsPiece methodsFor: 'accessing'!
 atom
@@ -3483,10 +3556,10 @@ initializeNamedClassSelectors
 		at: 'upper' put: #beUppercase;
 		at: 'xdigit' put: #beHexDigit! !
 
-!RxsRange methodsFor: 'accessing'!
+!RxsRange methodsFor: 'accessing' stamp: 'pb 11/25/2016 13:11:27'!
 enumerateTo: aCollection
 	"Add all of the elements I represent to the collection."
-	first asInteger to: last asInteger do:
+	first numericValue to: last numericValue do:
 		[:charCode |
 		aCollection add: charCode asCharacter]! !
 
@@ -3526,78 +3599,6 @@ isNullable
 !RxsRegex methodsFor: 'accessing'!
 regex
 	^regex! !
-
-!String methodsFor: '*vbregex'!
-allRegexMatches: rxString
-	^rxString asRegex matchesIn: self! !
-
-!String methodsFor: '*vbregex'!
-asRegex
-	"Compile the receiver as a regex matcher. May raise RxParser>>syntaxErrorSignal
-	or RxParser>>compilationErrorSignal.
-	This is a part of the Regular Expression Matcher package, (c) 1996, 1999 Vassili Bykov.
-	Refer to `documentation' protocol of RxParser class for details."
-	^RxParser preferredMatcherClass for: (RxParser new parse: self)! !
-
-!String methodsFor: '*vbregex'!
-asRegexIgnoringCase
-	"Compile the receiver as a regex matcher. May raise RxParser>>syntaxErrorSignal
-	or RxParser>>compilationErrorSignal.
-	This is a part of the Regular Expression Matcher package, (c) 1996, 1999 Vassili Bykov.
-	Refer to `documentation' protocol of RxParser class for details."
-	^RxParser preferredMatcherClass
-		for: (RxParser new parse: self)
-		ignoreCase: true! !
-
-!String methodsFor: '*vbregex'!
-copyWithRegex: rxString matchesReplacedWith: aString
-	^rxString asRegex
-		copy: self replacingMatchesWith: aString! !
-
-!String methodsFor: '*vbregex'!
-copyWithRegex: rxString matchesTranslatedUsing: aBlock
-	^rxString asRegex
-		copy: self translatingMatchesUsing: aBlock! !
-
-!String methodsFor: '*vbregex'!
-matchesRegex: regexString
-	"Test if the receiver matches a regex.  May raise RxParser>>regexErrorSignal or
-	child signals.
-	This is a part of the Regular Expression Matcher package, (c) 1996, 1999 Vassili Bykov.
-	Refer to `documentation' protocol of RxParser class for details."
-	^regexString asRegex matches: self! !
-
-!String methodsFor: '*vbregex'!
-matchesRegexIgnoringCase: regexString
-	"Test if the receiver matches a regex.  May raise RxParser>>regexErrorSignal or
-	child signals.
-	This is a part of the Regular Expression Matcher package, (c) 1996, 1999 Vassili Bykov.
-	Refer to `documentation' protocol of RxParser class for details."
-	^regexString asRegexIgnoringCase matches: self! !
-
-!String methodsFor: '*vbregex'!
-prefixMatchesRegex: regexString
-	"Test if the receiver's prefix matches a regex.	
-	May raise RxParser class>>regexErrorSignal or child signals.
-	This is a part of the Regular Expression Matcher package, (c) 1996, 1999 Vassili Bykov.
-	Refer to `documentation' protocol of RxParser class for details."
-	^regexString asRegex matchesPrefix: self! !
-
-!String methodsFor: '*vbregex'!
-prefixMatchesRegexIgnoringCase: regexString
-	"Test if the receiver's prefix matches a regex.	
-	May raise RxParser class>>regexErrorSignal or child signals.
-	This is a part of the Regular Expression Matcher package, (c) 1996, 1999 Vassili Bykov.
-	Refer to `documentation' protocol of RxParser class for details."
-	^regexString asRegexIgnoringCase matchesPrefix: self! !
-
-!String methodsFor: '*vbregex'!
-regex: rxString matchesCollect: aBlock
-	^rxString asRegex matchesIn: self collect: aBlock! !
-
-!String methodsFor: '*vbregex'!
-regex: rxString matchesDo: aBlock
-	^rxString asRegex matchesIn: self do: aBlock! !
 RxMatcher initialize!
 RxParser initialize!
 RxsPredicate initialize!
